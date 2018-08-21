@@ -246,7 +246,7 @@ class ApplicationStateController():
         """
         file = self.__getDBCommands__()
         #TODO: robust check of log dir
-        file_name = './log/log_for_task_' + str(self.currTask) + str(user_id) + ".sql"
+        file_name = './log/log_for_user_' + user_id + "_task_" + str(self.currTask) + ".sql"
         with open (file_name, 'w') as fd:
           file.seek (0)
           shutil.copyfileobj (file, fd)
