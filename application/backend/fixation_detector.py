@@ -15,9 +15,13 @@ class FixationDetector(DetectionComponent):
             See __init__ in DetectionComponent
         """
         DetectionComponent.__init__(self, tobii_controller, adaptation_loop)
+        self.restart_fixation_algorithm()
+
+    def restart_fixation_algorithm(self):
         self.runOnlineFix = True
         self.cur_fix_id = 0
         self.AOIS = self.application_state_controller.getFixAoiMapping()
+
 
     def notify_app_state_controller(self, aoi, fix_start_time, fix_end_time, fix_dur):
         self.application_state_controller.updateFixTable(aoi, self.cur_fix_id, fix_start_time, fix_end_time, fix_dur)
@@ -34,6 +38,7 @@ class FixationDetector(DetectionComponent):
             and params.MINDUR for respectively the distance and the smallest possible time length of a fixation.
             The method is a coroutine, which means that it can pause its execution and give control to other components of the platform.
         """
+        print(self.AOIS)
         #list of lists, each containing [starttime, endtime, duration, endx, endy]
         self.EndFixations = []
         #Keep track of index in x,y,time array

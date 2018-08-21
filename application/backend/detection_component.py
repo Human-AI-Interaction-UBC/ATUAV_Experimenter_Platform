@@ -48,6 +48,7 @@ class DetectionComponent():
         Depending on how DetectionComponent was initialized, run()
         gets scheduled to run either periodically or once.
         '''
+        print("TRYING HERE")
         if (self.is_periodic):
             self.cb = PeriodicCallback(callback = self.run, callback_time = self.callback_time)
             self.cb.start()
