@@ -6,6 +6,7 @@ from tornado import gen
 from tornado.ioloop import IOLoop
 from StringIO import StringIO
 import ast
+import params
 
 class ApplicationStateController():
 
@@ -58,7 +59,7 @@ class ApplicationStateController():
 
     def __readDBFromDisk__(self):
 
-        """Initializes the db in memory by reading it from './database/user_model_state.db'
+        """Initializes the db in memory by reading it from USER_MODEL_STATE_PATH
 
         arguments
         None
@@ -70,7 +71,7 @@ class ApplicationStateController():
         None
         """
 
-        self.conn = sqlite3.connect('./database/user_model_state.db')
+        self.conn = sqlite3.connect(USER_MODEL_STATE_PATH)
         commands = self.__getDBCommands__()
         self.conn.close()
 
@@ -83,7 +84,7 @@ class ApplicationStateController():
 
     def __writeDBToDisk__(self):
 
-        """ Writes the current state of the db in memory back to './database/user_model_state.db'
+        """ Writes the current state of the db in memory back to USER_MODEL_STATE_PATH
 
         arguments
         None
@@ -97,8 +98,8 @@ class ApplicationStateController():
         command = self.__getDBCommands__()
         self.conn.close()
 
-        os.remove("./database/user_model_state.db")
-        self.conn = sqlite3.connect("./database/user_model_state.db")
+        os.remove(USER_MODEL_STATE_PATH)
+        self.conn = sqlite3.connect(USER_MODEL_STATE_PATH)
         self.conn.cursor().executescript(command.read())
         self.conn.commit()
         self.conn.close()
@@ -230,7 +231,7 @@ class ApplicationStateController():
             self.conn.execute("DROP TABLE IF EXISTS {}".format(table_name))
         self.conn.commit()
 
-    def logTask(self):
+    def logTask(self, user_id):
 
         """ Creates a log file called log_for_task_x, where x is the current task
             the log file captures the current state of the database as a sql file
@@ -246,7 +247,7 @@ class ApplicationStateController():
         """
         file = self.__getDBCommands__()
         #TODO: robust check of log dir
-        file_name = './log/log_for_task_' + str(self.currTask) + ".sql"
+        file_name = './log/log_for_user_' + user_id + "_task_" + str(self.currTask) + ".sql"
         with open (file_name, 'w') as fd:
           file.seek (0)
           shutil.copyfileobj (file, fd)
@@ -275,7 +276,7 @@ class ApplicationStateController():
         self.__createDynamicTables__()
 
 
-    def resetApplication(self):
+    def resetApplication(self, user_id = 9999):
 
         """ Prepares the application for termination, should be called at the end of execution
             - logs the current state of db
@@ -292,7 +293,7 @@ class ApplicationStateController():
         None
         """
 
-        self.logTask()
+        self.logTask(user_id)
         self.__deleteAllDynamicTables__()
         self.__writeDBToDisk__()
 
