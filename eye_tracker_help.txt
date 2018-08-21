@@ -1,0 +1,10 @@
+Help for eyetracker
+
+eye_tracker.py contains all code for the eye tracker including the online fixation
+algorithm: onlinefix()
+
+fixations.html is the html file that draws the blue box on to the screen via
+the data received through the web socket
+
+hellowworld_eyetracker.py is where we can create the eye tracker object and
+start getting fixations 

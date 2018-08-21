@@ -1,0 +1,71 @@
+#theText{
+     width: 450px;
+     min-height: 500px;
+     font-size: 18px;
+     text-align: justify;
+
+ }
+#thetextparagraph{
+    width: 400px;
+    font-size: 18px;
+	  text-align: justify;
+
+}
+
+h2 {
+    width: 370px;
+    text-align: left;
+    padding-top: 0px;
+    margin-top: 0px;
+    font-size: 28px;
+}
+
+h3 {
+    padding-top: 0px;
+    margin-top: 0px;
+}
+/*html, body {
+    height: 100%;
+}*/
+
+html {
+    display: table;
+    margin: auto;
+}
+
+body {
+
+    display: table-cell;
+    vertical-align: middle;
+
+
+}
+
+#container{
+   position: absolute;
+   width: 80%;
+   left: 50%;
+   margin-left: -500px;
+}
+
+#textandvis{
+    height: 940px;
+    width: 1000px;
+    padding-left: 0px;
+    padding-top: 70px;
+
+}
+td {
+  vertical-align: top;
+  padding-right: 20px;
+}
+
+#animated_square {
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  background-color: blue;
+  left:300px;
+  top:300px;
+  z-index: 999;
+}

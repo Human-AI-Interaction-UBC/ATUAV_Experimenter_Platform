@@ -1,0 +1,299 @@
+{
+  "visual_references": {
+    "references": [
+      {
+        "mark_id": 1,
+        "tuple_ids": [
+          1
+        ]
+      },
+      {
+        "mark_id": 2,
+        "tuple_ids": [
+          2
+        ]
+      },
+      {
+        "mark_id": 3,
+        "tuple_ids": [
+          3
+        ]
+      },
+      {
+        "mark_id": 4,
+        "tuple_ids": [
+          5
+        ]
+      },
+      {
+        "mark_id": 5,
+        "tuple_ids": [
+          4
+        ]
+      },
+      {
+        "mark_id": 6,
+        "tuple_ids": [
+          6
+        ]
+      },
+      {
+        "mark_id": 7,
+        "tuple_ids": [
+          7
+        ]
+      },
+      {
+        "mark_id": 9,
+        "tuple_ids": [
+          8
+        ]
+      },
+      {
+        "mark_id": 10,
+        "tuple_ids": [
+          9
+        ]
+      },
+      {
+        "mark_id": 12,
+        "tuple_ids": [
+          10
+        ]
+      }
+    ]
+  },
+  "text": "<h2><b><font color=\"midnightblue\">The Rise of Asian Americans</font></b></h2><i>June 19, 2012</i> <p id=\"theTextParagraph\" class=\"ng-binding\">Asian Americans trace their roots to any of dozens of countries in the Far East, Southeast Asia and the Indian subcontinent. Each country of origin subgroup has its own unique history, culture, language, religious beliefs, economic and demographic traits, social and political values, and pathways into America. But despite often sizable subgroup differences, Asian Americans are distinctive as a whole, especially when compared with all U.S. adults, whom they exceed not just in the share with a college degree (49% vs. 28%), but also in median annual household income ($66,000 versus $49,800).</p>",
+  "marks": {
+    "marks": [
+      {
+        "b": 0.43,
+        "orientation": 2,
+        "g": 0.48,
+        "top": 105.5,
+        "height": 18,
+        "width": 53,
+        "r": 0.25,
+        "id": 1,
+        "left": 118.5
+      },
+      {
+        "b": 0.42,
+        "orientation": 2,
+        "g": 0.47,
+        "top": 132.5,
+        "height": 19,
+        "width": 92,
+        "r": 0.24,
+        "id": 2,
+        "left": 118.5
+      },
+      {
+        "b": 0.42,
+        "orientation": 2,
+        "g": 0.48,
+        "top": 160.5,
+        "height": 18,
+        "width": 59,
+        "r": 0.24,
+        "id": 3,
+        "left": 118.5
+      },
+      {
+        "b": 0.45,
+        "orientation": 2,
+        "g": 0.5,
+        "top": 214.5,
+        "height": 19,
+        "width": 24,
+        "r": 0.27,
+        "id": 4,
+        "left": 118.5
+      },
+      {
+        "top": 188,
+        "height": 18,
+        "width": 32,
+        "params": {
+          "shape": "Rect"
+        },
+        "id": 5,
+        "left": 118
+      },
+      {
+        "top": 279,
+        "height": 18,
+        "width": 98,
+        "params": {
+          "shape": "Rect"
+        },
+        "id": 6,
+        "left": 122
+      },
+      {
+        "top": 306,
+        "height": 18,
+        "width": 129,
+        "params": {
+          "shape": "Rect"
+        },
+        "id": 7,
+        "left": 122
+      },
+      {
+        "top": 333,
+        "height": 19,
+        "width": 106,
+        "params": {
+          "shape": "Rect"
+        },
+        "id": 9,
+        "left": 122
+      },
+      {
+        "top": 361,
+        "height": 18,
+        "width": 79,
+        "params": {
+          "shape": "Rect"
+        },
+        "id": 10,
+        "left": 122
+      },
+      {
+        "top": 388,
+        "height": 19,
+        "width": 66,
+        "params": {
+          "shape": "Rect"
+        },
+        "id": 12,
+        "left": 122
+      }
+    ]
+  },
+  "chart": "corpus/reports/pew/RiseOfAsianAmericans/Income/2012-sdt-asian-americans-002.png",
+  "references":
+  [{"worker_id":"combined","type":"combined","reference":[{"tuples":[["U.S. population","% with a bachelor's degree or more, among ages 25 and older, 2010","28"]],"phrases":[{"start":434,"end":449},{"start":497,"end":511},{"start":520,"end":524}]},{"phrases":[{"start":360,"end":433},{"start":451,"end":496},{"start":513,"end":519}],"tuples":[["Asians","% with a bachelor's degree or more, among ages 25 and older, 2010","49"]]},{"tuples":[["U.S. population","% with a bachelor's degree or more, among ages 25 and older, 2010","28"],["Asians","% with a bachelor's degree or more, among ages 25 and older, 2010","49"]],"phrases":[{"start":359,"end":375},{"start":415,"end":449},{"start":451,"end":468},{"start":490,"end":525}]},{"tuples":[["Asians","Median household income, 2010","$66,000"]],"phrases":[{"start":536,"end":594}]},{"tuples":[["U.S. population","Median household income, 2010","$49,800"],["Asians","Median household income, 2010","$66,000"]],"phrases":[{"start":531,"end":598}]},{"tuples":[["U.S. population","Median household income, 2010","$49,800"]],"phrases":[{"start":527,"end":593}]},{"tuples":[["Asians","% with a bachelor's degree or more, among ages 25 and older, 2010","49"]],"phrases":[{"start":360,"end":374},{"start":497,"end":516}]}]},{"worker_id":"gold","type":"gold","reference":[{"tuples":[["Asians","Median household income, 2010","$66,000"]],"phrases":[{"start":360,"end":375},{"start":456,"end":460},{"start":539,"end":569},{"start":571,"end":578}]},{"tuples":[["U.S. population","Median household income, 2010","$49,800"]],"phrases":[{"start":438,"end":449},{"start":539,"end":569},{"start":586,"end":593}]},{"tuples":[["U.S. population","% with a bachelor's degree or more, among ages 25 and older, 2010","28"]],"phrases":[{"start":438,"end":449},{"start":497,"end":511},{"start":521,"end":524}]},{"tuples":[["Asians","% with a bachelor's degree or more, among ages 25 and older, 2010","49"]],"phrases":[{"start":360,"end":375},{"start":456,"end":460},{"start":497,"end":511},{"start":513,"end":516}]}]},{"worker_id":1,"type":"passed","reference":[{"tuples":[["Asians","% with a bachelor's degree or more, among ages 25 and older, 2010","49"]],"phrases":[{"start":360,"end":525}]},{"tuples":[["U.S. population","% with a bachelor's degree or more, among ages 25 and older, 2010","28"]],"phrases":[{"start":360,"end":525}]},{"tuples":[["Asians","Median household income, 2010","$66,000"]],"phrases":[{"start":536,"end":594}]},{"tuples":[["U.S. population","Median household income, 2010","$49,800"]],"phrases":[{"start":527,"end":594}]}]},{"worker_id":2,"type":"passed","reference":[{"tuples":[["U.S. population","% with a bachelor's degree or more, among ages 25 and older, 2010","28"],["Asians","% with a bachelor's degree or more, among ages 25 and older, 2010","49"]],"phrases":[{"start":359,"end":525}]},{"tuples":[["U.S. population","Median household income, 2010","$49,800"],["Asians","Median household income, 2010","$66,000"]],"phrases":[{"start":527,"end":594}]}]},{"worker_id":3,"type":"passed","reference":[{"tuples":[["Asians","% with a bachelor's degree or more, among ages 25 and older, 2010","49"]],"phrases":[{"start":360,"end":374},{"start":497,"end":516}]},{"tuples":[["U.S. population","% with a bachelor's degree or more, among ages 25 and older, 2010","28"]],"phrases":[{"start":434,"end":449},{"start":497,"end":511},{"start":520,"end":524}]},{"tuples":[["Asians","Median household income, 2010","$66,000"]],"phrases":[{"start":571,"end":578}]},{"tuples":[["U.S. population","Median household income, 2010","$49,800"]],"phrases":[{"start":586,"end":593}]}]},{"worker_id":4,"type":"passed","reference":[{"tuples":[["U.S. population","% with a bachelor's degree or more, among ages 25 and older, 2010","28"],["Asians","% with a bachelor's degree or more, among ages 25 and older, 2010","49"]],"phrases":[{"start":360,"end":525}]},{"tuples":[["U.S. population","Median household income, 2010","$49,800"],["Asians","Median household income, 2010","$66,000"]],"phrases":[{"start":539,"end":595}]}]},{"worker_id":5,"type":"passed","reference":[{"tuples":[["U.S. population","% with a bachelor's degree or more, among ages 25 and older, 2010","28"],["Asians","% with a bachelor's degree or more, among ages 25 and older, 2010","49"]],"phrases":[{"start":359,"end":375},{"start":415,"end":449},{"start":451,"end":468},{"start":490,"end":525}]},{"tuples":[["U.S. population","Median household income, 2010","$49,800"],["Asians","Median household income, 2010","$66,000"]],"phrases":[{"start":530,"end":594}]}]},{"worker_id":6,"type":"passed","reference":[{"tuples":[["U.S. population","% with a bachelor's degree or more, among ages 25 and older, 2010","28"],["Asians","% with a bachelor's degree or more, among ages 25 and older, 2010","49"]],"phrases":[{"start":360,"end":525}]},{"tuples":[["U.S. population","Median household income, 2010","$49,800"],["Asians","Median household income, 2010","$66,000"]],"phrases":[{"start":359,"end":375},{"start":420,"end":449},{"start":539,"end":645}]}]},{"worker_id":7,"type":"failed","reference":[{"tuples":[["Hispanics","% with a bachelor's degree or more, among ages 25 and older, 2010","13"]],"phrases":[{"start":442,"end":449}]},{"tuples":[["Hispanics","Median household income, 2010","$40,000"],["Blacks","Median household income, 2010","$33,300"]],"phrases":[{"start":599,"end":605}]},{"tuples":[["U.S. population","Median household income, 2010","$49,800"]],"phrases":[{"start":366,"end":377}]},{"tuples":[["Whites","Median household income, 2010","$54,000"]],"phrases":[{"start":438,"end":441}]}]},{"worker_id":8,"type":"failed","reference":[{"tuples":[["Asians","% with a bachelor's degree or more, among ages 25 and older, 2010","49"]],"phrases":[{"start":484,"end":511}]},{"tuples":[["U.S. population","% with a bachelor's degree or more, among ages 25 and older, 2010","28"]],"phrases":[{"start":484,"end":511}]},{"tuples":[["Asians","Median household income, 2010","$66,000"]],"phrases":[{"start":539,"end":570}]},{"tuples":[["U.S. population","Median household income, 2010","$49,800"]],"phrases":[{"start":539,"end":569}]}]},{"worker_id":9,"type":"failed","reference":[{"tuples":[["U.S. population","% with a bachelor's degree or more, among ages 25 and older, 2010","28"]],"phrases":[{"start":520,"end":527}]},{"tuples":[["Asians","% with a bachelor's degree or more, among ages 25 and older, 2010","49"]],"phrases":[{"start":512,"end":516}]},{"tuples":[["Asians","% with a bachelor's degree or more, among ages 25 and older, 2010","49"]],"phrases":[{"start":360,"end":366}]}]},{"worker_id":10,"type":"failed","reference":[{"tuples":[["U.S. population","Median household income, 2010","$49,800"],["Asians","Median household income, 2010","$66,000"]],"phrases":[{"start":545,"end":595}]}]}]
+,
+
+
+  "sentences": [
+    {
+      "start": 0,
+      "end": 130
+    },
+    {
+      "start": 131,
+      "end": 208
+    },
+    {
+      "start": 209,
+      "end": 323
+    },
+    {
+      "start": 324,
+      "end": 333
+    }
+  ],
+  "datatable": {
+    "headers": [
+      "Population",
+      "_condition",
+      "_value"
+    ],
+    "data": [
+      {
+        "index": 0,
+        "id": 1,
+        "tuple": [
+          "U.S. population",
+          "% with a bachelor's degree or more, among ages 25 and older, 2010",
+          "28"
+        ]
+      },
+      {
+        "index": 1,
+        "id": 2,
+        "tuple": [
+          "Asians",
+          "% with a bachelor's degree or more, among ages 25 and older, 2010",
+          "49"
+        ]
+      },
+      {
+        "index": 2,
+        "id": 3,
+        "tuple": [
+          "Whites",
+          "% with a bachelor's degree or more, among ages 25 and older, 2010",
+          "31"
+        ]
+      },
+      {
+        "index": 3,
+        "id": 4,
+        "tuple": [
+          "Blacks",
+          "% with a bachelor's degree or more, among ages 25 and older, 2010",
+          "18"
+        ]
+      },
+      {
+        "index": 4,
+        "id": 5,
+        "tuple": [
+          "Hispanics",
+          "% with a bachelor's degree or more, among ages 25 and older, 2010",
+          "13"
+        ]
+      },
+      {
+        "index": 5,
+        "id": 6,
+        "tuple": [
+          "U.S. population",
+          "Median household income, 2010",
+          "$49,800"
+        ]
+      },
+      {
+        "index": 6,
+        "id": 7,
+        "tuple": [
+          "Asians",
+          "Median household income, 2010",
+          "$66,000"
+        ]
+      },
+      {
+        "index": 7,
+        "id": 8,
+        "tuple": [
+          "Whites",
+          "Median household income, 2010",
+          "$54,000"
+        ]
+      },
+      {
+        "index": 8,
+        "id": 9,
+        "tuple": [
+          "Hispanics",
+          "Median household income, 2010",
+          "$40,000"
+        ]
+      },
+      {
+        "index": 9,
+        "id": 10,
+        "tuple": [
+          "Blacks",
+          "Median household income, 2010",
+          "$33,300"
+        ]
+      }
+    ],
+    "text": []
+  }
+}

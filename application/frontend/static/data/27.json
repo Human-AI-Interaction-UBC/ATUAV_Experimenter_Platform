@@ -1,0 +1,1437 @@
+{
+  "visual_references": {
+    "references": [
+      {
+        "mark_id": 5,
+        "tuple_ids": [
+          1
+        ]
+      },
+      {
+        "mark_id": 6,
+        "tuple_ids": [
+          2
+        ]
+      },
+      {
+        "mark_id": 8,
+        "tuple_ids": [
+          3
+        ]
+      },
+      {
+        "mark_id": 9,
+        "tuple_ids": [
+          4
+        ]
+      },
+      {
+        "mark_id": 11,
+        "tuple_ids": [
+          5
+        ]
+      },
+      {
+        "mark_id": 12,
+        "tuple_ids": [
+          6
+        ]
+      },
+      {
+        "mark_id": 13,
+        "tuple_ids": [
+          7
+        ]
+      },
+      {
+        "mark_id": 14,
+        "tuple_ids": [
+          8
+        ]
+      },
+      {
+        "mark_id": 15,
+        "tuple_ids": [
+          9
+        ]
+      },
+      {
+        "mark_id": 18,
+        "tuple_ids": [
+          10
+        ]
+      },
+      {
+        "mark_id": 19,
+        "tuple_ids": [
+          11
+        ]
+      },
+      {
+        "mark_id": 20,
+        "tuple_ids": [
+          12
+        ]
+      },
+      {
+        "mark_id": 21,
+        "tuple_ids": [
+          13
+        ]
+      },
+      {
+        "mark_id": 23,
+        "tuple_ids": [
+          14
+        ]
+      },
+      {
+        "mark_id": 24,
+        "tuple_ids": [
+          15
+        ]
+      },
+      {
+        "mark_id": 26,
+        "tuple_ids": [
+          16
+        ]
+      },
+      {
+        "mark_id": 27,
+        "tuple_ids": [
+          17
+        ]
+      },
+      {
+        "mark_id": 29,
+        "tuple_ids": [
+          18
+        ]
+      },
+      {
+        "mark_id": 30,
+        "tuple_ids": [
+          19
+        ]
+      },
+      {
+        "mark_id": 31,
+        "tuple_ids": [
+          20
+        ]
+      },
+      {
+        "mark_id": 32,
+        "tuple_ids": [
+          21
+        ]
+      },
+      {
+        "mark_id": 33,
+        "tuple_ids": [
+          22
+        ]
+      },
+      {
+        "mark_id": 36,
+        "tuple_ids": [
+          23
+        ]
+      },
+      {
+        "mark_id": 37,
+        "tuple_ids": [
+          24
+        ]
+      },
+      {
+        "mark_id": 39,
+        "tuple_ids": [
+          25
+        ]
+      },
+      {
+        "mark_id": 40,
+        "tuple_ids": [
+          26
+        ]
+      },
+      {
+        "mark_id": 41,
+        "tuple_ids": [
+          27
+        ]
+      },
+      {
+        "mark_id": 42,
+        "tuple_ids": [
+          28
+        ]
+      },
+      {
+        "mark_id": 43,
+        "tuple_ids": [
+          29
+        ]
+      },
+      {
+        "mark_id": 44,
+        "tuple_ids": [
+          30
+        ]
+      },
+      {
+        "mark_id": 46,
+        "tuple_ids": [
+          31
+        ]
+      },
+      {
+        "mark_id": 47,
+        "tuple_ids": [
+          32
+        ]
+      },
+      {
+        "mark_id": 48,
+        "tuple_ids": [
+          33
+        ]
+      },
+      {
+        "mark_id": 50,
+        "tuple_ids": [
+          34
+        ]
+      },
+      {
+        "mark_id": 51,
+        "tuple_ids": [
+          35
+        ]
+      },
+      {
+        "mark_id": 52,
+        "tuple_ids": [
+          36
+        ]
+      },
+      {
+        "mark_id": 53,
+        "tuple_ids": [
+          37
+        ]
+      },
+      {
+        "mark_id": 56,
+        "tuple_ids": [
+          38
+        ]
+      },
+      {
+        "mark_id": 57,
+        "tuple_ids": [
+          39
+        ]
+      },
+      {
+        "mark_id": 59,
+        "tuple_ids": [
+          40
+        ]
+      },
+      {
+        "mark_id": 61,
+        "tuple_ids": [
+          41
+        ]
+      },
+      {
+        "mark_id": 63,
+        "tuple_ids": [
+          42
+        ]
+      },
+      {
+        "mark_id": 66,
+        "tuple_ids": [
+          43
+        ]
+      },
+      {
+        "mark_id": 67,
+        "tuple_ids": [
+          44
+        ]
+      },
+      {
+        "mark_id": 68,
+        "tuple_ids": [
+          45
+        ]
+      },
+      {
+        "mark_id": 69,
+        "tuple_ids": [
+          46
+        ]
+      },
+      {
+        "mark_id": 72,
+        "tuple_ids": [
+          47
+        ]
+      },
+      {
+        "mark_id": 73,
+        "tuple_ids": [
+          48
+        ]
+      },
+      {
+        "mark_id": 74,
+        "tuple_ids": [
+          49
+        ]
+      },
+      {
+        "mark_id": 75,
+        "tuple_ids": [
+          50
+        ]
+      },
+      {
+        "mark_id": 76,
+        "tuple_ids": [
+          51
+        ]
+      },
+      {
+        "mark_id": 78,
+        "tuple_ids": [
+          52
+        ]
+      },
+      {
+        "mark_id": 79,
+        "tuple_ids": [
+          53
+        ]
+      },
+      {
+        "mark_id": 80,
+        "tuple_ids": [
+          54
+        ]
+      },
+      {
+        "mark_id": 81,
+        "tuple_ids": [
+          55
+        ]
+      },
+      {
+        "mark_id": 82,
+        "tuple_ids": [
+          56
+        ]
+      },
+      {
+        "mark_id": 83,
+        "tuple_ids": [
+          57
+        ]
+      },
+      {
+        "mark_id": 86,
+        "tuple_ids": [
+          58
+        ]
+      },
+      {
+        "mark_id": 88,
+        "tuple_ids": [
+          59
+        ]
+      },
+      {
+        "mark_id": 89,
+        "tuple_ids": [
+          60
+        ]
+      },
+      {
+        "mark_id": 90,
+        "tuple_ids": [
+          61
+        ]
+      },
+      {
+        "mark_id": 91,
+        "tuple_ids": [
+          62
+        ]
+      },
+      {
+        "mark_id": 92,
+        "tuple_ids": [
+          63
+        ]
+      }
+    ]
+  },
+  "text": "<h2><b><font color=\"midnightblue\">Pervasive Gloom About <br>the World Economy</font></b></h2> <i>July 12, 2012</i> <p id=\"theTextParagraph\" class=\"ng-binding\">In the wake of four years of economic turmoil around the world and political upheaval in a number of nations, very few people are satisfied with the way things are going in their country. In only six of the 21 nations surveyed do half or more of the population think national economic conditions will improve over the next 12 months. This includes very optimistic Brazilians (84%), Chinese (83%) and Tunisians (75%) and relatively optimistic Americans (52%), Mexicans (51%) and Egyptians (50%). In addition, a plurality of Indians (45%) and Turks (44%) see a better economy on the horizon. But in six countries majorities or pluralities think economic conditions will worsen, including 81% of Greeks and 60% of Czechs.</p>",
+  "marks": {
+    "marks": [
+      {
+        "width": 173,
+        "top": 80,
+        "left": 77,
+        "id": 5,
+        "height": 15
+      },
+      {
+        "width": 25,
+        "top": 80,
+        "left": 250,
+        "id": 6,
+        "height": 15
+      },
+      {
+        "width": 9,
+        "top": 80,
+        "left": 275,
+        "id": 8,
+        "height": 15
+      },
+      {
+        "width": 172,
+        "top": 99,
+        "left": 77,
+        "id": 9,
+        "height": 14
+      },
+      {
+        "width": 16,
+        "top": 99,
+        "left": 250,
+        "id": 11,
+        "height": 14
+      },
+      {
+        "width": 5,
+        "top": 99,
+        "left": 266,
+        "id": 12,
+        "height": 14
+      },
+      {
+        "width": 154,
+        "top": 118,
+        "left": 77,
+        "id": 13,
+        "height": 14
+      },
+      {
+        "width": 24,
+        "top": 117,
+        "left": 232,
+        "id": 14,
+        "height": 15
+      },
+      {
+        "width": 25,
+        "top": 117,
+        "left": 256,
+        "id": 15,
+        "height": 15
+      },
+      {
+        "width": 106,
+        "top": 136,
+        "left": 77,
+        "id": 18,
+        "height": 14
+      },
+      {
+        "width": 56,
+        "top": 136,
+        "left": 182,
+        "id": 19,
+        "height": 14
+      },
+      {
+        "width": 42,
+        "top": 136,
+        "left": 237,
+        "id": 20,
+        "height": 14
+      },
+      {
+        "width": 104,
+        "top": 155,
+        "left": 77,
+        "id": 21,
+        "height": 14
+      },
+      {
+        "width": 67,
+        "top": 155,
+        "left": 181,
+        "id": 23,
+        "height": 14
+      },
+      {
+        "width": 34,
+        "top": 155,
+        "left": 247,
+        "id": 24,
+        "height": 14
+      },
+      {
+        "width": 102,
+        "top": 173,
+        "left": 78,
+        "id": 26,
+        "height": 16
+      },
+      {
+        "width": 57,
+        "top": 173,
+        "left": 180,
+        "id": 27,
+        "height": 16
+      },
+      {
+        "width": 42,
+        "top": 173,
+        "left": 237,
+        "id": 29,
+        "height": 16
+      },
+      {
+        "width": 93,
+        "top": 193,
+        "left": 77,
+        "id": 30,
+        "height": 14
+      },
+      {
+        "width": 53,
+        "top": 192,
+        "left": 169,
+        "id": 31,
+        "height": 14
+      },
+      {
+        "width": 48,
+        "top": 192,
+        "left": 222,
+        "id": 32,
+        "height": 14
+      },
+      {
+        "width": 90,
+        "top": 211,
+        "left": 77,
+        "id": 33,
+        "height": 15
+      },
+      {
+        "width": 46,
+        "top": 211,
+        "left": 167,
+        "id": 36,
+        "height": 15
+      },
+      {
+        "width": 54,
+        "top": 211,
+        "left": 213,
+        "id": 37,
+        "height": 15
+      },
+      {
+        "width": 64,
+        "top": 230,
+        "left": 78,
+        "id": 39,
+        "height": 15
+      },
+      {
+        "width": 72,
+        "top": 230,
+        "left": 142,
+        "id": 40,
+        "height": 15
+      },
+      {
+        "width": 67,
+        "top": 230,
+        "left": 214,
+        "id": 41,
+        "height": 15
+      },
+      {
+        "width": 65,
+        "top": 249,
+        "left": 76,
+        "id": 42,
+        "height": 15
+      },
+      {
+        "width": 90,
+        "top": 249,
+        "left": 141,
+        "id": 43,
+        "height": 15
+      },
+      {
+        "width": 32,
+        "top": 249,
+        "left": 231,
+        "id": 44,
+        "height": 15
+      },
+      {
+        "width": 60,
+        "top": 267,
+        "left": 77,
+        "id": 46,
+        "height": 16
+      },
+      {
+        "width": 89,
+        "top": 267,
+        "left": 137,
+        "id": 47,
+        "height": 16
+      },
+      {
+        "width": 56,
+        "top": 267,
+        "left": 226,
+        "id": 48,
+        "height": 16
+      },
+      {
+        "width": 59,
+        "top": 286,
+        "left": 77,
+        "id": 50,
+        "height": 15
+      },
+      {
+        "width": 72,
+        "top": 286,
+        "left": 136,
+        "id": 51,
+        "height": 15
+      },
+      {
+        "width": 73,
+        "top": 286,
+        "left": 208,
+        "id": 52,
+        "height": 15
+      },
+      {
+        "width": 52,
+        "top": 306,
+        "left": 77,
+        "id": 53,
+        "height": 13
+      },
+      {
+        "width": 48,
+        "top": 305,
+        "left": 130,
+        "id": 56,
+        "height": 15
+      },
+      {
+        "width": 88,
+        "top": 305,
+        "left": 178,
+        "id": 57,
+        "height": 15
+      },
+      {
+        "width": 50,
+        "top": 325,
+        "left": 77,
+        "id": 59,
+        "height": 13
+      },
+      {
+        "width": 55,
+        "top": 324,
+        "left": 128,
+        "id": 61,
+        "height": 14
+      },
+      {
+        "width": 98,
+        "top": 324,
+        "left": 183,
+        "id": 63,
+        "height": 15
+      },
+      {
+        "width": 43,
+        "top": 343,
+        "left": 78,
+        "id": 66,
+        "height": 15
+      },
+      {
+        "width": 78,
+        "top": 343,
+        "left": 121,
+        "id": 67,
+        "height": 15
+      },
+      {
+        "width": 82,
+        "top": 343,
+        "left": 199,
+        "id": 68,
+        "height": 15
+      },
+      {
+        "width": 44,
+        "top": 362,
+        "left": 78,
+        "id": 69,
+        "height": 15
+      },
+      {
+        "width": 59,
+        "top": 362,
+        "left": 122,
+        "id": 72,
+        "height": 15
+      },
+      {
+        "width": 98,
+        "top": 362,
+        "left": 181,
+        "id": 73,
+        "height": 15
+      },
+      {
+        "width": 44,
+        "top": 380,
+        "left": 78,
+        "id": 74,
+        "height": 15
+      },
+      {
+        "width": 59,
+        "top": 380,
+        "left": 122,
+        "id": 75,
+        "height": 15
+      },
+      {
+        "width": 94,
+        "top": 380,
+        "left": 181,
+        "id": 76,
+        "height": 15
+      },
+      {
+        "width": 36,
+        "top": 399,
+        "left": 77,
+        "id": 78,
+        "height": 15
+      },
+      {
+        "width": 93,
+        "top": 399,
+        "left": 113,
+        "id": 79,
+        "height": 15
+      },
+      {
+        "width": 69,
+        "top": 399,
+        "left": 206,
+        "id": 80,
+        "height": 15
+      },
+      {
+        "width": 32,
+        "top": 419,
+        "left": 77,
+        "id": 81,
+        "height": 13
+      },
+      {
+        "width": 102,
+        "top": 418,
+        "left": 109,
+        "id": 82,
+        "height": 15
+      },
+      {
+        "width": 68,
+        "top": 418,
+        "left": 211,
+        "id": 83,
+        "height": 15
+      },
+      {
+        "width": 27,
+        "top": 437,
+        "left": 76,
+        "id": 86,
+        "height": 16
+      },
+      {
+        "width": 55,
+        "top": 437,
+        "left": 103,
+        "id": 88,
+        "height": 15
+      },
+      {
+        "width": 124,
+        "top": 437,
+        "left": 158,
+        "id": 89,
+        "height": 15
+      },
+      {
+        "width": 17,
+        "top": 455,
+        "left": 77,
+        "id": 90,
+        "height": 15
+      },
+      {
+        "width": 22,
+        "top": 455,
+        "left": 94,
+        "id": 91,
+        "height": 15
+      },
+      {
+        "width": 168,
+        "top": 455,
+        "left": 116,
+        "id": 92,
+        "height": 15
+      },
+      {
+        "width": 261,
+        "top": 48,
+        "left": 31,
+        "id": "legend",
+        "height": 22
+      }
+    ]
+  },
+  "chart": "corpus/reports/pew/PervasiveGloomEconomy/Optimism/ECON0014.png",
+  "references":
+  [{"worker_id":"combined","type":"combined","reference":[{"tuples":[["Greece","Worsen","81"]],"phrases":[{"start":644,"end":675},{"start":687,"end":700}]},{"tuples":[["Turkey","Improve","44"]],"phrases":[{"start":510,"end":522},{"start":541,"end":594}]},{"tuples":[["Czech Rep.","Worsen","60"]],"phrases":[{"start":644,"end":675},{"start":705,"end":718}]},{"tuples":[["U.S.","Improve","52"]],"phrases":[{"start":420,"end":457}]},{"tuples":[["China","Improve","83"]],"phrases":[{"start":250,"end":332},{"start":382,"end":395}]},{"tuples":[["Tunisia","Improve","75"]],"phrases":[{"start":250,"end":364},{"start":400,"end":415}]},{"tuples":[["India","Improve","45"]],"phrases":[{"start":508,"end":536},{"start":553,"end":588}]},{"tuples":[["India","Improve","45"]],"phrases":[{"start":522,"end":537}]},{"tuples":[["China","Improve","83"]],"phrases":[{"start":267,"end":308},{"start":382,"end":396}]},{"tuples":[["Tunisia","Improve","75"]],"phrases":[{"start":266,"end":309},{"start":400,"end":416}]},{"tuples":[["U.S.","Improve","52"]],"phrases":[{"start":267,"end":332},{"start":442,"end":457}]},{"tuples":[["Mexico","Improve","51"]],"phrases":[{"start":267,"end":332},{"start":459,"end":474}]},{"tuples":[["Egypt","Improve","50"]],"phrases":[{"start":266,"end":332},{"start":478,"end":494}]},{"tuples":[["India","Improve","45"]],"phrases":[{"start":267,"end":333},{"start":523,"end":536}]},{"tuples":[["Turkey","Improve","44"]],"phrases":[{"start":266,"end":332},{"start":541,"end":552}]},{"tuples":[["Brazil","Improve","84"]],"phrases":[{"start":189,"end":380}]}]},{"worker_id":"gold","type":"gold","reference":[{"tuples":[["Greece","Worsen","81"]],"phrases":[{"start":669,"end":675},{"start":687,"end":690},{"start":694,"end":700}]},{"tuples":[["Czech Rep.","Worsen","60"]],"phrases":[{"start":669,"end":675},{"start":705,"end":708},{"start":712,"end":718}]},{"tuples":[["Brazil","Improve","84"]],"phrases":[{"start":301,"end":308},{"start":334,"end":338},{"start":364,"end":380}]},{"tuples":[["China","Improve","83"]],"phrases":[{"start":301,"end":308},{"start":334,"end":338},{"start":382,"end":395}]},{"tuples":[["Tunisia","Improve","75"]],"phrases":[{"start":301,"end":308},{"start":334,"end":338},{"start":400,"end":415}]},{"tuples":[["U.S.","Improve","52"]],"phrases":[{"start":301,"end":308},{"start":334,"end":338},{"start":442,"end":457}]},{"tuples":[["Mexico","Improve","51"]],"phrases":[{"start":301,"end":309},{"start":334,"end":338},{"start":459,"end":473}]},{"tuples":[["Egypt","Improve","50"]],"phrases":[{"start":301,"end":308},{"start":334,"end":338},{"start":478,"end":493}]},{"tuples":[["India","Improve","45"]],"phrases":[{"start":523,"end":536},{"start":559,"end":565}]},{"tuples":[["India","Improve","45"]],"phrases":[{"start":523,"end":536},{"start":559,"end":565}]},{"tuples":[["Turkey","Improve","44"]],"phrases":[{"start":541,"end":552},{"start":559,"end":565}]},{"tuples":[["Brazil","Improve","84"],["China","Improve","83"],["Tunisia","Improve","75"],["U.S.","Improve","52"],["Mexico","Improve","51"],["Egypt","Improve","50"]],"phrases":[{"start":196,"end":199},{"start":210,"end":217},{"start":230,"end":242},{"start":301,"end":308}]},{"tuples":[["Pakistan","Worsen","43"],["Spain","Worsen","47"],["France","Worsen","40"],["Italy","Worsen","47"],["Lebanon","Worsen","45"],["Czech Rep.","Worsen","60"],["Greece","Worsen","81"]],"phrases":[{"start":598,"end":611},{"start":612,"end":637},{"start":669,"end":675}]}]},{"worker_id":1,"type":"passed","reference":[{"tuples":[["Brazil","Improve","84"]],"phrases":[{"start":348,"end":380}]},{"tuples":[["China","Improve","83"]],"phrases":[{"start":382,"end":395}]},{"tuples":[["Tunisia","Improve","75"]],"phrases":[{"start":399,"end":415}]},{"tuples":[["U.S.","Improve","52"]],"phrases":[{"start":420,"end":457}]},{"tuples":[["Mexico","Improve","51"]],"phrases":[{"start":459,"end":473}]},{"tuples":[["Egypt","Improve","50"]],"phrases":[{"start":477,"end":493}]},{"tuples":[["India","Improve","45"]],"phrases":[{"start":508,"end":536}]},{"tuples":[["Turkey","Improve","44"]],"phrases":[{"start":541,"end":588}]},{"tuples":[["Greece","Worsen","81"]],"phrases":[{"start":644,"end":700}]},{"tuples":[["Czech Rep.","Worsen","60"]],"phrases":[{"start":705,"end":719}]}]},{"worker_id":2,"type":"passed","reference":[{"tuples":[["Brazil","Improve","84"]],"phrases":[{"start":348,"end":380}]},{"tuples":[["China","Improve","83"]],"phrases":[{"start":382,"end":395}]},{"tuples":[["Tunisia","Improve","75"]],"phrases":[{"start":400,"end":415}]}]},{"worker_id":3,"type":"passed","reference":[{"tuples":[["Brazil","Improve","84"]],"phrases":[{"start":250,"end":332},{"start":364,"end":380}]},{"tuples":[["China","Improve","83"]],"phrases":[{"start":250,"end":332},{"start":382,"end":395}]},{"tuples":[["Tunisia","Improve","75"]],"phrases":[{"start":250,"end":364},{"start":400,"end":415}]},{"tuples":[["U.S.","Improve","52"]],"phrases":[{"start":442,"end":457}]},{"tuples":[["Mexico","Improve","51"]],"phrases":[{"start":459,"end":473}]},{"tuples":[["Egypt","Improve","50"]],"phrases":[{"start":478,"end":493}]},{"tuples":[["India","Improve","45"]],"phrases":[{"start":508,"end":536},{"start":553,"end":588}]},{"tuples":[["Turkey","Improve","44"]],"phrases":[{"start":510,"end":522},{"start":541,"end":588}]},{"tuples":[["Greece","Worsen","81"]],"phrases":[{"start":626,"end":675},{"start":687,"end":700}]},{"tuples":[["Czech Rep.","Worsen","60"]],"phrases":[{"start":644,"end":675},{"start":705,"end":719}]}]},{"worker_id":4,"type":"passed","reference":[{"tuples":[["Brazil","Improve","84"]],"phrases":[{"start":347,"end":380}]},{"tuples":[["China","Improve","83"],["Tunisia","Improve","75"]],"phrases":[{"start":382,"end":394},{"start":400,"end":415}]},{"tuples":[["China","Improve","83"]],"phrases":[{"start":382,"end":394}]},{"tuples":[["U.S.","Improve","52"]],"phrases":[{"start":442,"end":457}]},{"tuples":[["Mexico","Improve","51"]],"phrases":[{"start":459,"end":473}]},{"tuples":[["Egypt","Improve","50"]],"phrases":[{"start":478,"end":493}]},{"tuples":[["India","Improve","45"]],"phrases":[{"start":522,"end":537}]},{"tuples":[["Turkey","Improve","44"]],"phrases":[{"start":540,"end":552}]}]},{"worker_id":5,"type":"passed","reference":[{"tuples":[["Brazil","Improve","84"]],"phrases":[{"start":266,"end":308},{"start":364,"end":380}]},{"tuples":[["China","Improve","83"]],"phrases":[{"start":267,"end":308},{"start":382,"end":396}]},{"tuples":[["Tunisia","Improve","75"]],"phrases":[{"start":266,"end":309},{"start":400,"end":416}]},{"tuples":[["U.S.","Improve","52"]],"phrases":[{"start":267,"end":332},{"start":442,"end":457}]},{"tuples":[["Mexico","Improve","51"]],"phrases":[{"start":267,"end":332},{"start":459,"end":474}]},{"tuples":[["Egypt","Improve","50"]],"phrases":[{"start":266,"end":332},{"start":478,"end":494}]},{"tuples":[["India","Improve","45"]],"phrases":[{"start":267,"end":333},{"start":523,"end":536}]},{"tuples":[["Turkey","Improve","44"]],"phrases":[{"start":266,"end":332},{"start":541,"end":552}]},{"tuples":[["Greece","Worsen","81"]],"phrases":[{"start":644,"end":675},{"start":687,"end":700}]},{"tuples":[["Czech Rep.","Worsen","60"]],"phrases":[{"start":643,"end":675},{"start":705,"end":718}]}]},{"worker_id":6,"type":"passed","reference":[{"tuples":[["Brazil","Improve","84"]],"phrases":[{"start":189,"end":380}]},{"tuples":[["China","Improve","83"]],"phrases":[{"start":382,"end":395}]},{"tuples":[["Tunisia","Improve","75"]],"phrases":[{"start":400,"end":415}]},{"tuples":[["U.S.","Improve","52"]],"phrases":[{"start":442,"end":457}]},{"tuples":[["Egypt","Improve","50"]],"phrases":[{"start":478,"end":493}]},{"tuples":[["India","Improve","45"]],"phrases":[{"start":510,"end":536}]},{"tuples":[["Turkey","Improve","44"]],"phrases":[{"start":541,"end":552}]},{"tuples":[["Greece","Worsen","81"]],"phrases":[{"start":612,"end":700}]},{"tuples":[["Czech Rep.","Worsen","60"]],"phrases":[{"start":705,"end":719}]}]},{"worker_id":7,"type":"failed","reference":[{"tuples":[["Brazil","Improve","84"],["China","Improve","83"],["Tunisia","Improve","75"],["U.S.","Improve","52"],["Mexico","Improve","51"],["Egypt","Improve","50"]],"phrases":[{"start":334,"end":493}]},{"tuples":[["India","Improve","45"],["Turkey","Improve","44"]],"phrases":[{"start":508,"end":588}]},{"tuples":[["Czech Rep.","Worsen","60"],["Greece","Worsen","81"]],"phrases":[{"start":598,"end":719}]}]},{"worker_id":8,"type":"failed","reference":[{"tuples":[["Brazil","Improve","84"]],"phrases":[{"start":267,"end":332},{"start":339,"end":380}]},{"tuples":[["China","Improve","83"]],"phrases":[{"start":382,"end":395}]},{"tuples":[["Tunisia","Improve","75"]],"phrases":[{"start":395,"end":416}]},{"tuples":[["U.S.","Improve","52"],["Mexico","Improve","51"],["Egypt","Improve","50"]],"phrases":[{"start":415,"end":493}]},{"tuples":[["India","Improve","45"],["Turkey","Improve","44"]],"phrases":[{"start":508,"end":588}]},{"tuples":[["Czech Rep.","Worsen","60"],["Greece","Worsen","81"]],"phrases":[{"start":644,"end":718}]}]},{"worker_id":9,"type":"failed","reference":[{"tuples":[["Brazil","Improve","84"]],"phrases":[{"start":364,"end":374}]},{"tuples":[["China","Improve","83"],["China","Worsen","2"]],"phrases":[{"start":382,"end":390}]},{"tuples":[["Turkey","Improve","44"]],"phrases":[{"start":541,"end":547}]},{"tuples":[["Egypt","Improve","50"]],"phrases":[{"start":478,"end":488}]},{"tuples":[["India","Improve","45"],["India","Remain the same","25"],["India","Worsen","24"]],"phrases":[{"start":523,"end":531}]},{"tuples":[["Greece","Improve","9"],["Greece","Remain the same","10"],["Greece","Worsen","81"]],"phrases":[{"start":694,"end":701}]}]},{"worker_id":10,"type":"failed","reference":[{"tuples":[["Brazil","Improve","84"]],"phrases":[{"start":364,"end":380}]}]}]
+,
+  "sentences": [
+    {
+      "start": 0,
+      "end": 145
+    },
+    {
+      "start": 146,
+      "end": 306
+    },
+    {
+      "start": 307,
+      "end": 531
+    }
+  ],
+  "datatable": {
+    "headers": [
+      "_Country",
+      "_opinion",
+      "_percentage"
+    ],
+    "data": [
+      {
+        "index": 0,
+        "id": 1,
+        "tuple": [
+          "Brazil",
+          "Improve",
+          "84"
+        ]
+      },
+      {
+        "index": 1,
+        "id": 2,
+        "tuple": [
+          "Brazil",
+          "Remain the same",
+          "12"
+        ]
+      },
+      {
+        "index": 2,
+        "id": 3,
+        "tuple": [
+          "Brazil",
+          "Worsen",
+          "5"
+        ]
+      },
+      {
+        "index": 3,
+        "id": 4,
+        "tuple": [
+          "China",
+          "Improve",
+          "83"
+        ]
+      },
+      {
+        "index": 4,
+        "id": 5,
+        "tuple": [
+          "China",
+          "Remain the same",
+          "9"
+        ]
+      },
+      {
+        "index": 5,
+        "id": 6,
+        "tuple": [
+          "China",
+          "Worsen",
+          "2"
+        ]
+      },
+      {
+        "index": 6,
+        "id": 7,
+        "tuple": [
+          "Tunisia",
+          "Improve",
+          "75"
+        ]
+      },
+      {
+        "index": 7,
+        "id": 8,
+        "tuple": [
+          "Tunisia",
+          "Remain the same",
+          "12"
+        ]
+      },
+      {
+        "index": 8,
+        "id": 9,
+        "tuple": [
+          "Tunisia",
+          "Worsen",
+          "12"
+        ]
+      },
+      {
+        "index": 9,
+        "id": 10,
+        "tuple": [
+          "U.S.",
+          "Improve",
+          "52"
+        ]
+      },
+      {
+        "index": 10,
+        "id": 11,
+        "tuple": [
+          "U.S.",
+          "Remain the same",
+          "26"
+        ]
+      },
+      {
+        "index": 11,
+        "id": 12,
+        "tuple": [
+          "U.S.",
+          "Worsen",
+          "20"
+        ]
+      },
+      {
+        "index": 12,
+        "id": 13,
+        "tuple": [
+          "Mexico",
+          "Improve",
+          "51"
+        ]
+      },
+      {
+        "index": 13,
+        "id": 14,
+        "tuple": [
+          "Mexico",
+          "Remain the same",
+          "32"
+        ]
+      },
+      {
+        "index": 14,
+        "id": 15,
+        "tuple": [
+          "Mexico",
+          "Worsen",
+          "16"
+        ]
+      },
+      {
+        "index": 15,
+        "id": 16,
+        "tuple": [
+          "Egypt",
+          "Improve",
+          "50"
+        ]
+      },
+      {
+        "index": 16,
+        "id": 17,
+        "tuple": [
+          "Egypt",
+          "Remain the same",
+          "28"
+        ]
+      },
+      {
+        "index": 17,
+        "id": 18,
+        "tuple": [
+          "Egypt",
+          "Worsen",
+          "20"
+        ]
+      },
+      {
+        "index": 18,
+        "id": 19,
+        "tuple": [
+          "India",
+          "Improve",
+          "45"
+        ]
+      },
+      {
+        "index": 19,
+        "id": 20,
+        "tuple": [
+          "India",
+          "Remain the same",
+          "25"
+        ]
+      },
+      {
+        "index": 20,
+        "id": 21,
+        "tuple": [
+          "India",
+          "Worsen",
+          "24"
+        ]
+      },
+      {
+        "index": 21,
+        "id": 22,
+        "tuple": [
+          "Turkey",
+          "Improve",
+          "44"
+        ]
+      },
+      {
+        "index": 22,
+        "id": 23,
+        "tuple": [
+          "Turkey",
+          "Remain the same",
+          "22"
+        ]
+      },
+      {
+        "index": 23,
+        "id": 24,
+        "tuple": [
+          "Turkey",
+          "Worsen",
+          "26"
+        ]
+      },
+      {
+        "index": 24,
+        "id": 25,
+        "tuple": [
+          "Britain",
+          "Improve",
+          "32"
+        ]
+      },
+      {
+        "index": 25,
+        "id": 26,
+        "tuple": [
+          "Britain",
+          "Remain the same",
+          "35"
+        ]
+      },
+      {
+        "index": 26,
+        "id": 27,
+        "tuple": [
+          "Britain",
+          "Worsen",
+          "32"
+        ]
+      },
+      {
+        "index": 27,
+        "id": 28,
+        "tuple": [
+          "Russia",
+          "Improve",
+          "31"
+        ]
+      },
+      {
+        "index": 28,
+        "id": 29,
+        "tuple": [
+          "Russia",
+          "Remain the same",
+          "44"
+        ]
+      },
+      {
+        "index": 29,
+        "id": 30,
+        "tuple": [
+          "Russia",
+          "Worsen",
+          "15"
+        ]
+      },
+      {
+        "index": 30,
+        "id": 31,
+        "tuple": [
+          "Germany",
+          "Improve",
+          "29"
+        ]
+      },
+      {
+        "index": 31,
+        "id": 32,
+        "tuple": [
+          "Germany",
+          "Remain the same",
+          "43"
+        ]
+      },
+      {
+        "index": 32,
+        "id": 33,
+        "tuple": [
+          "Germany",
+          "Worsen",
+          "27"
+        ]
+      },
+      {
+        "index": 33,
+        "id": 34,
+        "tuple": [
+          "Jordan",
+          "Improve",
+          "29"
+        ]
+      },
+      {
+        "index": 34,
+        "id": 35,
+        "tuple": [
+          "Jordan",
+          "Remain the same",
+          "35"
+        ]
+      },
+      {
+        "index": 35,
+        "id": 36,
+        "tuple": [
+          "Jordan",
+          "Worsen",
+          "34"
+        ]
+      },
+      {
+        "index": 36,
+        "id": 37,
+        "tuple": [
+          "Pakistan",
+          "Improve",
+          "26"
+        ]
+      },
+      {
+        "index": 37,
+        "id": 38,
+        "tuple": [
+          "Pakistan",
+          "Remain the same",
+          "23"
+        ]
+      },
+      {
+        "index": 38,
+        "id": 39,
+        "tuple": [
+          "Pakistan",
+          "Worsen",
+          "43"
+        ]
+      },
+      {
+        "index": 39,
+        "id": 40,
+        "tuple": [
+          "Spain",
+          "Improve",
+          "25"
+        ]
+      },
+      {
+        "index": 40,
+        "id": 41,
+        "tuple": [
+          "Spain",
+          "Remain the same",
+          "27"
+        ]
+      },
+      {
+        "index": 41,
+        "id": 42,
+        "tuple": [
+          "Spain",
+          "Worsen",
+          "47"
+        ]
+      },
+      {
+        "index": 42,
+        "id": 43,
+        "tuple": [
+          "France",
+          "Improve",
+          "22"
+        ]
+      },
+      {
+        "index": 43,
+        "id": 44,
+        "tuple": [
+          "France",
+          "Remain the same",
+          "37"
+        ]
+      },
+      {
+        "index": 44,
+        "id": 45,
+        "tuple": [
+          "France",
+          "Worsen",
+          "40"
+        ]
+      },
+      {
+        "index": 45,
+        "id": 46,
+        "tuple": [
+          "Italy",
+          "Improve",
+          "22"
+        ]
+      },
+      {
+        "index": 46,
+        "id": 47,
+        "tuple": [
+          "Italy",
+          "Remain the same",
+          "29"
+        ]
+      },
+      {
+        "index": 47,
+        "id": 48,
+        "tuple": [
+          "Italy",
+          "Worsen",
+          "47"
+        ]
+      },
+      {
+        "index": 48,
+        "id": 49,
+        "tuple": [
+          "Lebanon",
+          "Improve",
+          "22"
+        ]
+      },
+      {
+        "index": 49,
+        "id": 50,
+        "tuple": [
+          "Lebanon",
+          "Remain the same",
+          "29"
+        ]
+      },
+      {
+        "index": 50,
+        "id": 51,
+        "tuple": [
+          "Lebanon",
+          "Worsen",
+          "45"
+        ]
+      },
+      {
+        "index": 51,
+        "id": 52,
+        "tuple": [
+          "Poland",
+          "Improve",
+          "18"
+        ]
+      },
+      {
+        "index": 52,
+        "id": 53,
+        "tuple": [
+          "Poland",
+          "Remain the same",
+          "45"
+        ]
+      },
+      {
+        "index": 53,
+        "id": 54,
+        "tuple": [
+          "Poland",
+          "Worsen",
+          "33"
+        ]
+      },
+      {
+        "index": 54,
+        "id": 55,
+        "tuple": [
+          "Japan",
+          "Improve",
+          "16"
+        ]
+      },
+      {
+        "index": 55,
+        "id": 56,
+        "tuple": [
+          "Japan",
+          "Remain the same",
+          "49"
+        ]
+      },
+      {
+        "index": 56,
+        "id": 57,
+        "tuple": [
+          "Japan",
+          "Worsen",
+          "33"
+        ]
+      },
+      {
+        "index": 57,
+        "id": 58,
+        "tuple": [
+          "Czech Rep.",
+          "Improve",
+          "13"
+        ]
+      },
+      {
+        "index": 58,
+        "id": 59,
+        "tuple": [
+          "Czech Rep.",
+          "Remain the same",
+          "27"
+        ]
+      },
+      {
+        "index": 59,
+        "id": 60,
+        "tuple": [
+          "Czech Rep.",
+          "Worsen",
+          "60"
+        ]
+      },
+      {
+        "index": 60,
+        "id": 61,
+        "tuple": [
+          "Greece",
+          "Improve",
+          "9"
+        ]
+      },
+      {
+        "index": 61,
+        "id": 62,
+        "tuple": [
+          "Greece",
+          "Remain the same",
+          "10"
+        ]
+      },
+      {
+        "index": 62,
+        "id": 63,
+        "tuple": [
+          "Greece",
+          "Worsen",
+          "81"
+        ]
+      }
+    ],
+    "text": [
+      {
+        "category": "title",
+        "text": "Over Next 12 Months, Economy Will..."
+      }
+    ]
+  }
+}

@@ -1,0 +1,1129 @@
+{
+  "visual_references": {
+    "references": [
+      {
+        "mark_id": 1,
+        "tuple_ids": [
+          1
+        ]
+      },
+      {
+        "mark_id": 2,
+        "tuple_ids": [
+          2
+        ]
+      },
+      {
+        "mark_id": 3,
+        "tuple_ids": [
+          3
+        ]
+      },
+      {
+        "mark_id": 4,
+        "tuple_ids": [
+          4
+        ]
+      },
+      {
+        "mark_id": 5,
+        "tuple_ids": [
+          5
+        ]
+      },
+      {
+        "mark_id": 6,
+        "tuple_ids": [
+          6
+        ]
+      },
+      {
+        "mark_id": 7,
+        "tuple_ids": [
+          7
+        ]
+      },
+      {
+        "mark_id": 8,
+        "tuple_ids": [
+          8
+        ]
+      },
+      {
+        "mark_id": 9,
+        "tuple_ids": [
+          9
+        ]
+      },
+      {
+        "mark_id": 10,
+        "tuple_ids": [
+          10
+        ]
+      },
+      {
+        "mark_id": 11,
+        "tuple_ids": [
+          11
+        ]
+      },
+      {
+        "mark_id": 12,
+        "tuple_ids": [
+          12
+        ]
+      }
+    ]
+  },
+  "text": "<h2><b><font color=\"midnightblue\">Boomers Still Cautious About Stocks</font></b></h2> <i>February 19, 2013</i> <p id=\"theTextParagraph\" class=\"ng-binding\"> Mutual fund investors poured some $17 billion into domestic equity funds in January, reversing 2012’s trend, according to the Investment Company Institute (ICI), an industry trade group. Fund investors surveyed by ICI still remain less willing than they were prior to the big bust to take what the survey questionnaire calls “above-average or substantial risks” in their investments. This trend cuts across most age groups, from 40-somethings to retirees. The exception is the under-35 crowd: 26 percent identified themselves as being in these higher-risk categories, slightly more than the 24 percent who did back in 2007. But boomers nearing retirement and current retirees burned in the 2008 market collapse keep paring back their risk profiles. Older investors are moving “from capital appreciation to capital preservation,” said Shelly Antoniewicz, an ICI senior economist. Even 35-49 year olds, who still have two to three decades of investing ahead of them, are not quite back to where they were earlier in the decade when they were more willing to take risks in the stock market.</p>",
+  "marks": {
+    "marks": [
+      {
+        "b": 0.37,
+        "orientation": 1,
+        "g": 0.78,
+        "top": 104.5,
+        "height": 320,
+        "width": 34,
+        "r": 0.6,
+        "id": 1,
+        "left": 67.5
+      },
+      {
+        "b": 0.37,
+        "orientation": 1,
+        "g": 0.78,
+        "top": 136.5,
+        "height": 288,
+        "width": 34,
+        "r": 0.6,
+        "id": 2,
+        "left": 256.5
+      },
+      {
+        "b": 0.23,
+        "orientation": 1,
+        "g": 0.82,
+        "top": 147.5,
+        "height": 277,
+        "width": 32,
+        "r": 0.83,
+        "id": 3,
+        "left": 163.5
+      },
+      {
+        "b": 0.62,
+        "orientation": 1,
+        "g": 0.44,
+        "top": 147.5,
+        "height": 277,
+        "width": 34,
+        "r": 0.19,
+        "id": 4,
+        "left": 303.5
+      },
+      {
+        "b": 0.23,
+        "orientation": 1,
+        "g": 0.82,
+        "top": 158.5,
+        "height": 266,
+        "width": 32,
+        "r": 0.83,
+        "id": 5,
+        "left": 352.5
+      },
+      {
+        "b": 0.62,
+        "orientation": 1,
+        "g": 0.44,
+        "top": 168.5,
+        "height": 256,
+        "width": 32,
+        "r": 0.19,
+        "id": 6,
+        "left": 116.5
+      },
+      {
+        "b": 0.37,
+        "orientation": 1,
+        "g": 0.78,
+        "top": 177.5,
+        "height": 247,
+        "width": 34,
+        "r": 0.6,
+        "id": 7,
+        "left": 445.5
+      },
+      {
+        "b": 0.62,
+        "orientation": 1,
+        "g": 0.44,
+        "top": 210.5,
+        "height": 214,
+        "width": 34,
+        "r": 0.19,
+        "id": 8,
+        "left": 492.5
+      },
+      {
+        "b": 0.23,
+        "orientation": 1,
+        "g": 0.82,
+        "top": 221.5,
+        "height": 203,
+        "width": 32,
+        "r": 0.83,
+        "id": 9,
+        "left": 541.5
+      },
+      {
+        "b": 0.37,
+        "orientation": 1,
+        "g": 0.78,
+        "top": 327.5,
+        "height": 97,
+        "width": 35,
+        "r": 0.6,
+        "id": 10,
+        "left": 634.5
+      },
+      {
+        "b": 0.62,
+        "orientation": 1,
+        "g": 0.44,
+        "top": 338.5,
+        "height": 86,
+        "width": 34,
+        "r": 0.19,
+        "id": 11,
+        "left": 681.5
+      },
+      {
+        "b": 0.23,
+        "orientation": 1,
+        "g": 0.82,
+        "top": 348.5,
+        "height": 76,
+        "width": 32,
+        "r": 0.83,
+        "id": 12,
+        "left": 730.5
+      },
+      {
+        "height": 67,
+        "top": 85,
+        "left": 468,
+        "id": "legend",
+        "width": 76
+      }
+    ]
+  },
+  "chart": "corpus/blogs/squaredaway/boomers-still-cautious/boomers-still-cautious-chart.png",
+  "references": [
+    {
+      "worker_id": "combined",
+      "type": "combined",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Under 35",
+              24.05,
+              "2007"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 570,
+              "end": 624
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Under 35",
+              26.02,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 479,
+              "end": 568
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "35-49",
+              27.05,
+              "2001"
+            ],
+            [
+              "35-49",
+              26.02,
+              "2007"
+            ],
+            [
+              "35-49",
+              24.98,
+              "2012"
+            ],
+            [
+              "50-64",
+              23.2,
+              "2001"
+            ],
+            [
+              "50-64",
+              20.1,
+              "2007"
+            ],
+            [
+              "50-64",
+              19.07,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 188,
+              "end": 202
+            },
+            {
+              "start": 424,
+              "end": 455
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Under 35",
+              30.06,
+              "2001"
+            ],
+            [
+              "Under 35",
+              26.02,
+              "2012"
+            ],
+            [
+              "Under 35",
+              24.05,
+              "2007"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 188,
+              "end": 202
+            },
+            {
+              "start": 462,
+              "end": 493
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Under 35",
+              26.02,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 495,
+              "end": 506
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": "gold",
+      "type": "gold",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Under 35",
+              26.02,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 479,
+              "end": 487
+            },
+            {
+              "start": 495,
+              "end": 497
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Under 35",
+              24.05,
+              "2007"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 479,
+              "end": 487
+            },
+            {
+              "start": 593,
+              "end": 595
+            },
+            {
+              "start": 620,
+              "end": 624
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "65+",
+              9.11,
+              "2001"
+            ],
+            [
+              "65+",
+              8.08,
+              "2007"
+            ],
+            [
+              "65+",
+              7.14,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 447,
+              "end": 455
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "35-49",
+              27.05,
+              "2001"
+            ],
+            [
+              "35-49",
+              26.02,
+              "2007"
+            ],
+            [
+              "35-49",
+              24.98,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 430,
+              "end": 443
+            }
+          ]
+        },
+
+
+        {
+          "tuples": [
+            [
+              "65+",
+              9.11,
+              "2001"
+            ],
+            [
+              "65+",
+              8.08,
+              "2007"
+            ],
+            [
+              "65+",
+              7.14,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 660,
+              "end": 676
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "35-49",
+              27.05,
+              "2001"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 887,
+              "end": 902
+            },
+            {
+              "start": 1006,
+              "end": 1027
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "50-64",
+              23.2,
+              "2001"
+            ],
+            [
+              "50-64",
+              20.1,
+              "2007"
+            ],
+            [
+              "50-64",
+              19.07,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 630,
+              "end": 656
+            }
+          ]
+        }
+
+
+      ]
+    },
+    {
+      "worker_id": 1,
+      "type": "passed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Under 35",
+              26.02,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 495,
+              "end": 506
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Under 35",
+              24.05,
+              "2007"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 593,
+              "end": 603
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 2,
+      "type": "passed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Under 35",
+              24.05,
+              "2007"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 570,
+              "end": 624
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Under 35",
+              26.02,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 495,
+              "end": 569
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 3,
+      "type": "passed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Under 35",
+              26.02,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 479,
+              "end": 568
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Under 35",
+              24.05,
+              "2007"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 593,
+              "end": 625
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 4,
+      "type": "passed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "35-49",
+              27.05,
+              "2001"
+            ],
+            [
+              "35-49",
+              26.02,
+              "2007"
+            ],
+            [
+              "35-49",
+              24.98,
+              "2012"
+            ],
+            [
+              "50-64",
+              23.2,
+              "2001"
+            ],
+            [
+              "50-64",
+              20.1,
+              "2007"
+            ],
+            [
+              "50-64",
+              19.07,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 188,
+              "end": 202
+            },
+            {
+              "start": 424,
+              "end": 455
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Under 35",
+              30.06,
+              "2001"
+            ],
+            [
+              "Under 35",
+              26.02,
+              "2012"
+            ],
+            [
+              "Under 35",
+              24.05,
+              "2007"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 188,
+              "end": 202
+            },
+            {
+              "start": 462,
+              "end": 493
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 5,
+      "type": "failed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Under 35",
+              26.02,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 479,
+              "end": 568
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Under 35",
+              24.05,
+              "2007"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 592,
+              "end": 624
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "35-49",
+              24.98,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 425,
+              "end": 456
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 6,
+      "type": "failed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Under 35",
+              26.02,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 506,
+              "end": 568
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Under 35",
+              24.05,
+              "2007"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 506,
+              "end": 568
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 7,
+      "type": "failed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Under 35",
+              26.02,
+              "2012"
+            ],
+            [
+              "Under 35",
+              24.05,
+              "2007"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 458,
+              "end": 624
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 8,
+      "type": "failed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Under 35",
+              26.02,
+              "2012"
+            ],
+            [
+              "35-49",
+              24.98,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 619,
+              "end": 625
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Under 35",
+              30.06,
+              "2001"
+            ],
+            [
+              "Under 35",
+              26.02,
+              "2012"
+            ],
+            [
+              "Under 35",
+              24.05,
+              "2007"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 495,
+              "end": 516
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 9,
+      "type": "failed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Under 35",
+              24.05,
+              "2007"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 593,
+              "end": 625
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 10,
+      "type": "failed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "35-49",
+              27.05,
+              "2001"
+            ],
+            [
+              "35-49",
+              26.02,
+              "2007"
+            ],
+            [
+              "35-49",
+              24.98,
+              "2012"
+            ],
+            [
+              "50-64",
+              23.2,
+              "2001"
+            ],
+            [
+              "50-64",
+              20.1,
+              "2007"
+            ],
+            [
+              "50-64",
+              19.07,
+              "2012"
+            ],
+            [
+              "65+",
+              9.11,
+              "2001"
+            ],
+            [
+              "65+",
+              8.08,
+              "2007"
+            ],
+            [
+              "65+",
+              7.14,
+              "2012"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 385,
+              "end": 456
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Under 35",
+              30.06,
+              "2001"
+            ],
+            [
+              "Under 35",
+              26.02,
+              "2012"
+            ],
+            [
+              "Under 35",
+              24.05,
+              "2007"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 474,
+              "end": 568
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Under 35",
+              30.06,
+              "2001"
+            ],
+            [
+              "Under 35",
+              24.05,
+              "2007"
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 569,
+              "end": 625
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sentences": [
+    {
+      "start": 0,
+      "end": 196
+    },
+    {
+      "start": 197,
+      "end": 268
+    },
+    {
+      "start": 270,
+      "end": 437
+    }
+  ],
+  "datatable": {
+    "headers": [
+      "Age",
+      "_percent",
+      "_year"
+    ],
+    "data": [
+      {
+        "index": 0,
+        "id": 1,
+        "tuple": [
+          "Under 35",
+          30.06,
+          "2001"
+        ]
+      },
+      {
+        "index": 1,
+        "id": 2,
+        "tuple": [
+          "35-49",
+          27.05,
+          "2001"
+        ]
+      },
+      {
+        "index": 2,
+        "id": 3,
+        "tuple": [
+          "Under 35",
+          26.02,
+          "2012"
+        ]
+      },
+      {
+        "index": 3,
+        "id": 4,
+        "tuple": [
+          "35-49",
+          26.02,
+          "2007"
+        ]
+      },
+      {
+        "index": 4,
+        "id": 5,
+        "tuple": [
+          "35-49",
+          24.98,
+          "2012"
+        ]
+      },
+      {
+        "index": 5,
+        "id": 6,
+        "tuple": [
+          "Under 35",
+          24.05,
+          "2007"
+        ]
+      },
+      {
+        "index": 6,
+        "id": 7,
+        "tuple": [
+          "50-64",
+          23.2,
+          "2001"
+        ]
+      },
+      {
+        "index": 7,
+        "id": 8,
+        "tuple": [
+          "50-64",
+          20.1,
+          "2007"
+        ]
+      },
+      {
+        "index": 8,
+        "id": 9,
+        "tuple": [
+          "50-64",
+          19.07,
+          "2012"
+        ]
+      },
+      {
+        "index": 9,
+        "id": 10,
+        "tuple": [
+          "65+",
+          9.11,
+          "2001"
+        ]
+      },
+      {
+        "index": 10,
+        "id": 11,
+        "tuple": [
+          "65+",
+          8.08,
+          "2007"
+        ]
+      },
+      {
+        "index": 11,
+        "id": 12,
+        "tuple": [
+          "65+",
+          7.14,
+          "2012"
+        ]
+      }
+    ]
+  }
+}

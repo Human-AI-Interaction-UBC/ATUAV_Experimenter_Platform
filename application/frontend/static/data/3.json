@@ -1,0 +1,1145 @@
+{
+  "visual_references": {
+    "references": [
+      {
+        "mark_id": 1,
+        "tuple_ids": [
+          1
+        ]
+      },
+      {
+        "mark_id": 3,
+        "tuple_ids": [
+          2
+        ]
+      },
+      {
+        "mark_id": 4,
+        "tuple_ids": [
+          3
+        ]
+      },
+      {
+        "mark_id": 6,
+        "tuple_ids": [
+          4
+        ]
+      },
+      {
+        "mark_id": 8,
+        "tuple_ids": [
+          5
+        ]
+      },
+      {
+        "mark_id": 9,
+        "tuple_ids": [
+          6
+        ]
+      },
+      {
+        "mark_id": 10,
+        "tuple_ids": [
+          7
+        ]
+      },
+      {
+        "mark_id": 11,
+        "tuple_ids": [
+          8
+        ]
+      },
+      {
+        "mark_id": 13,
+        "tuple_ids": [
+          9
+        ]
+      },
+      {
+        "mark_id": 14,
+        "tuple_ids": [
+          10
+        ]
+      },
+      {
+        "mark_id": 15,
+        "tuple_ids": [
+          11
+        ]
+      },
+      {
+        "mark_id": 17,
+        "tuple_ids": [
+          12
+        ]
+      },
+      {
+        "mark_id": 18,
+        "tuple_ids": [
+          13
+        ]
+      },
+      {
+        "mark_id": 19,
+        "tuple_ids": [
+          14
+        ]
+      },
+      {
+        "mark_id": 20,
+        "tuple_ids": [
+          15
+        ]
+      },
+      {
+        "mark_id": 21,
+        "tuple_ids": [
+          16
+        ]
+      },
+      {
+        "mark_id": 22,
+        "tuple_ids": [
+          17
+        ]
+      },
+      {
+        "mark_id": 23,
+        "tuple_ids": [
+          18
+        ]
+      },
+      {
+        "mark_id": 24,
+        "tuple_ids": [
+          19
+        ]
+      },
+      {
+        "mark_id": 25,
+        "tuple_ids": [
+          20
+        ]
+      },
+      {
+        "mark_id": 26,
+        "tuple_ids": [
+          21
+        ]
+      },
+      {
+        "mark_id": 27,
+        "tuple_ids": [
+          22
+        ]
+      },
+      {
+        "mark_id": 28,
+        "tuple_ids": [
+          23
+        ]
+      },
+      {
+        "mark_id": 30,
+        "tuple_ids": [
+          24
+        ]
+      }
+    ]
+  },
+  "text": "<h2><b><font color=\"midnightblue\">Religion in Prisons – <br>A 50-State Survey of Prison Chaplains</font></b></h2> <i>March 22, 2012</i><p id=\"theTextParagraph\" class=\"ng-binding\"> The Pew Forum survey asked chaplains to rate the prevalence of extremist views among inmates in each of 12 religious groups. A majority of respondents to this question say that religious extremism is either very common (22%) or somewhat common (36%) among Muslim inmates (including followers of the Nation of Islam and the Moorish Science Temple of America). Religious extremism is perceived as less prevalent among other groups of inmates. About a quarter (24%) of chaplains responding to this question say that religious extremism is very or somewhat common among Protestant inmates; 76% say extremism is not too or not at all common among Protestants in the prisons where they work. About a fifth of chaplains say extremism is very or somewhat common among inmates practicing Native American spirituality (19%) and a host of “other non-Christian religions” (21%), such as the Rastafari movement, Santeria, Voodoo and others. In addition, 17% of chaplains answering the question say that extremism is very or somewhat common among Jewish inmates, and 14% say this about inmates with no religious preference. Fewer than one-in-ten of the chaplains answering say that religious extremism is very or somewhat common among inmates of other religious groups. </p>",
+  "marks": {
+    "marks": [
+      {
+        "width": 157,
+        "top": 150,
+        "left": 180,
+        "id": 1,
+        "height": 22
+      },
+      {
+        "width": 119,
+        "top": 150,
+        "left": 337,
+        "id": 3,
+        "height": 22
+      },
+      {
+        "width": 108,
+        "top": 183,
+        "left": 179,
+        "id": 4,
+        "height": 22
+      },
+      {
+        "width": 171,
+        "top": 183,
+        "left": 286,
+        "id": 6,
+        "height": 22
+      },
+      {
+        "width": 66,
+        "top": 217,
+        "left": 180,
+        "id": 8,
+        "height": 20
+      },
+      {
+        "width": 211,
+        "top": 217,
+        "left": 246,
+        "id": 9,
+        "height": 21
+      },
+      {
+        "width": 57,
+        "top": 250,
+        "left": 179,
+        "id": 10,
+        "height": 21
+      },
+      {
+        "width": 221,
+        "top": 250,
+        "left": 236,
+        "id": 11,
+        "height": 21
+      },
+      {
+        "width": 53,
+        "top": 283,
+        "left": 179,
+        "id": 13,
+        "height": 20
+      },
+      {
+        "width": 225,
+        "top": 283,
+        "left": 233,
+        "id": 14,
+        "height": 21
+      },
+      {
+        "width": 47,
+        "top": 315,
+        "left": 179,
+        "id": 15,
+        "height": 22
+      },
+      {
+        "width": 231,
+        "top": 315,
+        "left": 226,
+        "id": 17,
+        "height": 22
+      },
+      {
+        "width": 37,
+        "top": 349,
+        "left": 180,
+        "id": 18,
+        "height": 22
+      },
+      {
+        "width": 240,
+        "top": 348,
+        "left": 217,
+        "id": 19,
+        "height": 23
+      },
+      {
+        "width": 22,
+        "top": 381,
+        "left": 179,
+        "id": 20,
+        "height": 22
+      },
+      {
+        "width": 256,
+        "top": 381,
+        "left": 201,
+        "id": 21,
+        "height": 22
+      },
+      {
+        "width": 23,
+        "top": 414,
+        "left": 178,
+        "id": 22,
+        "height": 23
+      },
+      {
+        "width": 256,
+        "top": 414,
+        "left": 201,
+        "id": 23,
+        "height": 23
+      },
+      {
+        "width": 17,
+        "top": 449,
+        "left": 179,
+        "id": 24,
+        "height": 21
+      },
+      {
+        "width": 261,
+        "top": 449,
+        "left": 196,
+        "id": 25,
+        "height": 21
+      },
+      {
+        "width": 18,
+        "top": 481,
+        "left": 180,
+        "id": 26,
+        "height": 22
+      },
+      {
+        "width": 259,
+        "top": 482,
+        "left": 199,
+        "id": 27,
+        "height": 21
+      },
+      {
+        "width": 16,
+        "top": 514,
+        "left": 179,
+        "id": 28,
+        "height": 22
+      },
+      {
+        "width": 0,
+        "top": 537,
+        "left": 458,
+        "id": 29,
+        "height": 0
+      },
+      {
+        "width": 261,
+        "top": 514,
+        "left": 196,
+        "id": 30,
+        "height": 22
+      },
+      {
+        "width": 200,
+        "top": 91,
+        "left": 165,
+        "id": "legend",
+        "height": 45
+      }
+    ]
+  },
+  "chart": "corpus/reports/pew/ReligionInPrisons/CommonExtremism/chaplains-exec-4.png",
+  "references": [
+    {
+      "worker_id": "combined",
+      "type": "combined",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Not too/not at all common",
+              76
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 586,
+              "end": 654
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Very/somewhat common",
+              24
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 458,
+              "end": 585
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": "gold",
+      "type": "gold",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Not too/not at all common",
+              76
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 587,
+              "end": 590
+            },
+            {
+              "start": 608,
+              "end": 615
+            },
+            {
+              "start": 619,
+              "end": 636
+            },
+            {
+              "start": 643,
+              "end": 654
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Very/somewhat common",
+              24
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 459,
+              "end": 462
+            },
+            {
+              "start": 537,
+              "end": 541
+            },
+            {
+              "start": 545,
+              "end": 560
+            },
+            {
+              "start": 567,
+              "end": 577
+            }
+          ]
+        },
+        {"tuples":[["Jews","Very/somewhat common",17]],"phrases":[{"start":942,"end":945},{"start":1004,"end":1008},{"start":1012,"end":1027},{"start":1034,"end":1040}]},{"tuples":[["Unaffiliated","Very/somewhat common",14]],"phrases":[{"start":1004,"end":1008},{"start":1012,"end":1027},{"start":1054,"end":1057},{"start":1062,"end":1066},{"start":1086,"end":1109}]},{"tuples":[["Catholics","Very/somewhat common",8],["Mormons","Very/somewhat common",8],["Orthodox Christian","Very/somewhat common",6],["Buddhists","Very/somewhat common",7],["Hindus","Very/somewhat common",6]],"phrases":[{"start":1111,"end":1132},{"start":1192,"end":1196},{"start":1200,"end":1215},{"start":1233,"end":1255}]},
+        {
+          "tuples": [
+            [
+              "Native Am. spirituality",
+              "Very/somewhat common",
+              19
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 731,
+              "end": 735
+            },
+            {
+              "start": 739,
+              "end": 754
+            },
+            {
+              "start": 780,
+              "end": 808
+            },
+            {
+              "start": 810,
+              "end": 813
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Other non-Christian",
+              "Very/somewhat common",
+              21
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 731,
+              "end": 735
+            },
+            {
+              "start": 739,
+              "end": 754
+            },
+            {
+              "start": 830,
+              "end": 859
+            },
+            {
+              "start": 862,
+              "end": 865
+            }
+          ]
+        }
+
+      ]
+    },
+    {
+      "worker_id": 1,
+      "type": "passed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Very/somewhat common",
+              24
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 458,
+              "end": 585
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Not too/not at all common",
+              76
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 586,
+              "end": 654
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 2,
+      "type": "passed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Very/somewhat common",
+              24
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 458,
+              "end": 585
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Not too/not at all common",
+              76
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 587,
+              "end": 670
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 3,
+      "type": "passed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Very/somewhat common",
+              24
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 458,
+              "end": 463
+            },
+            {
+              "start": 514,
+              "end": 560
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Not too/not at all common",
+              76
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 586,
+              "end": 591
+            },
+            {
+              "start": 595,
+              "end": 654
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 4,
+      "type": "passed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Very/somewhat common",
+              24
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 450,
+              "end": 585
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Not too/not at all common",
+              76
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 587,
+              "end": 655
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 5,
+      "type": "passed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Very/somewhat common",
+              24
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 448,
+              "end": 586
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Not too/not at all common",
+              76
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 587,
+              "end": 686
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 6,
+      "type": "passed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Very/somewhat common",
+              24
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 457,
+              "end": 464
+            },
+            {
+              "start": 536,
+              "end": 567
+            },
+            {
+              "start": 567,
+              "end": 585
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Not too/not at all common",
+              76
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 587,
+              "end": 654
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 7,
+      "type": "failed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Very/somewhat common",
+              24
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 442,
+              "end": 585
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Not too/not at all common",
+              76
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 587,
+              "end": 685
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 8,
+      "type": "failed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Very/somewhat common",
+              24
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 458,
+              "end": 585
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Not too/not at all common",
+              76
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 587,
+              "end": 686
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 9,
+      "type": "failed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Very/somewhat common",
+              24
+            ],
+            [
+              "Protestants",
+              "Not too/not at all common",
+              76
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 458,
+              "end": 463
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Muslims",
+              "Very/somewhat common",
+              57
+            ],
+            [
+              "Muslims",
+              "Not too/not at all common",
+              43
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 360,
+              "end": 370
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Very/somewhat common",
+              24
+            ],
+            [
+              "Protestants",
+              "Not too/not at all common",
+              76
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 587,
+              "end": 590
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "worker_id": 10,
+      "type": "failed",
+      "reference": [
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Very/somewhat common",
+              24
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 458,
+              "end": 585
+            }
+          ]
+        },
+        {
+          "tuples": [
+            [
+              "Protestants",
+              "Not too/not at all common",
+              76
+            ]
+          ],
+          "phrases": [
+            {
+              "start": 587,
+              "end": 654
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+
+  "sentences": [
+    {
+      "start": 0,
+      "end": 81
+    },
+    {
+      "start": 82,
+      "end": 326
+    }
+  ],
+  "datatable": {
+    "headers": [
+      "_Religion",
+      "_repsonse",
+      "_percentage"
+    ],
+    "data": [
+      {
+        "index": 0,
+        "id": 1,
+        "tuple": [
+          "Muslims",
+          "Very/somewhat common",
+          57
+        ]
+      },
+      {
+        "index": 1,
+        "id": 2,
+        "tuple": [
+          "Muslims",
+          "Not too/not at all common",
+          43
+        ]
+      },
+      {
+        "index": 2,
+        "id": 3,
+        "tuple": [
+          "Pagan/earth-based",
+          "Very/somewhat common",
+          39
+        ]
+      },
+      {
+        "index": 3,
+        "id": 4,
+        "tuple": [
+          "Pagan/earth-based",
+          "Not too/not at all common",
+          61
+        ]
+      },
+      {
+        "index": 4,
+        "id": 5,
+        "tuple": [
+          "Protestants",
+          "Very/somewhat common",
+          24
+        ]
+      },
+      {
+        "index": 5,
+        "id": 6,
+        "tuple": [
+          "Protestants",
+          "Not too/not at all common",
+          76
+        ]
+      },
+      {
+        "index": 6,
+        "id": 7,
+        "tuple": [
+          "Other non-Christian",
+          "Very/somewhat common",
+          21
+        ]
+      },
+      {
+        "index": 7,
+        "id": 8,
+        "tuple": [
+          "Other non-Christian",
+          "Not too/not at all common",
+          79
+        ]
+      },
+      {
+        "index": 8,
+        "id": 9,
+        "tuple": [
+          "Native Am. spirituality",
+          "Very/somewhat common",
+          19
+        ]
+      },
+      {
+        "index": 9,
+        "id": 10,
+        "tuple": [
+          "Native Am. spirituality",
+          "Not too/not at all common",
+          81
+        ]
+      },
+      {
+        "index": 10,
+        "id": 11,
+        "tuple": [
+          "Jews",
+          "Very/somewhat common",
+          17
+        ]
+      },
+      {
+        "index": 11,
+        "id": 12,
+        "tuple": [
+          "Jews",
+          "Not too/not at all common",
+          83
+        ]
+      },
+      {
+        "index": 12,
+        "id": 13,
+        "tuple": [
+          "Unaffiliated",
+          "Very/somewhat common",
+          14
+        ]
+      },
+      {
+        "index": 13,
+        "id": 14,
+        "tuple": [
+          "Unaffiliated",
+          "Not too/not at all common",
+          86
+        ]
+      },
+      {
+        "index": 14,
+        "id": 15,
+        "tuple": [
+          "Catholics",
+          "Very/somewhat common",
+          8
+        ]
+      },
+      {
+        "index": 15,
+        "id": 16,
+        "tuple": [
+          "Catholics",
+          "Not too/not at all common",
+          92
+        ]
+      },
+      {
+        "index": 16,
+        "id": 17,
+        "tuple": [
+          "Mormons",
+          "Very/somewhat common",
+          8
+        ]
+      },
+      {
+        "index": 17,
+        "id": 18,
+        "tuple": [
+          "Mormons",
+          "Not too/not at all common",
+          92
+        ]
+      },
+      {
+        "index": 18,
+        "id": 19,
+        "tuple": [
+          "Orthodox Christian",
+          "Very/somewhat common",
+          6
+        ]
+      },
+      {
+        "index": 19,
+        "id": 20,
+        "tuple": [
+          "Orthodox Christian",
+          "Not too/not at all common",
+          94
+        ]
+      },
+      {
+        "index": 20,
+        "id": 21,
+        "tuple": [
+          "Buddhists",
+          "Very/somewhat common",
+          7
+        ]
+      },
+      {
+        "index": 21,
+        "id": 22,
+        "tuple": [
+          "Buddhists",
+          "Not too/not at all common",
+          93
+        ]
+      },
+      {
+        "index": 22,
+        "id": 23,
+        "tuple": [
+          "Hindus",
+          "Very/somewhat common",
+          6
+        ]
+      },
+      {
+        "index": 23,
+        "id": 24,
+        "tuple": [
+          "Hindus",
+          "Not too/not at all common",
+          94
+        ]
+      }
+    ],
+    "text": [
+      {
+        "category": "title",
+        "text": "How Common Is Religious Extremism?"
+      },
+      {
+        "category": "title",
+        "text": "% rating religious extremism among inmates of each religious group as ..."
+      }
+    ]
+  }
+}

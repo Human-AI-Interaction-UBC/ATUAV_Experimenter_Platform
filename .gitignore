@@ -1,0 +1,7 @@
+.idea/*
+*.pyc
+
+mOnlineFixations.csv
+*.ipynb
+*.ipynb_checkpoints
+/static/data_updated

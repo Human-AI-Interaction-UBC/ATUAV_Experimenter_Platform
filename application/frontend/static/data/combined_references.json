@@ -1,0 +1,22 @@
+  [
+    {"mmd_id": 18,
+    "merged_refs":
+    [
+    {  "ref_id": "A", 
+      "original_ref_index":[0,1,2],
+      "start": 386,
+      "end": 624
+    },
+    {  "ref_id": "B", 
+      "original_ref_index":[4,6],
+      "start": 626,
+      "end": 749    
+	},
+    {  "ref_id": "C", 
+      "original_ref_index":[5],
+      "start": 881,
+      "end": 749	
+	  }
+  ]
+    }  
+  ]

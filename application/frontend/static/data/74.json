@@ -1,0 +1,306 @@
+{
+  "visual_references": {
+    "references": [
+      {
+        "mark_id": 1,
+        "tuple_ids": [
+          1
+        ]
+      },
+      {
+        "mark_id": 2,
+        "tuple_ids": [
+          2
+        ]
+      },
+      {
+        "mark_id": 3,
+        "tuple_ids": [
+          3
+        ]
+      },
+      {
+        "mark_id": 4,
+        "tuple_ids": [
+          4
+        ]
+      },
+      {
+        "mark_id": 5,
+        "tuple_ids": [
+          5
+        ]
+      },
+      {
+        "mark_id": 6,
+        "tuple_ids": [
+          6
+        ]
+      },
+      {
+        "mark_id": 7,
+        "tuple_ids": [
+          7
+        ]
+      },
+      {
+        "mark_id": 8,
+        "tuple_ids": [
+          8
+        ]
+      },
+      {
+        "mark_id": 9,
+        "tuple_ids": [
+          9
+        ]
+      },
+      {
+        "mark_id": 10,
+        "tuple_ids": [
+          10
+        ]
+      },
+      {
+        "mark_id": 11,
+        "tuple_ids": [
+          11
+        ]
+      }
+    ]
+  },
+  "text": "<h2><b><font color=\"midnightblue\">Syrian refugees: how many are there and where are they?</h2></b></font><i>March 6, 2013</i><p id=\"theTextParagraph\" class=\"ng-binding\">The humanitarian fallout of the conflict in Syria reaches new proportions as the number of estimated refugees reaches one million. Who's Helping? So far, over $145 million has been pledged to alleviate the crisis in 2013 - less than a third of the $494 million which the UN says is needed. Contributing 46%, the United States is by far the biggest donor, followed by the European Commission (21%) and Japan (18%).</p>",
+  "marks": {
+    "marks": [
+      {
+        "b": 0.14,
+        "orientation": 2,
+        "g": 0.11,
+        "top": 90.5,
+        "height": 21,
+        "width": 181,
+        "r": 0.88,
+        "id": 1,
+        "left": 147.5
+      },
+      {
+        "b": 0.04,
+        "orientation": 2,
+        "g": 0,
+        "top": 117.5,
+        "height": 21,
+        "width": 82,
+        "r": 0.74,
+        "id": 2,
+        "left": 147.5
+      },
+      {
+        "b": 0.14,
+        "orientation": 2,
+        "g": 0.11,
+        "top": 145.5,
+        "height": 21,
+        "width": 71,
+        "r": 0.88,
+        "id": 3,
+        "left": 147.5
+      },
+      {
+        "b": 0.13,
+        "orientation": 2,
+        "g": 0.11,
+        "top": 172.5,
+        "height": 21,
+        "width": 20,
+        "r": 0.87,
+        "id": 4,
+        "left": 147.5
+      },
+      {
+        "b": 0.13,
+        "orientation": 2,
+        "g": 0.1,
+        "top": 200.5,
+        "height": 21,
+        "width": 16,
+        "r": 0.87,
+        "id": 5,
+        "left": 147.5
+      },
+      {
+        "b": 0.12,
+        "orientation": 2,
+        "g": 0.09,
+        "top": 227.5,
+        "height": 21,
+        "width": 8,
+        "r": 0.86,
+        "id": 6,
+        "left": 147.5
+      },
+      {
+        "b": 0.11,
+        "orientation": 2,
+        "g": 0.09,
+        "top": 255.5,
+        "height": 21,
+        "width": 6,
+        "r": 0.85,
+        "id": 7,
+        "left": 147.5
+      },
+      {
+        "b": 0.11,
+        "orientation": 2,
+        "g": 0.08,
+        "top": 282.5,
+        "height": 21,
+        "width": 5,
+        "r": 0.84,
+        "id": 8,
+        "left": 147.5
+      },
+      {
+        "b": 0.11,
+        "orientation": 2,
+        "g": 0.08,
+        "top": 310.5,
+        "height": 21,
+        "width": 5,
+        "r": 0.84,
+        "id": 9,
+        "left": 147.5
+      },
+      {
+        "b": 0.11,
+        "orientation": 2,
+        "g": 0.08,
+        "top": 337.5,
+        "height": 21,
+        "width": 5,
+        "r": 0.84,
+        "id": 10,
+        "left": 147.5
+      },
+      {
+        "b": 0.1,
+        "orientation": 2,
+        "g": 0.07,
+        "top": 365.5,
+        "height": 21,
+        "width": 4,
+        "r": 0.83,
+        "id": 11,
+        "left": 147.5
+      }
+    ]
+  },
+  "chart": "corpus/blogs/datablog/syrian_refugees/money_1/money_1.png",
+  "references":
+  [{"worker_id":"combined","type":"combined","reference":[{"tuples":[["Japan","$26,000,000"]],"phrases":[{"start":401,"end":412}]},{"tuples":[["European Commission","$30,033,922"]],"phrases":[{"start":371,"end":394}]},{"tuples":[["US","$67,030,000"]],"phrases":[{"start":308,"end":353}]},{"tuples":[["US","$67,030,000"]],"phrases":[{"start":290,"end":325}]}]},{"worker_id":"gold","type":"gold","reference":[{"tuples":[["European Commission","$30,033,922"]],"phrases":[{"start":371,"end":390},{"start":392,"end":395}]},{"tuples":[["Japan","$26,000,000"]],"phrases":[{"start":401,"end":406},{"start":408,"end":411}]},{"tuples":[["US","$67,030,000"]],"phrases":[{"start":303,"end":306},{"start":312,"end":325}]}]},{"worker_id":1,"type":"passed","reference":[{"tuples":[["US","$67,030,000"]],"phrases":[{"start":308,"end":353}]},{"tuples":[["European Commission","$30,033,922"],["Japan","$26,000,000"]],"phrases":[{"start":355,"end":412}]}]},{"worker_id":2,"type":"passed","reference":[{"tuples":[["US","$67,030,000"]],"phrases":[{"start":290,"end":353}]},{"tuples":[["European Commission","$30,033,922"]],"phrases":[{"start":370,"end":396}]},{"tuples":[["Japan","$26,000,000"]],"phrases":[{"start":401,"end":413}]}]},{"worker_id":3,"type":"passed","reference":[{"tuples":[["US","$67,030,000"]],"phrases":[{"start":308,"end":353}]},{"tuples":[["European Commission","$30,033,922"]],"phrases":[{"start":367,"end":396}]},{"tuples":[["Japan","$26,000,000"]],"phrases":[{"start":401,"end":412}]}]},{"worker_id":4,"type":"passed","reference":[{"tuples":[["US","$67,030,000"]],"phrases":[{"start":290,"end":325}]},{"tuples":[["European Commission","$30,033,922"]],"phrases":[{"start":289,"end":302},{"start":371,"end":395}]},{"tuples":[["Japan","$26,000,000"]],"phrases":[{"start":290,"end":302},{"start":401,"end":413}]}]},{"worker_id":5,"type":"passed","reference":[{"tuples":[["US","$67,030,000"]],"phrases":[{"start":302,"end":353}]},{"tuples":[["European Commission","$30,033,922"]],"phrases":[{"start":371,"end":396}]},{"tuples":[["Japan","$26,000,000"]],"phrases":[{"start":401,"end":413}]}]},{"worker_id":6,"type":"failed","reference":[{"tuples":[["US","$67,030,000"]],"phrases":[{"start":290,"end":353}]},{"tuples":[["European Commission","$30,033,922"]],"phrases":[{"start":355,"end":396}]},{"tuples":[["Japan","$26,000,000"]],"phrases":[{"start":401,"end":412}]},{"tuples":[["US","$67,030,000"],["European Commission","$30,033,922"],["Japan","$26,000,000"],["Netherlands","$7,033,231"],["Norway","$5,475,452"],["Germany","$2,713,704"],["Kuwait","$2,000,000"],["Finland","$1,356,852"],["Belgium","$1,356,852"],["Ireland","$1,356,852"],["China","$1,000,000"]],"phrases":[{"start":146,"end":220}]}]},{"worker_id":7,"type":"failed","reference":[{"tuples":[["US","$67,030,000"]],"phrases":[{"start":303,"end":353}]},{"tuples":[["European Commission","$30,033,922"]],"phrases":[{"start":371,"end":397}]},{"tuples":[["Japan","$26,000,000"]],"phrases":[{"start":400,"end":412}]}]},{"worker_id":8,"type":"failed","reference":[{"tuples":[["European Commission","$30,033,922"]],"phrases":[{"start":371,"end":396}]},{"tuples":[["Japan","$26,000,000"]],"phrases":[{"start":401,"end":413}]}]},{"worker_id":9,"type":"failed","reference":[{"tuples":[["US","$67,030,000"]],"phrases":[{"start":307,"end":353}]}]},{"worker_id":10,"type":"failed","reference":[{"tuples":[["US","$67,030,000"]],"phrases":[{"start":154,"end":220},{"start":248,"end":288},{"start":290,"end":325}]},{"tuples":[["European Commission","$30,033,922"]],"phrases":[{"start":371,"end":396}]},{"tuples":[["Japan","$26,000,000"]],"phrases":[{"start":401,"end":412}]}]}]
+
+,
+  "sentences": [
+    {
+      "start": 0,
+      "end": 143
+    },
+    {
+      "start": 144,
+      "end": 267
+    }
+  ],
+  "datatable": {
+    "headers": [],
+    "data": [
+      {
+        "index": 0,
+        "id": 1,
+        "tuple": [
+          "US",
+          "$67,030,000"
+        ]
+      },
+      {
+        "index": 1,
+        "id": 2,
+        "tuple": [
+          "European Commission",
+          "$30,033,922"
+        ]
+      },
+      {
+        "index": 2,
+        "id": 3,
+        "tuple": [
+          "Japan",
+          "$26,000,000"
+        ]
+      },
+      {
+        "index": 3,
+        "id": 4,
+        "tuple": [
+          "Netherlands",
+          "$7,033,231"
+        ]
+      },
+      {
+        "index": 4,
+        "id": 5,
+        "tuple": [
+          "Norway",
+          "$5,475,452"
+        ]
+      },
+      {
+        "index": 5,
+        "id": 6,
+        "tuple": [
+          "Germany",
+          "$2,713,704"
+        ]
+      },
+      {
+        "index": 6,
+        "id": 7,
+        "tuple": [
+          "Kuwait",
+          "$2,000,000"
+        ]
+      },
+      {
+        "index": 7,
+        "id": 8,
+        "tuple": [
+          "Finland",
+          "$1,356,852"
+        ]
+      },
+      {
+        "index": 8,
+        "id": 9,
+        "tuple": [
+          "Belgium",
+          "$1,356,852"
+        ]
+      },
+      {
+        "index": 9,
+        "id": 10,
+        "tuple": [
+          "Ireland",
+          "$1,356,852"
+        ]
+      },
+      {
+        "index": 10,
+        "id": 11,
+        "tuple": [
+          "China",
+          "$1,000,000"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,78 @@
+Each JSON file in this directory contains the data for a paragraph-chart
+condition. The format of each JSON file is as follows:
+
+{
+  'text': The full text of the paragraph.
+  'chart_url': A URL to the original chart. For charts that are dynamically
+               generated in the source document, this property is blank. For
+               these charts, we used screenshots.
+  'document_url': The URL of the source document.
+  'datatable': The datatable of the chart. It has the format:
+    {
+      'headers': [<header 1>, <header 2>, ...]
+      'data': Contains the rows of the data table:
+      [
+        {
+          'index': The index of this row.
+          'id': The id of this row.
+          'tuple': [<value 1>, <value 2>, ...]
+        },
+        ...
+      ]
+    }
+  'marks': The marks in the chart. It has the format:
+    [
+      {
+        'r': The r component of the RGB color of the mark.
+        'g': The g component of the RGB color of the mark.
+        'b': The b component of the RGB color of the mark.
+        'orientation': 1 if vertical, 0 if horizontal.
+        'top': Top position of the top-left point of the mark.
+        'left': Left position of the top-left point of the mark.
+        'height': Height of the mark.
+        'width': Width of the mark.
+      },
+      ...
+    ]
+  'visual_references': A mapping between the marks and the tuples in the
+                       datatable. Has the format:
+    [
+      {
+        'mark_id': The id of the mark.
+        'tuple_ids': [<tuple_id 1>, <tuple_id 2>, ...]
+      }
+    ]
+  'references': The references between the text and the chart, indexed by
+                worker_id. Worker_id is 'combined' for the merged and clustered
+                references; 'gold' for the gold references; and a number (1, 2,
+                etc.) for each worker. Has the format:
+    [
+      {
+        'worker_id': ('combined'|'gold'|<number>)
+        'type': One of
+          'passed' (if the worker passed the gold check),
+          'failed' (if the worker failed the gold check),
+          'combined',
+          'gold'
+        'reference':
+          [
+            {
+              'tuples':
+                [
+                  [<string 1>, <string 2>, ...],
+                  ...
+                ]
+              'phrases':
+                [
+                  {
+                    'start': Start index into the string of the first phrase.
+                    'end': End index into the string of the first phrase.
+                  },
+                  ...
+                ]
+            },
+            ...
+          ]
+      }
+    ]
+}
