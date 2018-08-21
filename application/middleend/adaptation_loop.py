@@ -1,6 +1,7 @@
 import sqlite3
 import json
 from StringIO import StringIO
+import params
 
 def dict_factory(cursor, row):
     d = {}
@@ -38,7 +39,7 @@ class AdaptationLoop():
 
         """Reads the rules / intervention database from disk and stores it in memory
             - also sets the row_factory attribute of the db connection to return a dictionary
-            - read from ./database/gaze_event_rules.db
+            - read from GAZE_EVENT_RULES_PATH
 
         arguments
         None
@@ -47,8 +48,8 @@ class AdaptationLoop():
         None
 
         """
-        # db read from ./database//gaze_event_rules.db
-        self.conn = sqlite3.connect('./database/gaze_event_rules.db')
+        # db read from GAZE_EVENT_RULES_PATH
+        self.conn = sqlite3.connect(GAZE_EVENT_RULES_PATH)
 
         #copy the db from disk into a buffer
         db = StringIO()

@@ -6,6 +6,7 @@ from tornado import gen
 from tornado.ioloop import IOLoop
 from StringIO import StringIO
 import ast
+import params
 
 class ApplicationStateController():
 
@@ -58,7 +59,7 @@ class ApplicationStateController():
 
     def __readDBFromDisk__(self):
 
-        """Initializes the db in memory by reading it from './database/user_model_state.db'
+        """Initializes the db in memory by reading it from USER_MODEL_STATE_PATH
 
         arguments
         None
@@ -70,7 +71,7 @@ class ApplicationStateController():
         None
         """
 
-        self.conn = sqlite3.connect('./database/user_model_state.db')
+        self.conn = sqlite3.connect(USER_MODEL_STATE_PATH)
         commands = self.__getDBCommands__()
         self.conn.close()
 
@@ -83,7 +84,7 @@ class ApplicationStateController():
 
     def __writeDBToDisk__(self):
 
-        """ Writes the current state of the db in memory back to './database/user_model_state.db'
+        """ Writes the current state of the db in memory back to USER_MODEL_STATE_PATH
 
         arguments
         None
@@ -97,8 +98,8 @@ class ApplicationStateController():
         command = self.__getDBCommands__()
         self.conn.close()
 
-        os.remove("./database/user_model_state.db")
-        self.conn = sqlite3.connect("./database/user_model_state.db")
+        os.remove(USER_MODEL_STATE_PATH)
+        self.conn = sqlite3.connect(USER_MODEL_STATE_PATH)
         self.conn.cursor().executescript(command.read())
         self.conn.commit()
         self.conn.close()

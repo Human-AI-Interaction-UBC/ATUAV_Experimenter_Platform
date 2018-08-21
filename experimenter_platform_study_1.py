@@ -28,15 +28,15 @@ class Application(tornado.web.Application):
             (r"/questionnaire", QuestionnaireHandler),
             (r"/resume", ResumeHandler),
             (r"/userID", UserIDHandler),
-            (r"/prestudy", PreStudyHandler), (r"/(Sample_bars.png)", tornado.web.StaticFileHandler, {'path':'./application/frontend/static/sample/'}),
-                                             (r"/(Sample_bars_2.png)", tornado.web.StaticFileHandler, {'path':'./application/frontend/static/sample/'}),
-            (r"/sample_MMD", SampleHandler), (r"/(ExampleMMD.png)", tornado.web.StaticFileHandler, {'path':'./application/frontend/static/sample/'}),
-            (r"/sample_Q", SampleHandler2), (r"/(ExampleQ.png)", tornado.web.StaticFileHandler, {'path':'./application/frontend/static/sample/'}),
-            (r"/calibration", CalibrationHandler), (r"/(blank_cross.jpg)", tornado.web.StaticFileHandler, {'path':'./application/frontend/static/sample/'}),
+            (r"/prestudy", PreStudyHandler), (r"/(Sample_bars.png)", tornado.web.StaticFileHandler, {'path': FRONT_END_STATIC_PATH + 'sample/'}),
+                                             (r"/(Sample_bars_2.png)", tornado.web.StaticFileHandler, {'path':FRONT_END_STATIC_PATH + 'sample/'}),
+            (r"/sample_MMD", SampleHandler), (r"/(ExampleMMD.png)", tornado.web.StaticFileHandler, {'path':FRONT_END_STATIC_PATH + 'sample/'}),
+            (r"/sample_Q", SampleHandler2), (r"/(ExampleQ.png)", tornado.web.StaticFileHandler, {'path':FRONT_END_STATIC_PATH + 'sample/'}),
+            (r"/calibration", CalibrationHandler), (r"/(blank_cross.jpg)", tornado.web.StaticFileHandler, {'path':FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/tobii", TobiiHandler),
             (r"/ready", ReadyHandler),
             (r"/done", DoneHandler),
-            (r"/final_question", FinalHandler), (r"/(post_question.png)", tornado.web.StaticFileHandler, {'path':'./application/frontend/static/sample/'}),
+            (r"/final_question", FinalHandler), (r"/(post_question.png)", tornado.web.StaticFileHandler, {'path':FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/done2", DoneHandler2),
             (r"/websocket", MMDWebSocket)
         ]
@@ -49,8 +49,8 @@ class Application(tornado.web.Application):
         end_time = '';
         #where to look for the html files
         settings = dict(
-            template_path=os.path.join(os.path.dirname(__file__), "./application/frontend/templates"),
-            static_path=os.path.join(os.path.dirname(__file__), "./application/frontend/static"),
+            template_path=os.path.join(os.path.dirname(__file__), FRONT_END_TEMPLATE_PATH),
+            static_path=os.path.join(os.path.dirname(__file__), FRONT_END_STATIC_PATH),
             debug=True,
         )
         #initializes web app
