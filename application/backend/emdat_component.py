@@ -13,6 +13,9 @@ class EMDATComponent(DetectionComponent):
 
     def  __init__(self, tobii_controller, adaptation_loop, callback_time):
         DetectionComponent.__init__(self, tobii_controller, adaptation_loop, is_periodic = True, callback_time = callback_time)
+        self.setup_new_emdat_component()
+
+    def setup_new_emdat_component(self):
         self.pups_idx   = 0
         self.pupv_idx   = 0
         self.dist_idx   = 0
@@ -26,8 +29,7 @@ class EMDATComponent(DetectionComponent):
         self.init_emdat_features(self.emdat_task_features)
         self.tobii_controller.update_aoi_storage(self.AOIS)
         self.feature_select = self.application_state_controller.getEdmatFeatures()
-        self.execfile = open('newfile.txt', 'w')
-
+        
     def notify_app_state_controller(self):
         """
         Selects features for specified events in Application State and sends them to the database.
@@ -106,7 +108,6 @@ class EMDATComponent(DetectionComponent):
         elif (params.KEEP_GLOBAL_FEATURES):
             self.merge_features(self.emdat_interval_features, self.tobii_controller.emdat_global_features)
         print("Complete EMDAT execution --- %.12f seconds --- \n\n\n" % (time.time() - start_time))
-        self.execfile.write("%.5f\n" % (time.time() - start_time))
         print self.id
         self.id += 1
         self.notify_app_state_controller()

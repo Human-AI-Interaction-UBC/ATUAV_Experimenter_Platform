@@ -14,14 +14,44 @@ from application.middleend.adaptation_loop import AdaptationLoop
 from application.application_state_controller import ApplicationStateController
 from application.application_web_socket import ApplicationWebSocket
 
+from application.backend.fixation_detector import FixationDetector
+from application.backend.emdat_component import EMDATComponent
+from application.backend.ml_component import MLComponent
+
+
+
+
 import params
 ##########################################
 
 define("port", default=8888, help="run on the given port", type=int)
+TOBII_CONTROLLER = "tobii_controller"
+APPLICATION_STATE_CONTROLLER = "application_state_controller"
+ADAPTATION_LOOP = "adaptation_loop"
+FIXATION_ALGORITHM = "fixation_algorithm"
+EMDAT_COMPONENT = "emdat_component"
+ML_COMPONENT = "ml_component"
 
 class Application(tornado.web.Application):
     def __init__(self):
         #connects url with code
+
+        self.tobii_controller = TobiiController()
+        self.tobii_controller.waitForFindEyeTracker()
+        self.tobii_controller.activate(self.tobii_controller.eyetrackers.keys()[0])
+        self.app_state_control = ApplicationStateController(1)
+        self.adaptation_loop = AdaptationLoop(self.app_state_control)
+
+        self.fixation_component = FixationDetector(self.tobii_controller, self.adaptation_loop)
+        self.emdat_component = EMDATComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.EMDAT_CALL_PERIOD)
+        self.ml_component = MLComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.EMDAT_CALL_PERIOD, emdat_component = self.emdat_component)
+
+        websocket_dict = {TOBII_CONTROLLER: self.tobii_controller,
+                         APPLICATION_STATE_CONTROLLER: self.app_state_control,
+                         ADAPTATION_LOOP: self.adaptation_loop,
+                         FIXATION_ALGORITHM: self.fixation_component,
+                         EMDAT_COMPONENT: self.emdat_component,
+                         ML_COMPONENT: self.ml_component}
         handlers = [
             (r"/", MainHandler),
             (r"/mmd", MMDHandler),
@@ -38,7 +68,7 @@ class Application(tornado.web.Application):
             (r"/done", DoneHandler),
             (r"/final_question", FinalHandler), (r"/(post_question.png)", tornado.web.StaticFileHandler, {'path':'./application/frontend/static/sample/'}),
             (r"/done2", DoneHandler2),
-            (r"/websocket", MMDWebSocket)
+            (r"/websocket", MMDWebSocket, dict(websocket_dict = websocket_dict))
         ]
         #connects to database
         self.conn = sqlite3.connect('database.db')
@@ -59,56 +89,21 @@ class Application(tornado.web.Application):
 class MMDWebSocket(ApplicationWebSocket):
 
     def open(self):
-        print('opened ws')
         self.websocket_ping_interval = 0
         self.websocket_ping_timeout = float("inf")
-        self.app_state_control = ApplicationStateController(self.application.cur_mmd)
-        self.adaptation_loop = AdaptationLoop(self.app_state_control)
         self.adaptation_loop.liveWebSocket = self
-
-        self.tobii_controller = TobiiController()
-        self.tobii_controller.waitForFindEyeTracker()
         print self.tobii_controller.eyetrackers
 
-        self.tobii_controller.activate(self.tobii_controller.eyetrackers.keys()[0])
         self.start_detection_components()
         self.tobii_controller.startTracking()
-        print "tracking started"
 
     def on_message(self, message):
         print("RECEIVED MESSAGE: " + message)
-        if (message == "close"):
-            print("destroying")
+        if (message == "next_task"):
             self.stop_detection_components()
             self.tobii_controller.stopTracking()
-            self.tobii_controller.destroy()
-            self.app_state_control.resetApplication()
             return
-        elif (message == "next_task"):
-
-            next_task = self.application.mmd_order[self.application.mmd_index]
-            print("NEXT TASK" + str(next_task))
-            self.stop_detection_components()
-            self.tobii_controller.stopTracking()
-            self.app_state_control.changeTask(next_task)
-            self.start_detection_components()
-            self.tobii_controller.startTracking()
-            return
-
-        elif (message.find("switch_task") != -1):
-            print("SWITCHING TASK")
-            result = message.split(":")
-            next_task = int(result[1])
-
-            self.stop_detection_components()
-            self.tobii_controller.stopTracking()
-            self.app_state_control.changeTask(next_task)
-            self.start_detection_components()
-            self.tobii_controller.startTracking()
-            return
-
         else:
-            print("SOMETHING WRONG")
             self.stop_detection_components()
             self.tobii_controller.stopTracking()
             self.tobii_controller.destroy()
@@ -397,8 +392,6 @@ def main():
     http_server = tornado.httpserver.HTTPServer(Application())
     http_server.listen(options.port)
     tornado.ioloop.IOLoop.current().start()
-
-
 
 if __name__ == "__main__":
     main()
