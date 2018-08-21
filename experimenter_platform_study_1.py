@@ -82,7 +82,7 @@ class MMDWebSocket(ApplicationWebSocket):
             self.stop_detection_components()
             self.tobii_controller.stopTracking()
             self.tobii_controller.destroy()
-            self.app_state_control.resetApplication()
+            self.app_state_control.resetApplication(user_id = self.application.cur_user)
             return
         elif (message == "next_task"):
 
@@ -112,7 +112,7 @@ class MMDWebSocket(ApplicationWebSocket):
             self.stop_detection_components()
             self.tobii_controller.stopTracking()
             self.tobii_controller.destroy()
-            self.app_state_control.resetApplication()
+            self.app_state_control.resetApplication(user_id = self.application.cur_user)
             return
 
 class MainHandler(tornado.web.RequestHandler):

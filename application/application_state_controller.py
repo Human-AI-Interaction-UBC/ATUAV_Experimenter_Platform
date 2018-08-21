@@ -230,7 +230,7 @@ class ApplicationStateController():
             self.conn.execute("DROP TABLE IF EXISTS {}".format(table_name))
         self.conn.commit()
 
-    def logTask(self):
+    def logTask(self, user_id):
 
         """ Creates a log file called log_for_task_x, where x is the current task
             the log file captures the current state of the database as a sql file
@@ -246,7 +246,7 @@ class ApplicationStateController():
         """
         file = self.__getDBCommands__()
         #TODO: robust check of log dir
-        file_name = './log/log_for_task_' + str(self.currTask) + ".sql"
+        file_name = './log/log_for_task_' + str(self.currTask) + str(user_id) + ".sql"
         with open (file_name, 'w') as fd:
           file.seek (0)
           shutil.copyfileobj (file, fd)
@@ -275,7 +275,7 @@ class ApplicationStateController():
         self.__createDynamicTables__()
 
 
-    def resetApplication(self):
+    def resetApplication(self, user_id = 9999):
 
         """ Prepares the application for termination, should be called at the end of execution
             - logs the current state of db
@@ -292,7 +292,7 @@ class ApplicationStateController():
         None
         """
 
-        self.logTask()
+        self.logTask(user_id)
         self.__deleteAllDynamicTables__()
         self.__writeDBToDisk__()
 
