@@ -39,7 +39,7 @@ class Application(tornado.web.Application):
         self.tobii_controller = TobiiController()
         self.tobii_controller.waitForFindEyeTracker()
         self.tobii_controller.activate(self.tobii_controller.eyetrackers.keys()[0])
-        self.app_state_control = ApplicationStateController(1)
+        self.app_state_control = ApplicationStateController(0)
         self.adaptation_loop = AdaptationLoop(self.app_state_control)
 
         self.fixation_component = FixationDetector(self.tobii_controller, self.adaptation_loop)
@@ -58,15 +58,15 @@ class Application(tornado.web.Application):
             (r"/questionnaire", QuestionnaireHandler),
             (r"/resume", ResumeHandler),
             (r"/userID", UserIDHandler),
-            (r"/prestudy", PreStudyHandler), (r"/(Sample_bars.png)", tornado.web.StaticFileHandler, {'path': FRONT_END_STATIC_PATH + 'sample/'}),
-                                             (r"/(Sample_bars_2.png)", tornado.web.StaticFileHandler, {'path':FRONT_END_STATIC_PATH + 'sample/'}),
-            (r"/sample_MMD", SampleHandler), (r"/(ExampleMMD.png)", tornado.web.StaticFileHandler, {'path':FRONT_END_STATIC_PATH + 'sample/'}),
-            (r"/sample_Q", SampleHandler2), (r"/(ExampleQ.png)", tornado.web.StaticFileHandler, {'path':FRONT_END_STATIC_PATH + 'sample/'}),
-            (r"/calibration", CalibrationHandler), (r"/(blank_cross.jpg)", tornado.web.StaticFileHandler, {'path':FRONT_END_STATIC_PATH + 'sample/'}),
+            (r"/prestudy", PreStudyHandler), (r"/(Sample_bars.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+                                             (r"/(Sample_bars_2.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+            (r"/sample_MMD", SampleHandler), (r"/(ExampleMMD.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+            (r"/sample_Q", SampleHandler2), (r"/(ExampleQ.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+            (r"/calibration", CalibrationHandler), (r"/(blank_cross.jpg)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/tobii", TobiiHandler),
             (r"/ready", ReadyHandler),
             (r"/done", DoneHandler),
-            (r"/final_question", FinalHandler), (r"/(post_question.png)", tornado.web.StaticFileHandler, {'path':FRONT_END_STATIC_PATH + 'sample/'}),
+            (r"/final_question", FinalHandler), (r"/(post_question.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/done2", DoneHandler2),
             (r"/websocket", MMDWebSocket, dict(websocket_dict = websocket_dict))
         ]
@@ -79,8 +79,8 @@ class Application(tornado.web.Application):
         end_time = '';
         #where to look for the html files
         settings = dict(
-            template_path=os.path.join(os.path.dirname(__file__), FRONT_END_TEMPLATE_PATH),
-            static_path=os.path.join(os.path.dirname(__file__), FRONT_END_STATIC_PATH),
+            template_path=os.path.join(os.path.dirname(__file__), params.FRONT_END_TEMPLATE_PATH),
+            static_path=os.path.join(os.path.dirname(__file__), params.FRONT_END_STATIC_PATH),
             debug=True,
         )
         #initializes web app
@@ -109,6 +109,9 @@ class MMDWebSocket(ApplicationWebSocket):
             self.tobii_controller.destroy()
             self.app_state_control.resetApplication(user_id = self.application.cur_user)
             return
+
+    def on_close(self):
+        self.app_state_control.logTask(user_id = self.application.cur_user)
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):

@@ -187,7 +187,7 @@
               d3.selectAll(marks.unselected_marks)
                 .transition()
                 .duration(transition_in)
-								.attr('stroke', 'none')
+								.attr('stroke-width', 0)
                 .attr('fill-opacity', function(mark_data) {
 										//var this_selection = d3.select(this)[0];
 										//console.log("contains? :" + marks.selected_marks.includes(this));
@@ -210,7 +210,7 @@
 					d3.selectAll(marks.unselected_marks)
 					  .transition()
 						.attr('fill-opacity', desat? DESATURATION: 0)
-						.attr('stroke', 'none') //Enamul: to remove Bolding Intervention
+						.attr('stroke-width', 0) //Enamul: to remove Bolding Intervention
 						.duration(transition_out)
             .each('end', function() {
               d3.select(this).classed('selected', 'false');
@@ -231,9 +231,9 @@
 						.attr('stroke', 'white')
 						.attr('stroke-width', 0)
 						.transition()
+						.attr('stroke-width', bold_thickness)
 						.duration(transition_in)
 						//.attr('fill-opacity', 0)
-						.attr('stroke-width', bold_thickness)
 						.attr('stroke', function () { return bold? color: 'none';})
 						.attr('fill-opacity', 0);
 				}

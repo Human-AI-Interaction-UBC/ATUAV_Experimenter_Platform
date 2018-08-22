@@ -49,7 +49,7 @@ class AdaptationLoop():
 
         """
         # db read from GAZE_EVENT_RULES_PATH
-        self.conn = sqlite3.connect(GAZE_EVENT_RULES_PATH)
+        self.conn = sqlite3.connect(params.GAZE_EVENT_RULES_PATH)
 
         #copy the db from disk into a buffer
         db = StringIO()

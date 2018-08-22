@@ -71,7 +71,7 @@ class ApplicationStateController():
         None
         """
 
-        self.conn = sqlite3.connect(USER_MODEL_STATE_PATH)
+        self.conn = sqlite3.connect(params.USER_MODEL_STATE_PATH)
         commands = self.__getDBCommands__()
         self.conn.close()
 
@@ -98,8 +98,8 @@ class ApplicationStateController():
         command = self.__getDBCommands__()
         self.conn.close()
 
-        os.remove(USER_MODEL_STATE_PATH)
-        self.conn = sqlite3.connect(USER_MODEL_STATE_PATH)
+        os.remove(params.USER_MODEL_STATE_PATH)
+        self.conn = sqlite3.connect(params.USER_MODEL_STATE_PATH)
         self.conn.cursor().executescript(command.read())
         self.conn.commit()
         self.conn.close()
@@ -164,8 +164,8 @@ class ApplicationStateController():
         None
         """
 
-        self.conn.execute("CREATE TABLE intervention_state ( `intervention` TEXT, `active` INTEGER, time_stamp INTEGER, occurences INTEGER, PRIMARY KEY(`intervention`))")
-        self.conn.execute("CREATE TABLE rule_state ( `rule` TEXT, time_stamp INTEGER, occurences INTEGER, PRIMARY KEY(`rule`))")
+        self.conn.execute("CREATE TABLE intervention_state ( `intervention` TEXT, `active` INTEGER, time_stamp INTEGER, occurences INTEGER)")
+        self.conn.execute("CREATE TABLE rule_state ( `rule` TEXT, time_stamp INTEGER, occurences INTEGER)")
         self.conn.commit()
         for user in self.userStates:
             table_name = user['event_name']
@@ -247,12 +247,12 @@ class ApplicationStateController():
         """
         file = self.__getDBCommands__()
         #TODO: robust check of log dir
-        file_name = './log/log_for_user_' + user_id + "_task_" + str(self.currTask) + ".sql"
+        file_name = './log/log_for_user_' + str(user_id) + "_task_" + str(self.currTask) + ".sql"
         with open (file_name, 'w') as fd:
           file.seek (0)
           shutil.copyfileobj (file, fd)
 
-    def changeTask(self, task):
+    def changeTask(self, task, user_id = 9999):
 
         """ Changes database to reflect a new task:
             - create a log of current db state
@@ -270,7 +270,7 @@ class ApplicationStateController():
         None
         """
         print "Switching to task: " + str(task)
-        self.logTask()
+        self.logTask(user_id)
         self.__deleteTaskDynamicTables__()
         self.__updateTaskAndUserState__(task)
         self.__createDynamicTables__()
@@ -550,7 +550,8 @@ class ApplicationStateController():
             self.conn.execute("INSERT INTO intervention_state values (?, 1, ?, ?)", (intervention_name, time_stamp, 1))
         else:
             occurences = int(intervention_occurences['occurences']) + 1
-            self.conn.execute("UPDATE intervention_state SET active = 1, time_stamp = ?, occurences = ? WHERE intervention = ?", (time_stamp, occurences, intervention_name))
+            self.conn.execute("UPDATE intervention_state SET active = 1, occurences = ? WHERE intervention = ?", (occurences, intervention_name))
+            self.conn.execute("INSERT INTO intervention_state values (?, 1, ?, ?)", (intervention_name, time_stamp, occurences))
         self.conn.commit()
         #update rule occurences
         rule_occurences = self.conn.execute("SELECT occurences FROM rule_state WHERE rule = ?", (rule_name,)).fetchone()
@@ -558,7 +559,8 @@ class ApplicationStateController():
             self.conn.execute("INSERT INTO rule_state values (?, ?, ?)", (rule_name, time_stamp, 1))
         else:
             occurences = int(rule_occurences['occurences']) + 1
-            self.conn.execute("UPDATE rule_state SET time_stamp = ?, occurences = ? WHERE rule = ?", (time_stamp, occurences, rule_name))
+            self.conn.execute("UPDATE rule_state SET occurences = ? WHERE rule = ?", ( occurences, rule_name))
+            self.conn.execute("INSERT INTO rule_state values (?, ?, ?)", (rule_name, time_stamp, occurences))
         self.conn.commit()
 
     def setInterventionInactive(self, intervention_name):

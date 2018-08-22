@@ -19,7 +19,7 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
         self.app_state_control = websocket_dict[APPLICATION_STATE_CONTROLLER]
         self.adaptation_loop = websocket_dict[ADAPTATION_LOOP]
         next_task = self.application.cur_mmd
-        self.app_state_control.changeTask(next_task)
+        self.app_state_control.changeTask(next_task, self.application.cur_user)
         self.fixation_component = websocket_dict[FIXATION_ALGORITHM]
         self.emdat_component = websocket_dict[EMDAT_COMPONENT]
         self.ml_component = websocket_dict[ML_COMPONENT]

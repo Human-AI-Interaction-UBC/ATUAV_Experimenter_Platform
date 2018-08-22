@@ -13,6 +13,7 @@ from application.backend.eye_tracker import TobiiController
 from application.middleend.adaptation_loop import AdaptationLoop
 from application.application_state_controller import ApplicationStateController
 from application.application_web_socket import ApplicationWebSocket
+from application.backend.fixation_detector import FixationDetector
 
 import params
 ##########################################
@@ -57,7 +58,7 @@ class Application(tornado.web.Application):
 #def get is for when a http get request is made to the url
 #def post is for when a http post request is made to the url(ex: form is submitted)
 
-class WebSocketHandler(ApplicationWebSocket):
+class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
     def open(self):
         self.websocket_ping_interval = 0
@@ -68,13 +69,20 @@ class WebSocketHandler(ApplicationWebSocket):
 
         self.tobii_controller = TobiiController()
         self.tobii_controller.waitForFindEyeTracker()
-        self.initialize_detection_components()
+        #self.initialize_detection_components()
         print self.tobii_controller.eyetrackers
 
         self.tobii_controller.activate(self.tobii_controller.eyetrackers.keys()[0])
         self.tobii_controller.startTracking()
+        self.fixation_component = FixationDetector(self.tobii_controller, self.adaptation_loop)
+
         self.start_detection_components()
         print "tracking started"
+
+    def start_detection_components(self):
+        if (params.USE_FIXATION_ALGORITHM):
+            self.fixation_component.restart_fixation_algorithm()
+            self.fixation_component.start()
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
