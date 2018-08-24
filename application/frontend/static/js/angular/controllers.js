@@ -45,9 +45,10 @@ var AppCtrl = function($scope, $http, $location) {
      */
     matchMode: 'lenient'
   };
-
+  /***** Server communications block *****/
   $scopeGlobal.interventions = {};
   $scopeGlobal.ws = new WebSocket("ws://localhost:8888/websocket");
+  // Generic app.js functions for triggering/dremoving interventions
   $scopeGlobal.ws.onmessage = function (evt) {
     var obj = JSON.parse(evt.data);
     //console.log(evt.data);
@@ -58,6 +59,7 @@ var AppCtrl = function($scope, $http, $location) {
         handleDelivery(obj);
     }
   }
+  /***************************************/
 
   $scope.curMarksManager;
   $scope.curSpanManager;
@@ -177,14 +179,4 @@ var AppCtrl = function($scope, $http, $location) {
       function() {
         initReferences($scope);
       });
-};
-
-var ReferenceDisplayCtrl = function($scope) {
-  $scope.mapPhraseIndices = function(phraseObj, text) {
-    return text.substring(phraseObj.start, phraseObj.end);
-  };
-
-  $scope.mapTuples = function(tuples) {
-    return tuples.join(', ');
-  };
 };

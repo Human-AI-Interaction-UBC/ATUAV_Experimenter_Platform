@@ -440,8 +440,6 @@ app.config(function($locationProvider) {
 
 app.controller('AppCtrl', AppCtrl);
 
-app.directive('referencedisplay', ReferenceDisplay);
-
 function isArray(o) {
   return Object.prototype.toString.call(o) === '[object Array]';
 }
@@ -472,6 +470,12 @@ function clone(obj) {
       $scopeGlobal.ws.send("next_task");
   })
 
+/**
+* Remove the interventions specified in the obj
+*
+* @param {Array.<string>} obj
+*   Array with intervention inds to be removed
+*/
 function handleRemoval(obj) {
   console.log("Received a remove call");
   var referenceID;
@@ -482,13 +486,20 @@ function handleRemoval(obj) {
   }
 }
 
+/**
+ * Apply the interventions specified in obj
+ *
+ * @param {Array.<function>} obj
+ *    The array with intervention ids, js functions to call to apply the interventions,
+ *    and parameters for for them
+ */
 function handleDelivery(obj) {
   console.log("Received a deliver call");
+  console.log(obj)
   for (let intervention of obj.deliver) {
     var func = intervention.function;
     var interventionName = intervention.name;
     var transition_in = intervention.transition_in;
-
     var args = JSON.parse(intervention.arguments);
     var referenced_tuples = [];
     var data = $scopeGlobal.datatable.data;
@@ -502,20 +513,38 @@ function handleDelivery(obj) {
   }
 }
 
-
+/**
+ * Display the visual interventions (such as bar chart highlighting). Called by eval()
+ * in handleDelivery()
+ * @param {string} referenceID
+ * @param {int} transition_in - how time to wait before applying the intervention
+ * @param {Object} args - arguments for the highlighting, specified in the database
+ */
 function highlightVisOnly(referenceID, transition_in, args) {
+  console.log("HIGHLIGTING viz ONLY")
     setTimeout(function () {
       var tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
       $scopeGlobal.curMarksManager.highlight(tuple_ids , referenceID.tuple_id, transition_in, args);
     },transition_in*1.2);
 }
 
+/**
+ * Highlighting the graph legend 
+ */
 function highlightLegend(referenceID, transition_in, args) {
   setTimeout(function () {
       $scopeGlobal.curMarksManager.highlightLegend(transition_in, args);
   },transition_in*1.2);
 }
 
+/**
+ * Find all the references which the highlighted phrase overlaps.
+ *
+ * @param {{start: number, end: number}} selection
+ *    The indices of the selected text.
+ * @returns {Array.<reference>} An array of references that the selection
+ *    overlaps with.
+ */
 function removeAllInterventions(referenceID) {
 
   if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
