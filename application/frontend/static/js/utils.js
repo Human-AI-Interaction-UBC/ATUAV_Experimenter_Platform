@@ -22,7 +22,7 @@ var utils = {
       loadJSON(urls[i], (function(this_ind) {
         return function(response) {
           outputs[this_ind] = JSON.parse(response);
-          
+
           // Fire the callback when all the data has been fetched.
           var finished = outputs.reduce(function(acc, val) { return acc && isNaN(val); }, true);
           if(finished) {
@@ -50,7 +50,7 @@ var utils = {
       table = d3.select(theTable)
               .attr('class', 'table table-striped')
               .style('width', 'auto');
-    
+
     // Create the header
     var header = table.append("tr").classed("table-header", true)
                 .selectAll("td.table-header").data(headers)
@@ -59,7 +59,7 @@ var utils = {
                   // Ignore header titles I've made up (prefixed with a '_' in the data)
                   return d.indexOf('_') === 0 ? "" : d;
                 });
-    
+
     // Create the tuple rows
     var selectedRE = new RegExp('\\bselected\\b\\s*','g');
     var tupleRows = table.selectAll("tr.tuple")
@@ -82,7 +82,7 @@ var utils = {
           this.className += " selected";
         }
       });
-    
+
     // Create the cells in the tuple
     var cells = tupleRows.selectAll("td.tuple").data(function(d) { return d.tuple ? d.tuple : d; })
               .enter().append("td").classed("tuple", true)
@@ -106,87 +106,6 @@ var utils = {
     return true;
   },
 
-  visualReferenceClickHandler: function(selectionManager, marksManager, visrefs, datatable, data) {
-    var ref_tuples;
-    if(d3.event.target.tagName === 'PRE') {
-      // Highlight the selected text
-      if(data.phrases.length > 0) {
-        selectionManager.setSelections(data.phrases);
-      }
-
-      ref_tuples = data.tuples;
-      if(ref_tuples[0].id) {
-        ref_tuples = ref_tuples.map(function(val) {
-          return val.tuple;
-        });
-      }
-
-      // Highlight the marks
-
-      // Get the tuple ids
-      var tuple_ids = [];
-      data.tuples.forEach(function(tuple) {
-        datatable.data.forEach(function(d) {
-          if(utils.equalTuples(d.tuple,tuple)) {
-            tuple_ids.push(d.id);
-          }
-        });
-      });
-
-      // Get the marks from the visrefs table
-      var selected_mark_ids = [];
-      for(var markId in visrefs) {
-        if(visrefs.hasOwnProperty(markId)) {
-          visrefs[markId].tuple_ids.forEach(function(tuple_id) {
-            tuple_ids.forEach(function(selected_id) {
-              if(selected_id === tuple_id) selected_mark_ids.push(markId);
-            });
-          });
-        }
-      }
-
-      // Highlight the marks
-      marksManager.marks.classed('selected', function(d) {
-        for(var i=0; i<selected_mark_ids.length; i++) {
-          if(selected_mark_ids[i] == d.id) return true;
-        }
-        return false;
-      });
-    }
-  },
-
-  referenceClickHandler: function(selectionManager, table, data) {
-    var ref_tuples;
-    if(d3.event.target.tagName === 'PRE') { // Don't highlight if the user clicks the cncel button
-      // Highlight the selected text
-      if(data.phrases.length > 0) {
-        selectionManager.setSelections(data.phrases);
-      }
-
-      ref_tuples = data.tuples;
-      if(ref_tuples[0].id) {
-        ref_tuples = ref_tuples.map(function(val) {
-          return val.tuple;
-        });
-      }
-
-      // Highlight the table rows
-      d3.select(table).selectAll('tr.tuple')
-        .classed('selected', function(tupleData) {
-          var match = false,
-            i;
-          for(i=0; i<ref_tuples.length; i++) {
-            match = true;
-            if(tupleData.tuple) tupleData = tupleData.tuple;
-            tupleData.forEach(function(elem, ind) {
-              if(elem !== ref_tuples[i][ind]) match = false;
-            });
-            if(match) return true;
-          }
-          return match;
-        });
-    };
-  }
 }
 
 window.utils = utils;

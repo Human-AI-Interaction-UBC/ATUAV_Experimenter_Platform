@@ -2,7 +2,6 @@
   var ReferenceMapper = function(visual_references) {
     var self = this;
     this.visual_references = visual_references;
-
     this.marks_to_tuples = this.visual_references.references.reduce(
       function(acc, val) {
         acc[val.mark_id] = val;
@@ -34,5 +33,4 @@
   }
 
   window.ReferenceMapper = ReferenceMapper;
-
 }()

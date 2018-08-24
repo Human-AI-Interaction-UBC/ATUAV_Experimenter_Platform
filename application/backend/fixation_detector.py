@@ -137,10 +137,6 @@ class FixationDetector(DetectionComponent):
                         if (utils.point_inside_polygon(x_fixation, y_fixation, self.AOIS[aoi])):
                             self.cur_fix_id += 1
                             self.notify_app_state_controller(aoi, int(Sfix[0]), int(EfixEndTime), int(EfixEndTime - Sfix[0]))
-                    #May wanrt to use something like this in the future in there are performace issues
-                    #self.x = self.x[array_index:]
-                    #self.y = self.y[array_index:]
-                    #self.time = self.time[array_index:]
                     break
 
     @gen.coroutine

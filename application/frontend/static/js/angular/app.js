@@ -22,13 +22,11 @@ function hasOverlap(lspans, rspans) {
       l += 1;
       continue;
     }
-
     // Case 2: right span ends before left span
     if (rspan.end <= lspan.start) {
       r += 1;
       continue;
     }
-
     return true;
   }
   return false;
@@ -55,6 +53,14 @@ function getOverlappedReferences(selection, references) {
   return overlappedReferences;
 };
 
+/**
+ * Find all the references strictly within the phrase.
+ *
+ * @param {{start: number, end: number}} selection
+ *    The indices of the selected text.
+ * @returns {Array.<reference>} An array of references that are
+*     within the selection.
+ */
 function getStrictRelatedReferences(selection, references) {
   var relatedReferences = [];
   references.forEach(function(reference) {
@@ -65,6 +71,7 @@ function getStrictRelatedReferences(selection, references) {
     reference.phrases.sort(function(a,b) { return a.start - b.start; });
     for (var i=0, l=reference.phrases.length; i < l; i++) {
       var phrase = reference.phrases[i];
+      // Do not select if not valid
       if (!(phrase.start >= selection.start && phrase.end <= selection.end)) {
         valid = false;
         break;
@@ -78,21 +85,16 @@ function getStrictRelatedReferences(selection, references) {
   return relatedReferences;
 }
 
-
 /**
  * Use the mark manager to highlight the tuples contained in the array of
  * references.
  *
  * @param {angular.Scope} $scope .
  * @param {Array.<reference>} references .
- */
-/**
- *
  * @param {{start: number, end: number}} [selection]
  */
 function highlightRelatedPhrases($scope, references, selection) {
-
-  // Highlight the phrases
+  // Select all phrases from all references
   var phrases = [];
   references.forEach(function(reference) {
     // Deep copy the phrases, since we modify them later if there is a selection
@@ -103,21 +105,25 @@ function highlightRelatedPhrases($scope, references, selection) {
       });
     });
   });
+  // Sort by starting time
   phrases.sort(function(a,b) { return a.start-b.start; });
   // Remove duplicates or merge
-  var i=1;
+  var i = 1;
   while (i < phrases.length) {
+    // Start and end are same with previous phrase
     if (phrases[i].start == phrases[i-1].start &&
         phrases[i].end == phrases[i-1].end) {
       phrases.splice(i, 1);
       continue;
     }
+    // If current's start is between previous' start and end
     if (phrases[i].start >= phrases[i-1].start &&
         phrases[i].start <= phrases[i-1].end) {
       phrases[i-1].end = Math.max(phrases[i].end, phrases[i-1].end);
       phrases.splice(i, 1);
       continue;
     }
+    // If current's end is between previous' start and end
     if (phrases[i].end >= phrases[i-1].start &&
        phrases[i].end <= phrases[i-1].end) {
       phrases[i-1].start = phrases[i].start;
@@ -130,26 +136,32 @@ function highlightRelatedPhrases($scope, references, selection) {
   /** @type {Array.<{start: number, end: number}>} */
   var highlightAndReferenceSpans = [];
   var highlightSpans = [];
-
   // If there's a selection, modify the phrases to ignore the selection
   var i = 0;
   if (selection) {
     while (i < phrases.length) {
       // Completely contained within selection. Make three spans
-      if (phrases[i].start >= selection.start &&
-          phrases[i].end <= selection.end) {
+      if (phrases[i].start >= selection.start && phrases[i].end <= selection.end) {
+        // Start at start of selection or end of previous phrase,
+        // End at start of this phrase
         var before = {
           start: i === 0 ? selection.start :
               Math.max(selection.start, phrases[i-1].end),
           end: phrases[i].start
         };
+        // Start at end of this phrase,
+        // End at end of this selection or start of next phrase
         var after = {
           start: phrases[i].end,
           end: i >= phrases.length - 1 ? selection.end :
               Math.min(selection.end, phrases[i+1].start)
         };
+        // Highlight current phrase
         var currentPhrase = phrases[i];
         highlightAndReferenceSpans.push(currentPhrase);
+        // Add before and after to the left and right
+        // of the current phrase and move on to next
+        // phrases
         phrases.splice(i, 1);
         if (before.start !== before.end) {
           highlightSpans.push(before);
@@ -165,18 +177,19 @@ function highlightRelatedPhrases($scope, references, selection) {
         }
         continue;
       }
-
       // Selection is completely contained in this phrase. Split and move on
-      if (selection.start >= phrases[i].start &&
-          selection.end <= phrases[i].end) {
+      if (selection.start >= phrases[i].start && selection.end <= phrases[i].end) {
+        // [this phrase start, selection start]
         var before = {
           start: phrases[i].start,
           end: selection.start
         };
+        // [selection end, this phrase end]
         var after = {
           start: selection.end,
           end: phrases[i].end
         };
+
         var selectionCopy = clone(selection);
         highlightAndReferenceSpans.push(selectionCopy);
         phrases.splice(i, 1);
@@ -192,13 +205,11 @@ function highlightRelatedPhrases($scope, references, selection) {
         }
         continue;
       }
-
       // Selection overlaps the end of the phrase
       if (phrases[i].end > selection.start &&
           phrases[i].end < selection.end) {
         var middle = {
-          start: i === 0 ? selection.start :
-              Math.max(selection.start, phrases[i-1].end),
+          start: i === 0 ? selection.start : Math.max(selection.start, phrases[i-1].end),
           end: phrases[i].end
         };
         phrases[i].end = middle.start;
@@ -216,7 +227,6 @@ function highlightRelatedPhrases($scope, references, selection) {
         highlightSpans.push(right);
         i++;
         continue;
-
       }
 
       // Selection overlaps the start of the phrase
@@ -224,8 +234,7 @@ function highlightRelatedPhrases($scope, references, selection) {
           phrases[i].start < selection.end) {
 
         var left = {
-          start: i === 0 ? selection.start :
-              Math.max(selection.start, phrases[i-1].end),
+          start: i === 0 ? selection.start : Math.max(selection.start, phrases[i-1].end),
           end: phrases[i].start
         };
 
@@ -244,11 +253,10 @@ function highlightRelatedPhrases($scope, references, selection) {
         i++;
         continue;
       }
-
+      // No overlap
       i++;
     }
   }
-
   $scope.curSpanManager = createSpans(phrases, selection,
       highlightAndReferenceSpans, highlightSpans);
 };
@@ -267,9 +275,6 @@ function highlightRelatedPhrases($scope, references, selection) {
 function createSpans(phrases, selection,
     highlightAndReferenceSpans, highlightSpans) {
   var paragraph = document.getElementById('theTextParagraph');
-  //console.log(paragraph);
-  //console.log(phrases);
-
   // Create distinct spans
   i = 1;
   while(i < phrases.length) {
@@ -440,6 +445,7 @@ app.directive('referencedisplay', ReferenceDisplay);
 function isArray(o) {
   return Object.prototype.toString.call(o) === '[object Array]';
 }
+
 function clone(obj) {
   if(!obj || typeof obj !== 'object') {
     return obj;
@@ -466,58 +472,55 @@ function clone(obj) {
       $scopeGlobal.ws.send("next_task");
   })
 
-    function handleRemoval(obj) {
-      console.log("Received a remove call");
-      var referenceID;
-      for (let intervention of obj.remove) {
-        var referenceID = $scopeGlobal.interventions[intervention]
-        delete $scopeGlobal.interventions[intervention];
-        removeAllInterventions(referenceID);
-      }
+function handleRemoval(obj) {
+  console.log("Received a remove call");
+  var referenceID;
+  for (let intervention of obj.remove) {
+    var referenceID = $scopeGlobal.interventions[intervention]
+    delete $scopeGlobal.interventions[intervention];
+    removeAllInterventions(referenceID);
+  }
+}
+
+function handleDelivery(obj) {
+  console.log("Received a deliver call");
+  for (let intervention of obj.deliver) {
+    var func = intervention.function;
+    var interventionName = intervention.name;
+    var transition_in = intervention.transition_in;
+
+    var args = JSON.parse(intervention.arguments);
+    var referenced_tuples = [];
+    var data = $scopeGlobal.datatable.data;
+    if (args.type == "legend") {
+      referenced_tuples.push("legend");
+    } else {
+      var referenceID = args.id;
     }
-
-    function handleDelivery(obj) {
-      console.log("Received a deliver call");
-      for (let intervention of obj.deliver) {
-        var func = intervention.function;
-        var interventionName = intervention.name;
-        var transition_in = intervention.transition_in;
-
-        var args = JSON.parse(intervention.arguments);
-        var referenced_tuples = [];
-        var data = $scopeGlobal.datatable.data;
-        if (args.type == "legend") {
-          referenced_tuples.push("legend");
-        } else {
-          var referenceID = args.id;
-        }
-
-        $scopeGlobal.interventions[interventionName] = { tuple_id: args.id, args: args, transition_out: intervention.transition_out };
-        eval(func)($scopeGlobal.interventions[interventionName], transition_in, args);
-      }
-    }
+    $scopeGlobal.interventions[interventionName] = { tuple_id: args.id, args: args, transition_out: intervention.transition_out };
+    eval(func)($scopeGlobal.interventions[interventionName], transition_in, args);
+  }
+}
 
 
-    function highlightVisOnly(referenceID, transition_in, args) {
-        setTimeout(function () {
-          var tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
-          $scopeGlobal.curMarksManager.highlight(tuple_ids , referenceID.tuple_id, transition_in, args);
-        },transition_in*1.2);
-    }
+function highlightVisOnly(referenceID, transition_in, args) {
+    setTimeout(function () {
+      var tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
+      $scopeGlobal.curMarksManager.highlight(tuple_ids , referenceID.tuple_id, transition_in, args);
+    },transition_in*1.2);
+}
 
-    function highlightLegend(referenceID, transition_in, args) {
-      setTimeout(function () {
-          $scopeGlobal.curMarksManager.highlightLegend(transition_in, args);
-      },transition_in*1.2);
-    }
+function highlightLegend(referenceID, transition_in, args) {
+  setTimeout(function () {
+      $scopeGlobal.curMarksManager.highlightLegend(transition_in, args);
+  },transition_in*1.2);
+}
 
-    function removeAllInterventions(referenceID) {
+function removeAllInterventions(referenceID) {
 
-      if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
-        setTimeout(function(){
-          $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
-        }, referenceID.transition_out*1.2);
-
-      }
-
-    }
+  if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
+    setTimeout(function(){
+      $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
+    }, referenceID.transition_out*1.2);
+  }
+}
