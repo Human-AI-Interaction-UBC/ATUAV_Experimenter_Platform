@@ -105,9 +105,6 @@ function addRatingWidget(shopItem, data) {
     var r = rating(ratingElement, currentRating, maxRating, callback);
 }
 
-//})();
-
-
 function getSelectedValue(element){
     var txt="";
     for (i = 0; i < element.length; i++) {

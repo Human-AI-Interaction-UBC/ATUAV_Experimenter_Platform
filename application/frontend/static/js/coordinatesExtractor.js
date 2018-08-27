@@ -51,7 +51,6 @@ function findCoordinatesofSentences(textElementID, coordinatesofChar) {
     //console.log($offset);
   });
   $(textElementID).html(oldText); //get back to original text without spans
-
 // loop over each sentence of the paragraph
   for(var i=0; i<sentSpanCoord.length;i++){
     var paragraphText = oldText;
@@ -78,8 +77,71 @@ function findCoordinatesofSentences(textElementID, coordinatesofChar) {
   }
 
   return sentencePolygonCoordinates;
-
 };
+
+function findCoordinatesofRefSentences(textElementID, coordinatesofChar, startEndCoords) {
+  var sentSpanCoord = [], sentencePolygonCoordinates = [];
+  var newText =  "";
+  var oldText = $(textElementID).text().trim();
+  newText = oldText
+  var sortFunc = function(a,b) { return a.start - b.start; };
+  startEndCoords.sort(sortFunc)
+  var spanCharAcc = 0
+  //put a span for each sentence
+  for (var i = 0, len = startEndCoords.length; i < len; i++) {
+    start = startEndCoords[i]['start'];
+    end = startEndCoords[i]['end'];
+    // for correct string slicing
+    if (start == 0) {
+      start = 1;
+    }
+    newText = newText.slice(0, start - 1 + spanCharAcc) + '<span>' + newText.slice(start - 1 + spanCharAcc)
+    spanCharAcc = spanCharAcc + 6
+    newText = newText.slice(0, end - 1 + spanCharAcc) + '</span>' + newText.slice(end - 1 + spanCharAcc)
+    spanCharAcc = spanCharAcc + 7
+  }
+
+  $(textElementID).html(newText);
+  console.log(newText)
+  $spans = $(textElementID).find('span');
+  $spans.each(function(){
+    var $span = $(this),
+        $offset = $span.offset();
+    $offset.width = $span.innerWidth();
+    $offset.height = $span.innerHeight();
+    $offset.sentence = $span.text();
+    sentSpanCoord.push($offset);
+  });
+  $(textElementID).html(oldText); //get back to original text without spans
+  console.log(sentSpanCoord)
+
+// loop over each sentence of the paragraph
+  for(var i=0; i<sentSpanCoord.length;i++){
+    var paragraphText = oldText;
+    var sentenceStartPosition = paragraphText.indexOf(sentSpanCoord[i].sentence);
+    var sentenceEndPosition = paragraphText.indexOf(sentSpanCoord[i].sentence) + sentSpanCoord[i].sentence.length-1;
+    var coordofSentStartPosition = coordinatesofChar[sentenceStartPosition];
+    var coordofSentEndPosition = coordinatesofChar[sentenceEndPosition];
+
+    // eight points needed to build the polygon
+    sentencePolygonCoordinates.push(
+      {sentence:sentSpanCoord[i].sentence, start:sentenceStartPosition, end: sentenceEndPosition,
+      numofwords:sentSpanCoord[i].sentence.split(" ").length,
+      polygonCoords:[
+      {x:coordofSentStartPosition.left, y:coordofSentStartPosition.top},
+      {x:coordofSentStartPosition.left, y:coordofSentStartPosition.top+coordofSentStartPosition.height},
+      {x:sentSpanCoord[i].left, y:coordofSentStartPosition.top+coordofSentStartPosition.height},
+      {x:sentSpanCoord[i].left, y:sentSpanCoord[i].top+ sentSpanCoord[i].height},
+      {x:coordofSentEndPosition.left+coordofSentEndPosition.width, y:coordofSentEndPosition.top+coordofSentEndPosition.height},
+      {x:coordofSentEndPosition.left+coordofSentEndPosition.width, y:coordofSentEndPosition.top},
+      {x:sentSpanCoord[i].left + sentSpanCoord[i].width, y:coordofSentEndPosition.top},
+      {x:sentSpanCoord[i].left + sentSpanCoord[i].width, y:sentSpanCoord[i].top}
+    ]});
+  }
+  return sentencePolygonCoordinates;
+};
+
+
 //coordinates of each sentence with index, each word within sentence with index, num of word in each sentence
 function aggregateDataIntoJSON(charData, sentenceData, wordData){
   var aggregatedData = {charData:charData, sentenceData:sentenceData, wordData:wordData};

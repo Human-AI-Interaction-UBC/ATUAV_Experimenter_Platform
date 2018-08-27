@@ -1,4 +1,6 @@
-
+/*****************************************
+/ Code for highlighting (NOT RELEVANT NOW)
+******************************************
 /**
  * Check if two sets of spans have any overlap.
  *
@@ -357,7 +359,6 @@ function createSpans(phrases, selection,
         }
       }
     }
-
   });
   return sm;
 }
@@ -367,21 +368,16 @@ function initReferences($scope) {
     $scope.curMarksManager.removeOverlay();
   }
   if($scope.curSpanManager) { $scope.curSpanManager.clearSpans(); }
-
   var datatable = $scope.datatable;
   var marks = $scope.marks;
   var visual_references = $scope.visualReferences;
-  var text_references =  $scope.curReference;
+  var textrefs =  $scope.curReference;
 
   var refMapper = new ReferenceMapper(visual_references);
 
   // Merge the data tables
   var data = datatable.data,
     marksHash = {};
-  var visrefs = visual_references.references.reduce(function(acc, val) {
-    acc[val.mark_id] = val;
-    return acc;
-  }, {});
   visual_references.references.forEach(function(visual_reference) {
     visual_reference.tuple_ids.forEach(function(tuple_id) {
       marksHash[tuple_id] = { 'mark_id': visual_reference.mark_id };
@@ -389,7 +385,6 @@ function initReferences($scope) {
   });
 
   // Determine the tuple IDs that the text references refer to.
-  var textrefs = text_references;
   var referenced_tuples = [];
 
   function matched_tuple(tuple_a, tuple_b) {
@@ -432,6 +427,9 @@ function initReferences($scope) {
   $scope.refMapper = refMapper;
 }
 
+/*****************************************
+ END Code for highlighting (NOT RELEVANT NOW)
+******************************************/
 
 var app = angular.module('visreferences', ['ui.bootstrap']);
 app.config(function($locationProvider) {
@@ -521,7 +519,6 @@ function handleDelivery(obj) {
  * @param {Object} args - arguments for the highlighting, specified in the database
  */
 function highlightVisOnly(referenceID, transition_in, args) {
-  console.log("HIGHLIGTING viz ONLY")
     setTimeout(function () {
       var tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
       $scopeGlobal.curMarksManager.highlight(tuple_ids , referenceID.tuple_id, transition_in, args);
@@ -529,7 +526,7 @@ function highlightVisOnly(referenceID, transition_in, args) {
 }
 
 /**
- * Highlighting the graph legend 
+ * Highlighting the graph legend
  */
 function highlightLegend(referenceID, transition_in, args) {
   setTimeout(function () {
@@ -537,16 +534,8 @@ function highlightLegend(referenceID, transition_in, args) {
   },transition_in*1.2);
 }
 
-/**
- * Find all the references which the highlighted phrase overlaps.
- *
- * @param {{start: number, end: number}} selection
- *    The indices of the selected text.
- * @returns {Array.<reference>} An array of references that the selection
- *    overlaps with.
- */
-function removeAllInterventions(referenceID) {
 
+function removeAllInterventions(referenceID) {
   if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
     setTimeout(function(){
       $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
