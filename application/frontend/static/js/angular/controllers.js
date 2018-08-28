@@ -94,6 +94,9 @@ var AppCtrl = function($scope, $http, $location) {
           //sendJSONtoTornado($scope.aggregatedData,$scope.curConditionId );
           //console.log($scope.coordinatesofSentences[1].polygonCoords);
           //drawOverlay($scope.aggregatedData.sentenceData[0].polygonCoords);
+          console.log($scope.aggregatedData.sentenceData[0].polygonCoords)
+          console.log("drew overlay")
+
       });
   };
   angular.element(document.getElementById('theChart')).on('load',

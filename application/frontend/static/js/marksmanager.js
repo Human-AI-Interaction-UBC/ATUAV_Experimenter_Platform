@@ -218,7 +218,6 @@
 					d3.select(this.overlay).selectAll( '.arrow_selectArrow').remove();
 				},
 				"highlightLegend": function(transition_in, args) {
-					console.log("highlighting legend");
 					var legend_mark = this.getLegendMark();
 					var transition_in = transition_in || 0; //TODO: maybe this should be TRANSITION_DURATION
 					var color = args.color;
@@ -227,6 +226,7 @@
 					//var desat = args.desat;
 					var bold = args.bold;
 					var bold_thickness = args.bold_thickness || 1;
+					console.log("highlighting legend");
 					d3.select(legend_mark)
 						.attr('stroke', 'white')
 						.attr('stroke-width', 0)
@@ -236,6 +236,8 @@
 						//.attr('fill-opacity', 0)
 						.attr('stroke', function () { return bold? color: 'none';})
 						.attr('fill-opacity', 0);
+
+					console.log("highlighted legend")
 				}
 			}
 		}
@@ -385,7 +387,11 @@
 		var self = this;
 		for (var i=0; i<self.marks.length; i++){
 				var d3mark = d3.select(self.marks[i]);
+				console.log(d3mark)
+
 				var mark_data = d3mark.data()[0];
+				console.log(mark_data)
+
 				if (mark_data.id == "legend") {
 					return self.marks[i];
 				}
