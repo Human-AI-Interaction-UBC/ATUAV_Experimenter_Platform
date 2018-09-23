@@ -198,6 +198,8 @@
 				},
 				"unhighlight": function(interventions, to_be_removed) {
 					var tuple_ids = Object.values(interventions).map(function(obj) {return obj.tuple_id});
+					console.log("NEW TUPLE IDS")
+					console.log(tuple_ids)
 					var self = this,
 						marks = self.getSelectedMarks(tuple_ids);
 						console.log("removing: selected marks" + marks.selected_marks.length);
@@ -406,6 +408,8 @@
         this, tuple_ids, reference_id, transition_in, args);
 	};
 	MarksManager.prototype.unhighlight = function(interventions, to_be_removed) {
+		console.log("NEW TUPLE IDS")
+		console.log()
 		MarksManager.internal.highlights[this.type].unhighlight.call(this, interventions, to_be_removed);
 	};
 	MarksManager.prototype.highlightLegend = function(transition_in, args) {

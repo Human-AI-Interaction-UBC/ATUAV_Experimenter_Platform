@@ -1,0 +1,28 @@
+
+==================================================================================
+
+09.20.2018
+
+Title: Fixed the bug with flickering
+
+Description: We had this flickering bug, where visually we had highlight and desat
+of the bars triggered very frequently for some of the rules.
+
+Cause: The bug reveals itself when two mutually exclusive rules (call them R1 and R2)
+share one visual intervention (i.e., they trigger the highlight of the same bar, B1).
+The reason for this behavior is that when receive a new event, we deliver interventions
+(bar highlights) which this event triggers, and then remove the interventions for
+which this event is set as a removal condition. For example, if we receive a new event E1,
+which is a delivery trigger for R1, we deliver R1. If the adaptation loop detects that E1 is
+a removal condition for R2, and it checks which bars the R2 delivers (B1 is one of them).
+Then, it will attempt to delete all of the bars that R2 delivers. Since B1 is one
+of them, it will trigger the removal of B1, even though it should be present according
+to R1.
+
+Fix: I had to add extra logic to __removeExpiredInterventions__ function in
+adaptation_loop.py. Specifically, when creating a list of interventions to remove,
+we are checking for rules which interventions need to be removed. Before, when we found such
+a rule, we just checked if any of the interventions that this rule delivers is currently active,
+and if so, add it to the list of interventions to be removed. Now, before adding an intervention
+to this removal list, we additionally check if this intervention is delivered by
+the current active rule, and if so, we do not attempt to remove it.

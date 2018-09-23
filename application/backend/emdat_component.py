@@ -29,7 +29,7 @@ class EMDATComponent(DetectionComponent):
         self.init_emdat_features(self.emdat_task_features)
         self.tobii_controller.update_aoi_storage(self.AOIS)
         self.feature_select = self.application_state_controller.getEdmatFeatures()
-        
+
     def notify_app_state_controller(self):
         """
         Selects features for specified events in Application State and sends them to the database.

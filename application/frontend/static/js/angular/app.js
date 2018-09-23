@@ -476,6 +476,7 @@ function clone(obj) {
 */
 function handleRemoval(obj) {
   console.log("Received a remove call");
+  console.log(obj);
   var referenceID;
   for (let intervention of obj.remove) {
     var referenceID = $scopeGlobal.interventions[intervention]
@@ -536,9 +537,11 @@ function highlightLegend(referenceID, transition_in, args) {
 
 
 function removeAllInterventions(referenceID) {
-  if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
+  //if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
+    console.log("REMOVED")
+    console.log("success")
     setTimeout(function(){
       $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
     }, referenceID.transition_out*1.2);
-  }
+  //}
 }

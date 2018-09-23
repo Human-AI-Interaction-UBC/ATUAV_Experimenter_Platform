@@ -80,23 +80,41 @@ class AdaptationLoop():
 
         """
 
-        # get all rules and interventions which have a trigger event that matches event_name
+        # get all rules and interventions which have a removal event that matches event_name
         query_results = self.conn.execute("""SELECT name, removal_sql_condition, intervention_name FROM rule, rule_task, rule_removal_trigger, rule_intervention_payload
                                             WHERE rule.name = rule_task.rule_name and rule_task.task = ?
                                             and rule.name = rule_intervention_payload.rule_name
                                             and rule.name = rule_removal_trigger.rule_name and rule_removal_trigger.removal_trigger_event = ?""", (task, event_name))
         triggered_removals = query_results.fetchall()
 
+        # get all rules and interventions which have a delivery event that matches event_name
+        query_results = self.conn.execute("""SELECT name, delivery_sql_condition, intervention_name, active_retrigger
+                                            FROM rule, rule_task, rule_delivery_trigger, rule_intervention_payload
+                                            WHERE rule.name = rule_task.rule_name and rule_task.task = ?
+                                            and rule.name = rule_intervention_payload.rule_name
+                                            and rule.name = rule_delivery_trigger.rule_name and rule_delivery_trigger.delivery_trigger_event = ?""", (task, event_name))
+        triggered_rules = query_results.fetchall()
+
         to_remove = []
         #for each intervention, if it is currently active and if it's removal condition is met
         #update its status in the application state. ie. set active = 0
+        curr_rule_interventions = []
+
+        for trigger in triggered_rules:
+            curr_rule_interventions.append(trigger["intervention_name"])
+
         for removal in triggered_removals:
 
             intervention_name = removal['intervention_name']
             removal_condition = removal['removal_sql_condition']
-
+            #if (intervention_name in )
             if self.app_state_controller.isInterventionActive(intervention_name):
                 if self.app_state_controller.evaluateConditional(removal_condition):
+                    print("Looking at", intervention_name)
+                    if (intervention_name in curr_rule_interventions):
+                        print("Don't need", intervention_name)
+                        continue
+                    print("Need", intervention_name)
                     self.app_state_controller.setInterventionInactive(intervention_name)
                     to_remove.append(intervention_name)
                     print("removing: " + intervention_name)
@@ -105,7 +123,7 @@ class AdaptationLoop():
         #TODO: Whether or not liveWebSocket should be an array
         if to_remove:
             to_remove = json.dumps({'remove': to_remove})
-            #print to_remove
+            print to_remove
             self.liveWebSocket.write_message(to_remove)
 
     def __ruleRepeatsAllowed__(self, rule_name):

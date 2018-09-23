@@ -89,6 +89,7 @@ var AppCtrl = function($scope, $http, $location) {
           $scope.coordinatesofWords = findCoordinatesofWords("#theTextParagraph", $scope.coordinatesofChar);
           $scope.coordinatesofRefSentences = findCoordinatesofRefSentences("#theTextParagraph", $scope.coordinatesofChar, startEndCoords);
           $scope.aggregatedData = aggregateDataIntoJSON($scope.coordinatesofChar, $scope.coordinatesofRefSentences, $scope.coordinatesofWords);
+          console.log("NEW DATA")
           console.log($scope.aggregatedData)
           //uncomment this to store the json data
           //sendJSONtoTornado($scope.aggregatedData,$scope.curConditionId );
