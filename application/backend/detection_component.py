@@ -50,8 +50,11 @@ class DetectionComponent():
         '''
         print("TRYING HERE")
         if (self.is_periodic):
-            self.cb = PeriodicCallback(callback = self.run, callback_time = self.callback_time)
-            self.cb.start()
+            if (not hasattr(self, "cb")):
+                self.cb = PeriodicCallback(callback = self.run, callback_time = self.callback_time)
+                self.cb.start()
+            else:
+                self.cb.start()
         else:
             IOLoop.instance().add_callback(callback = self.run)
 

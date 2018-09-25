@@ -227,6 +227,10 @@ class TobiiController:
 		self.gazeData = []
 		self.eventData = []
 		self.eyetracker.events.OnGazeDataReceived += self.on_gazedata
+		print("=================== SLEEPING =========================")
+		time.sleep(1)
+		print("=================== WOKE UP =========================")
+
 		self.eyetracker.StartTracking()
 
 		#Preetpal's Code to initialize/empty arrays to be used in fixation algorithm

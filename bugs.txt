@@ -1,3 +1,14 @@
+09.23.2018
+
+Title: Bug with crashing EMDAT
+
+Description: EMDAT component was sometimes crashing when we are switching to new
+MSNV from the questionnaire from previous MSNV.
+
+Fix: We had a field "start" in the EMDAT component, which has the same name as
+function start(). I didn't know that python doesn't separate those, so when I was
+calling self.start = time.time(), it was overwriting the function definition under
+the same name. The field start is now called start_time.
 
 ==================================================================================
 

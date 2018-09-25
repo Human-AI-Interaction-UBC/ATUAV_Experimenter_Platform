@@ -29,6 +29,7 @@ class EMDATComponent(DetectionComponent):
         self.init_emdat_features(self.emdat_task_features)
         self.tobii_controller.update_aoi_storage(self.AOIS)
         self.feature_select = self.application_state_controller.getEdmatFeatures()
+        print("CONSTRUCTED NEW EMDAT OBJECT")
 
     def notify_app_state_controller(self):
         """
@@ -55,7 +56,6 @@ class EMDATComponent(DetectionComponent):
                                                 self.tobii_controller.emdat_global_features[event_name][feature_name])
         return features_to_send
 
-    @gen.coroutine
     def run(self):
         """
         Calculates the features for new raw Tobii data collected since
@@ -64,9 +64,9 @@ class EMDATComponent(DetectionComponent):
         """
         start_time = time.time()
         print(self.pups_idx, len(self.tobii_controller.time))
-        self.start = self.tobii_controller.time[self.pups_idx]
+        self.start_time = self.tobii_controller.time[self.pups_idx]
         self.end = self.tobii_controller.time[-1]
-        self.length = self.end - self.start
+        self.length = self.end - self.start_time
         self.calc_validity_gaps()
         self.emdat_interval_features = {}
         self.init_emdat_features(self.emdat_interval_features)
@@ -76,29 +76,19 @@ class EMDATComponent(DetectionComponent):
 
         """ calculate pupil dilation features """
         pupil_start_time = time.time()
-        #print("\n\n\n============ START calculating features for whole screen ============")
         if (params.USE_PUPIL_FEATURES):
             self.calc_pupil_features()
-        #print("Calculating PUPIL features for WHOLE screen: --- %s seconds ---" % (time.time() - pupil_start_time))
         """ calculate distance from screen features"""
         if (params.USE_DISTANCE_FEATURES):
             self.calc_distance_features()
         """ calculate fixations, angles and path features"""
         if (params.USE_FIXATION_PATH_FEATURES):
             self.calc_fix_ang_path_features()
-        #print("Calculating FIXATION ANGLE features for WHOLE screen: --- %s seconds ---" % (time.time() - fix_angle_start_time))
-        #print("============ FINISH calculating features for whole screen ============\n\n\n\n\n")
 
         all_aoi_time = time.time()
-        #print(all_aoi_time)
         """ calculate AOIs features """
-        #print("============ START calculating features for AOIS ============\n\n")
 
         self.calc_aoi_features()# rest_pupil_size, export_pupilinfo)
-        #print("============ FINISH calculating features for AOIS ============\n\n\n\n\n")
-        #print(time.time())
-        #print(time.time() - all_aoi_time)
-        #print("Calculating ALL AOI: --- %s seconds ---" % (time.time() - all_aoi_time))
         all_merging_time = time.time()
         if (params.KEEP_TASK_FEATURES and params.KEEP_GLOBAL_FEATURES):
             self.merge_features(self.emdat_interval_features, self.emdat_task_features)
@@ -317,7 +307,6 @@ class EMDATComponent(DetectionComponent):
             # TODO: Check that
             #self.fixation_start = -1
             #self.fixation_end = -1
-
             self.emdat_interval_features['meanfixationduration'] = mean(map(lambda x: float(x[2]), fixation_data))
             self.emdat_interval_features['stddevfixationduration'] = stddev(map(lambda x: float(x[2]), fixation_data))
             self.emdat_interval_features['sumfixationduration'] = sum(map(lambda x: x[2], fixation_data))
@@ -329,7 +318,6 @@ class EMDATComponent(DetectionComponent):
         else:
             #self.fixation_start = -1
             #self.fixation_end = -1
-
             self.emdat_interval_features['meanfixationduration'] = -1
             self.emdat_interval_features['stddevfixationduration'] = -1
             self.emdat_interval_features['sumfixationduration'] = -1

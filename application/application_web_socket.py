@@ -2,7 +2,7 @@ import tornado.websocket
 
 
 import params
-
+import time
 
 TOBII_CONTROLLER = "tobii_controller"
 APPLICATION_STATE_CONTROLLER = "application_state_controller"
@@ -66,6 +66,9 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
             self.fixation_component.start()
         if (params.USE_EMDAT):
             self.emdat_component.setup_new_emdat_component()
+            print(type(self.emdat_component))
+            print("HAS ATTRIBUTE", hasattr(self.emdat_component, 'start'))
+            #self.emdat_component.print_hi()
             self.emdat_component.start()
             if (params.USE_ML):
                 self.ml_component.start()

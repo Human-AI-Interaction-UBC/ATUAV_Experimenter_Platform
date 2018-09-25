@@ -34,8 +34,13 @@ ML_CALL_PERIOD = 6000000
 # Some parameter from EMDAT
 MAX_SEG_TIMEGAP= 10
 
+# Fixation detector parameters
 FIX_MAXDIST = 35
 FIX_MINDUR = 100000
 
 REST_PUPIL_SIZE = 0
 PUPIL_ADJUSTMENT = "rpscenter"
+
+# The amount of time to wait after starting a new task before starting recording
+# fixations (to account for html loading time)
+FIX_DETECTION_DELAY = 1000000
