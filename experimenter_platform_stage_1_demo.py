@@ -63,7 +63,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         self.websocket_ping_interval = 0
         self.websocket_ping_timeout = float("inf")
-        self.app_state_control = ApplicationStateController(5)
+        self.app_state_control = ApplicationStateController(18)
         self.adaptation_loop = AdaptationLoop(self.app_state_control)
         self.adaptation_loop.liveWebSocket = self
 
@@ -96,7 +96,7 @@ class MainHandler(tornado.web.RequestHandler):
         #self.render('mmd.html', mmd="3")
         #self.render('mmd.html', mmd="3")
 
-        self.render('MMDIntervention.html', mmd="5")
+        self.render('MMDIntervention.html', mmd="18")
         #self.render('questionnaire.html', mmd="3", questions = mmdQuestions)
 
 
