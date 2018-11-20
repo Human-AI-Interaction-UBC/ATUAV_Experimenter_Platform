@@ -124,6 +124,7 @@ class MainHandler(tornado.web.RequestHandler):
         q1 = self.get_argument('element_1')
         if(int(q1)==1):
             self.application.mmd_order = [3,5,9,11,18,20,27,28,30,60,62,66,72,74,76]
+            self.application.mmd_order = [3]
             random.shuffle(self.application.mmd_order)
             self.application.mmd_index = 0
             self.redirect('/userID')

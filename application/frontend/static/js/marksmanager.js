@@ -39,208 +39,213 @@
 		highlights: {
 			"highlight": {
 				"create": function() {
-					var self = this;
-					var marks = d3.select(self.overlay).selectAll('rect')
-					  .data(self.data, function(d) { return d ? d.id : null; });
+						var self = this;
+						var marks = d3.select(self.overlay).selectAll('rect')
+						  .data(self.data, function(d) { return d ? d.id : null; });
 
-					marks.enter()
-					  .append('rect').attr('x', function(d) { return d.left*self.scale.x; })
-					  .attr('y', function(d) { return d.top*self.scale.y; })
-					  .attr('width', function(d) { return d.width*self.scale.x; })
-					  .attr('height', function(d) { return d.height*self.scale.y; });
+						marks.enter()
+						  .append('rect').attr('x', function(d) { return d.left*self.scale.x; })
+						  .attr('y', function(d) { return d.top*self.scale.y; })
+						  .attr('width', function(d) { return d.width*self.scale.x; })
+						  .attr('height', function(d) { return d.height*self.scale.y; });
 
-					marks.exit().remove();
-
-					return d3.select(self.overlay).selectAll('rect');
-				},
-				"highlight": function(tuple_ids) {
-					//d3.selectAll(this.marks)
-                    d3.select(this.overlay).selectAll('rect')
-					  .style('display', function(mark_data) {
-						  for(var i=0; i<tuple_ids.length; i++) {
-						      if(tuple_ids[i] === mark_data.id) return 'block';
-						  }
-						  return 'none';
-					  });
-				},
-				"unhighlight": function() {
-          d3.selectAll(this.marks).style('display', 'none');
-        }
+						marks.exit().remove();
+						console.log("highlight - create")
+						return d3.select(self.overlay).selectAll('rect');
+					},
+					"highlight": function(tuple_ids) {
+					console.log("highlight - highlight")
+						//d3.selectAll(this.marks)
+	            d3.select(this.overlay).selectAll('rect')
+						  .style('display', function(mark_data) {
+							  for(var i=0; i<tuple_ids.length; i++) {
+							      if(tuple_ids[i] === mark_data.id) return 'block';
+							  }
+							  return 'none';
+						  });
+					},
+					"unhighlight": function() {
+						console.log("highlight - unhighlight")
+	          d3.selectAll(this.marks).style('display', 'none');
+	        }
 			},
 			"desaturate": {
-				"create": function() {
-					var self = this;
+					"create": function() {
+						console.log("desaturate - create")
+						var self = this;
 
-					var margin = 1;
-					var marks = d3.select(self.overlay).selectAll('rect')
-					  .data(self.data, function(d) { return d.id; }).enter()
-					  .append('rect')
-            .attr('x', function(d) {
-              return (d.left-margin)*self.scale.x;
-            })
-					  .attr('y', function(d) {
-              return (d.top-margin)*self.scale.y;
-            })
-					  .attr('width', function(d) {
-              return (d.width+margin*2)*self.scale.x;
-            })
-					  .attr('height', function(d) {
-              return (d.height+margin*2)*self.scale.y;
-            })
-            .on('click._marksmanager', function(d) {
-							if(!d3.select(this).classed('selected')) {
-								MarksManager.internal.highlights['desaturate'].highlight.call(self, [d.id]);
-							}
-							else {
-								MarksManager.internal.highlights['desaturate'].unhighlight.call(self);
-							}
-            });
-					// Extract only the marks that are mentioned
-					var referenced_marks = self.data.reduce(function(acc, val) {
-												if(val.tuple) acc.push(val);
-												return acc;
-											}, []);
-					return marks[0];
-					// var hints = d3.select(this.overlay).selectAll('circle')
-					// 			  .data(referenced_marks, function(d) { return d.id; })
-					// 			  .enter().append('circle')
-					// 			  .attr('cx', function(d) { return d.left; })
-					// 			  .attr('cy', function(d) { return d.top; })
-					// 			  .attr('r', 3).attr('fill', 'red').attr('fill-opacity', 0.5)
-					// 			  .classed('reference_hint', true);
-				},
-				"highlight": function(tuple_ids, reference_id, transition_in, args) {
-					var self = this,
-						marks = self.getSelectedMarks(tuple_ids);
-						selected_mark = self.getSelectedMarks([reference_id]);
-						console.log("tuple_ids " + tuple_ids);
-						console.log("reference_id " + reference_id);
-						console.log("args" + args);
+						var margin = 1;
+						var marks = d3.select(self.overlay).selectAll('rect')
+						  .data(self.data, function(d) { return d.id; }).enter()
+						  .append('rect')
+	            .attr('x', function(d) {
+	              return (d.left-margin)*self.scale.x;
+	            })
+						  .attr('y', function(d) {
+	              return (d.top-margin)*self.scale.y;
+	            })
+						  .attr('width', function(d) {
+	              return (d.width+margin*2)*self.scale.x;
+	            })
+						  .attr('height', function(d) {
+	              return (d.height+margin*2)*self.scale.y;
+	            })
+	            .on('click._marksmanager', function(d) {
+								if(!d3.select(this).classed('selected')) {
+									MarksManager.internal.highlights['desaturate'].highlight.call(self, [d.id]);
+								}
+								else {
+									MarksManager.internal.highlights['desaturate'].unhighlight.call(self);
+								}
+	            });
+						// Extract only the marks that are mentioned
+						var referenced_marks = self.data.reduce(function(acc, val) {
+													if(val.tuple) acc.push(val);
+													return acc;
+												}, []);
+						return marks[0];
+						// var hints = d3.select(this.overlay).selectAll('circle')
+						// 			  .data(referenced_marks, function(d) { return d.id; })
+						// 			  .enter().append('circle')
+						// 			  .attr('cx', function(d) { return d.left; })
+						// 			  .attr('cy', function(d) { return d.top; })
+						// 			  .attr('r', 3).attr('fill', 'red').attr('fill-opacity', 0.5)
+						// 			  .classed('reference_hint', true);
+					},
+					"unhighlight": function(interventions, to_be_removed) {
+						console.log("desaturate - unhighlight")
+						var tuple_ids = Object.values(interventions).map(function(obj) {return obj.tuple_id});
+						console.log("NEW TUPLE IDS")
+						console.log(tuple_ids)
+						var self = this,
+							marks = self.getSelectedMarks(tuple_ids);
+							console.log("removing: selected marks" + marks.selected_marks.length);
+						/*d3.selectAll('.visual_reference')
+							.transition()
+							.attr('fill-opacity', 0)
+							.duration(TRANSITION_DURATION);*/
+						var desat = Object.values(interventions).map(function(obj) {return obj.args.desat}).includes(true); // true if there is an intervention with desat
+						var transition_out = to_be_removed.transition_out || 0;
+						d3.selectAll(marks.unselected_marks)
+							.transition()
+							.attr('fill-opacity', desat? DESATURATION: 0)
+							.attr('stroke-width', 0) //Enamul: to remove Bolding Intervention
+							.duration(transition_out)
+							.each('end', function() {
+								d3.select(this).classed('selected', 'false');
+							});
+						d3.select(this.overlay).selectAll( '.arrow_selectArrow').remove();
+					},
+					"highlight": function(tuple_ids, reference_id, transition_in, args) {
+						console.log("desaturate - highlight")
+						var self = this,
+							marks = self.getSelectedMarks(tuple_ids);
+							selected_mark = self.getSelectedMarks([reference_id]);
+							console.log("tuple_ids " + tuple_ids);
+							console.log("reference_id " + reference_id);
+							console.log("args" + args);
 
+							var transition_in = transition_in || 0; //TODO: maybe this should be TRANSITION_DURATION
+							var color = args.color;
+							var arrow = args.arrow;
+							var arrow_direction = args.arrow_direction;
+							var desat = args.desat;
+							var bold = args.bold;
+							var bold_thickness = args.bold_thickness || 1;
+
+	            	/*if(arrow){
+									self.arrowwidth = 25;
+	                for(var i=0;i<marks.selected_marks.length;i++){
+	                  var d3mark = d3.select(marks.selected_marks[i]);
+	                  var mark_data = d3mark.data()[0];
+	                  var arrowSize = Math.min(10, mark_data.height/2-2);
+										if (arrow_direction == "top") {
+												self.drawArrow(d3.select(this.overlay), mark_data.left+ mark_data.width/2,
+																													mark_data.top - self.arrowwidth,
+																													mark_data.left+ mark_data.width/2,
+																													mark_data.top - 2, arrowSize, transition_in, 'selectArrow');
+										} else if (arrow_direction == "bottom") {
+												self.drawArrow(d3.select(this.overlay), mark_data.left+ mark_data.width/2,
+																													mark_data.height + mark_data.top + self.arrowwidth,
+																													mark_data.left+ mark_data.width/2,
+																													mark_data.height + mark_data.top + 2, arrowSize, transition_in, 'selectArrow');
+										} else if (arrow_direction == "left") {
+												self.drawArrow(d3.select(this.overlay), mark_data.left - self.arrowwidth,
+																													mark_data.height/2+ mark_data.top,
+																													mark_data.left- 2,
+																													mark_data.height/2+ mark_data.top, arrowSize, transition_in,  'selectArrow');
+										} else {
+												// default: arrow starts on the right side
+	                  		self.drawArrow(d3.select(this.overlay), mark_data.left+ mark_data.width+self.arrowwidth,
+																														mark_data.height/2+ mark_data.top,
+																														mark_data.left+ mark_data.width+2,
+																														mark_data.height/2+ mark_data.top, arrowSize, transition_in, 'selectArrow');
+										}
+	                }
+
+								}
+								else{ //TEST
+									d3.select(this.overlay).selectAll( '.arrow_selectArrow')
+											.transition()
+											.duration(transition_in)
+											.remove();
+
+	              }*/
+
+								/*d3.selectAll('.visual_reference')
+									.sort( function(a, b) {
+										if (marks.selected_marks.includes(a)) return 1;
+										else return -1;
+									});*/ //TODO: currently non functioning
+
+	              d3.selectAll(selected_mark.selected_marks)
+	                .attr('stroke', 'white')
+									.attr('stroke-width', 0)
+	                .transition()
+	                .duration(transition_in)
+	                //.attr('fill-opacity', 0)
+								  .attr('stroke-width', bold_thickness)
+	                .attr('stroke', function () { return bold? color: 'none';})
+									.attr('fill-opacity', 0)
+	                .each('end', function() {
+	                  d3.select(this).attr('id', 'reference_' + reference_id);
+										d3.select(this).classed('selected', true);
+	                  //d3.select(this).classed('selected', !d3.select(this).classed('selected'));
+	                });
+	              d3.selectAll(marks.unselected_marks)
+	                .transition()
+	                .duration(transition_in)
+									.attr('stroke-width', 0)
+	                .attr('fill-opacity', function(mark_data) {
+											//var this_selection = d3.select(this)[0];
+											//console.log("contains? :" + marks.selected_marks.includes(this));
+											//console.log(d3.select(this).attr("class"));
+											//console.log(d3.select(this).property("className"));
+											return marks.selected_marks.length === 0 ? 0 : desat? DESATURATION: 0;
+	                });
+					},
+					"highlightLegend": function(transition_in, args) {
+						var legend_mark = this.getLegendMark();
 						var transition_in = transition_in || 0; //TODO: maybe this should be TRANSITION_DURATION
 						var color = args.color;
-						var arrow = args.arrow;
-						var arrow_direction = args.arrow_direction;
-						var desat = args.desat;
+						//var arrow = args.arrow;
+						//var arrow_direction = args.arrow_direction; //TODO: no suppor for arrows or desat currently
+						//var desat = args.desat;
 						var bold = args.bold;
 						var bold_thickness = args.bold_thickness || 1;
+						console.log("highlighting legend");
+						d3.select(legend_mark)
+							.attr('stroke', 'white')
+							.attr('stroke-width', 0)
+							.transition()
+							.attr('stroke-width', bold_thickness)
+							.duration(transition_in)
+							//.attr('fill-opacity', 0)
+							.attr('stroke', function () { return bold? color: 'none';})
+							.attr('fill-opacity', 0);
 
-            	if(arrow){
-								self.arrowwidth = 25;
-                for(var i=0;i<marks.selected_marks.length;i++){
-                  var d3mark = d3.select(marks.selected_marks[i]);
-                  var mark_data = d3mark.data()[0];
-                  var arrowSize = Math.min(10, mark_data.height/2-2);
-									if (arrow_direction == "top") {
-											self.drawArrow(d3.select(this.overlay), mark_data.left+ mark_data.width/2,
-																												mark_data.top - self.arrowwidth,
-																												mark_data.left+ mark_data.width/2,
-																												mark_data.top - 2, arrowSize, transition_in, 'selectArrow');
-									} else if (arrow_direction == "bottom") {
-											self.drawArrow(d3.select(this.overlay), mark_data.left+ mark_data.width/2,
-																												mark_data.height + mark_data.top + self.arrowwidth,
-																												mark_data.left+ mark_data.width/2,
-																												mark_data.height + mark_data.top + 2, arrowSize, transition_in, 'selectArrow');
-									} else if (arrow_direction == "left") {
-											self.drawArrow(d3.select(this.overlay), mark_data.left - self.arrowwidth,
-																												mark_data.height/2+ mark_data.top,
-																												mark_data.left- 2,
-																												mark_data.height/2+ mark_data.top, arrowSize, transition_in,  'selectArrow');
-									} else {
-											// default: arrow starts on the right side
-                  		self.drawArrow(d3.select(this.overlay), mark_data.left+ mark_data.width+self.arrowwidth,
-																													mark_data.height/2+ mark_data.top,
-																													mark_data.left+ mark_data.width+2,
-																													mark_data.height/2+ mark_data.top, arrowSize, transition_in, 'selectArrow');
-									}
-                }
-
-							}
-							else{
-								d3.select(this.overlay).selectAll( '.arrow_selectArrow')
-										.transition()
-										.duration(transition_in)
-										.remove();
-
-              }
-
-							d3.selectAll('.visual_reference')
-								.sort( function(a, b) {
-									if (marks.selected_marks.includes(a)) return 1;
-									else return -1;
-								}); //TODO: currently non functioning
-
-              d3.selectAll(selected_mark.selected_marks)
-                .attr('stroke', 'white')
-								.attr('stroke-width', 0)
-                .transition()
-                .duration(transition_in)
-                //.attr('fill-opacity', 0)
-							  .attr('stroke-width', bold_thickness)
-                .attr('stroke', function () { return bold? color: 'none';})
-								.attr('fill-opacity', 0)
-                .each('end', function() {
-                  d3.select(this).attr('id', 'reference_' + reference_id);
-									d3.select(this).classed('selected', true);
-                  //d3.select(this).classed('selected', !d3.select(this).classed('selected'));
-                });
-              d3.selectAll(marks.unselected_marks)
-                .transition()
-                .duration(transition_in)
-								.attr('stroke-width', 0)
-                .attr('fill-opacity', function(mark_data) {
-										//var this_selection = d3.select(this)[0];
-										//console.log("contains? :" + marks.selected_marks.includes(this));
-										//console.log(d3.select(this).attr("class"));
-										//console.log(d3.select(this).property("className"));
-										return marks.selected_marks.length === 0 ? 0 : desat? DESATURATION: 0;
-                });
-				},
-				"unhighlight": function(interventions, to_be_removed) {
-					var tuple_ids = Object.values(interventions).map(function(obj) {return obj.tuple_id});
-					console.log("NEW TUPLE IDS")
-					console.log(tuple_ids)
-					var self = this,
-						marks = self.getSelectedMarks(tuple_ids);
-						console.log("removing: selected marks" + marks.selected_marks.length);
-					/*d3.selectAll('.visual_reference')
-						.transition()
-						.attr('fill-opacity', 0)
-						.duration(TRANSITION_DURATION);*/
-					var desat = Object.values(interventions).map(function(obj) {return obj.args.desat}).includes(true); // true if there is an intervention with desat
-					var transition_out = to_be_removed.transition_out || 0;
-					d3.selectAll(marks.unselected_marks)
-					  .transition()
-						.attr('fill-opacity', desat? DESATURATION: 0)
-						.attr('stroke-width', 0) //Enamul: to remove Bolding Intervention
-						.duration(transition_out)
-            .each('end', function() {
-              d3.select(this).classed('selected', 'false');
-            });
-					d3.select(this.overlay).selectAll( '.arrow_selectArrow').remove();
-				},
-				"highlightLegend": function(transition_in, args) {
-					var legend_mark = this.getLegendMark();
-					var transition_in = transition_in || 0; //TODO: maybe this should be TRANSITION_DURATION
-					var color = args.color;
-					//var arrow = args.arrow;
-					//var arrow_direction = args.arrow_direction; //TODO: no suppor for arrows or desat currently
-					//var desat = args.desat;
-					var bold = args.bold;
-					var bold_thickness = args.bold_thickness || 1;
-					console.log("highlighting legend");
-					d3.select(legend_mark)
-						.attr('stroke', 'white')
-						.attr('stroke-width', 0)
-						.transition()
-						.attr('stroke-width', bold_thickness)
-						.duration(transition_in)
-						//.attr('fill-opacity', 0)
-						.attr('stroke', function () { return bold? color: 'none';})
-						.attr('fill-opacity', 0);
-
-					console.log("highlighted legend")
-				}
+						console.log("highlighted legend")
+					}
 			}
 		}
 	};

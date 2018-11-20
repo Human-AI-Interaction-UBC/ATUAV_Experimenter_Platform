@@ -35,6 +35,7 @@ class AdaptationLoop():
         self.liveWebSocket = liveWebSocket
         self.__readDBFromDisk__()
 
+
     def __readDBFromDisk__(self):
 
         """Reads the rules / intervention database from disk and stores it in memory
@@ -220,6 +221,46 @@ class AdaptationLoop():
             #print to_deliver_rules
             self.liveWebSocket.write_message(to_deliver_rules)
 
+    def __deliverAllInterventions__(self, event_name, task, time_stamp):
+
+        """Dispacthes new interventions which are triggered
+            - gets all the rules which have this event as a delivery trigger
+            - if the delivery trigger on the rule is met, dispatch it's corresponding invervention
+
+            arguments
+            event_name         -- string, name of the user (state) event triggering this rule check
+            task               -- int, current task id
+            time_stamp         -- long, time stamp of user event
+
+            keyword arguments
+            None
+
+            """
+
+        #get all the rules/interventions which have event_name as the delivery_trigger
+        query_results = self.conn.execute("""SELECT name, intervention_name
+                                        FROM rule, rule_task, rule_delivery_trigger, rule_intervention_payload
+                                        WHERE rule.name = rule_task.rule_name and rule_task.task = ?
+                                        and rule.name = rule_intervention_payload.rule_name
+                                        and rule.name = rule_delivery_trigger.rule_name""", (task,))
+        triggered_rules = query_results.fetchall()
+
+    #filter the triggered rules to rules to deliver based on their delivery sql conditional
+    #if the delivery condtional is satisfied, update the application state ie. active = 1
+        to_deliver_rules = []
+        for rule in triggered_rules:
+                rule_name = rule['name']
+                intervention_name = rule['intervention_name']
+                results = self.conn.execute("SELECT * FROM intervention WHERE intervention.name = ?", (intervention_name,))
+                intervention_params = results.fetchone()
+                to_deliver_rules.append(intervention_params)
+                self.app_state_controller.setInterventionActive(intervention_name, rule_name, time_stamp)
+
+        if to_deliver_rules:
+            to_deliver_rules = json.dumps({'deliver': to_deliver_rules})
+            #print to_deliver_rules
+            self.liveWebSocket.write_message(to_deliver_rules)
+
     def evaluateRules(self, event_name, time_stamp):
 
         """Evaluates all rules based that are triggered by the event with event_name
@@ -240,11 +281,13 @@ class AdaptationLoop():
             raise ValueError("Event name received is not one of the user states active for this task")
         task = self.app_state_controller.currTask
         print("EVALUATING: " + event_name)
+
         #remove all interventions that have this event as a removal_triggger
         self.__removeExpiredInterventions__(event_name, task)
 
         #deliver new interventions for all interventions that have this event as deliver_trigger
         self.__deliverNewInterventions__(event_name, task, time_stamp)
+        #self.__deliverAllInterventions__(event_name, task, time_stamp)
 
     def test(self):
         # for testing purposes:

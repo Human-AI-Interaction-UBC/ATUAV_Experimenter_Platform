@@ -92,9 +92,9 @@ var AppCtrl = function($scope, $http, $location) {
           console.log($scope.aggregatedData)
           //uncomment this to store the json data
           //sendJSONtoTornado($scope.aggregatedData,$scope.curConditionId );
-          //console.log($scope.coordinatesofSentences[1].polygonCoords);
+          console.log($scope.coordinatesofSentences[0].polygonCoords);
           //drawOverlay($scope.aggregatedData.sentenceData[0].polygonCoords);
-          console.log($scope.aggregatedData.sentenceData[0].polygonCoords)
+          //console.log($scope.aggregatedData.sentenceData[0].polygonCoords)
           console.log("drew overlay")
 
       });

@@ -522,6 +522,7 @@ function handleDelivery(obj) {
 function highlightVisOnly(referenceID, transition_in, args) {
     setTimeout(function () {
       var tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
+      //debugger;
       $scopeGlobal.curMarksManager.highlight(tuple_ids , referenceID.tuple_id, transition_in, args);
     },transition_in*1.2);
 }

@@ -4,6 +4,13 @@
 USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight.db"
 GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight.db"
 
+
+# Project paths:
+# Reference highlighting rules - SD testing
+#RUN USING:  python -u experimenter_platform_study_bars_SD.py
+#USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight_SD.db"
+#GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_SD_bold1.db"
+
 # Legend highlighting rules
 #RUN USING:  python -u experimenter_platform_study_1.py
 #GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_legend_highlighting.db"
