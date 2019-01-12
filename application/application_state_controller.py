@@ -412,10 +412,12 @@ class ApplicationStateController():
         """
 
         query = query.replace("\n"," ") #replace new line symbols in case the sql conditional is multi-lined
+
         try:
             query_results = self.conn.execute(query)
             value = int(query_results.fetchone()['result'])
-        except:
+        except Exception as e:
+            print(e)
             raise ValueError("Malformed SQL conditional check in gaze_event_rules.db")
         #print value
         return value

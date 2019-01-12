@@ -1,8 +1,20 @@
+#Pilot condition
+PILOT_CONDITION_NO_REMOVAL = True
+#PILOT_CONDITION_NO_REMOVAL = False
+
+#PILOT mmd subset to load
+#PILOT_MMD_SUBSET = [3,9,11,20,27,60,74]
+PILOT_MMD_SUBSET = [5,28,30,62,66,72,76]
+
 # Project paths:
 # Reference highlighting rules
 #RUN USING:  python -u experimenter_platform_stage_1_demo.py
 USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight.db"
-GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight.db"
+#GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight.db"
+if PILOT_CONDITION_NO_REMOVAL:
+    GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_pilot_noremoval.db"
+else:
+    GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_pilot_removal.db"
 
 
 # Project paths:

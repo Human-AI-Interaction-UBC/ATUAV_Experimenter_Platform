@@ -1,0 +1,82 @@
+<html>
+<head>
+    <script src="static/js/libraries/jquery.js"></script>
+    <style>
+        .overlay {
+            position: absolute;
+            border: 1px solid red;
+            background: #dff;
+            margin: -1px;
+            z-index: -1;
+        }
+        p {
+            width: 250px;
+            margin: 24px 65px;
+        }
+        p.span {
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+<body>
+<div>
+    <div>
+        Type a term:
+        <input type="text" id="term"/>
+    </div>
+    <hr/>
+    <p>The cat has been let out of the bag.</p>
+    <p>Yesterday I let the dog out of the cathouse.</p>
+    <p>Let's get a dog to keep the cats company. A cat can get lonely and we don't want to let it get lonely or else it will get out of the bag and get into trouble. Dog's don't need bags, but we can let it have a bag if it want's one and the cat doesn't get jealous. But the cat needs company</p>
+    <script>
+      function highlightWordPositions(word, color) {
+        var $paras = $('p'),
+            $spans,
+            _top = 0,
+            _left = 0;
+
+        $paras.each(function(){
+          var $p = $(this),
+              regex = new RegExp(word, 'g');
+
+          $p.html($p.text().replace(regex, '<span>' + word + '</span>'));
+          $spans = $p.find('span');
+
+          $spans.each(function(){
+            var $span = $(this),
+                $offset = $span.offset(),
+                $overlay = $('<div class="overlay"/>');
+            console.log($offset);
+            $overlay
+                .offset($offset)
+                .css({
+                  width: $span.innerWidth(),
+                  height: $span.innerHeight()
+                });
+
+            $(document.body).append($overlay);
+          });
+        });
+      }
+
+      $('#term').keyup(function(event){
+        var term = this.value;
+
+        if (term == '') {
+          $('.overlay').remove();
+          return false;
+        } else if (term.indexOf(' ') != -1) {
+          this.value = term.replace(' ', '');
+          return false;
+        }
+
+        $('.overlay').remove();
+
+        highlightWordPositions(term);
+      });
+
+    </script>
+</body>
+</html>

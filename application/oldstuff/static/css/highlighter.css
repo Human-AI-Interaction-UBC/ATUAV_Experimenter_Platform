@@ -1,0 +1,145 @@
+h3 {
+  padding-top: 10px;
+}
+
+.left {
+  float: left;
+  width: 90px;
+}
+
+.right {
+  float: right;
+  width: 100px;
+}
+
+body {
+  padding: 10px;
+}
+
+div {
+  /*padding-top: 17px;*/
+}
+
+.text-reference {
+  border: dotted red;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-left-width: 0px;
+  border-bottom-width: 1px;
+}
+
+.text-reference-special {
+  background-color: yellow;
+}
+
+.text-reference:hover {
+  /*
+  border-top-width: 1px;
+  border-right-width: 1px;
+  border-left-width: 1px;
+  */
+  cursor: pointer;
+  /*font-weight: bold;*/
+}
+
+.unselected {
+  background-color: #fcfcfc;
+  color: #dbdbdb;
+  border: 1px solid #eee;
+}
+
+rect.selected:hover {
+  cursor: pointer;
+}
+
+#condition_container {
+  margin: auto;
+}
+
+#theTextParagraph {
+  font-size: 18px;
+}
+
+#conditionSelect {
+  width: 60px;
+}
+
+#referenceSetSelect {
+  width: 100px;
+}
+
+select {
+  height: 25px;
+}
+
+.control {
+  /*display: inline;*/
+  padding-right: 20px;
+}
+
+.control-label {
+  font-size: 16px;
+}
+
+#theApplication {
+  border: 1px solid #ddd;
+  width: 98%;
+  margin: auto;
+  padding: 10px;
+}
+
+/*
+ * Result option styling
+ */
+.result {
+  cursor: pointer;
+}
+
+/*
+ * Reference set option styling
+ */
+label.passed {
+  color: green;
+}
+label.failed {
+  color: red;
+}
+
+
+/*
+ * Disclosure animation
+ */
+.disclosure {
+  -webkit-transition-property: -webkit-transform, opacity;
+  -webkit-transition-duration: 0.2s, 0.05s;
+  -webkit-transition-timing-function: ease-in, ease-in;
+
+  -moz-transition-property: -webkit-transform, opacity;
+  -moz-transition-duration: 0.2s, 0.05s;
+  -moz-transition-timing-function: ease-in, ease-in;  
+
+  opacity: 0.4;
+
+  margin-left: 5px;
+}
+
+.disclosure:hover {
+  opacity: 1;
+}
+
+.disclosure-open {
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+}
+
+.disclosure-close {
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+}
+.overlayText {
+  position: absolute;
+  border: 1px solid red;
+  background: #dff;
+  margin: -1px;
+  z-index: -1;
+}

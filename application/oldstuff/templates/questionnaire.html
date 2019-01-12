@@ -1,0 +1,86 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="static/js/libraries/jquery.js"></script>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Your feedback</title>
+
+    <link rel="stylesheet" href="static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="static/css/rating.min.css">
+    <link rel="stylesheet" href="static/css/rating.min.css">
+    <link rel="stylesheet" href="static/css/view.css">
+    <script type="text/javascript" src="static/js/libraries/view.js"></script>
+
+    <script>
+      currentMMD = '{{mmd}}';
+      console.log(currentMMD);
+      questions = "{{questions}}";
+      console.log(questions);
+      var parser = new DOMParser;
+      var dom = parser.parseFromString(
+          '<!doctype html><body>' + questions,
+          'text/html');
+      var decodedString = dom.body.textContent;
+
+      console.log(decodedString);
+      questionObj = JSON.parse(decodedString);
+      //console.log(JSON.stringify(questionObj));
+    </script>
+    <link rel="stylesheet" href="../static/css/view.css">
+
+</head>
+<body id="main_body" >
+
+<!--<img id="top" src="top.png" alt="">-->
+
+<div id="form_container">
+
+    <!--<h1><a>Your feedback</a></h1>-->
+    <div class="form_description">
+        <table width='725px'><tr><td><h2>Questions</h2></td><td id ="progress" style="text-align:right"></td></tr></table>
+
+      </div>
+    <div id="MMDid"></div>
+    <div style="width:700px">Please rate how strongly you agree or disagree with each of the following statements with respect to the snippet you read (<b>more stars means higher agreement</b>).</div>
+    <div id="star_rating" style="padding-left: 25px;"></div>
+    <div></br></br>Please answer the following questions with respect to the snippet you just read.</div>
+    <form id="form_questionnaire" class="appnitro"  method="post" >
+        <!--action="javascript:submitPostStudy();"-->
+        <input type="hidden" id="answers" name="answers" value="">
+        <ul id = 'questionList'>
+
+            </li>
+
+        </ul>
+        <ul>
+
+            <li id="ErrorContainer">
+
+            </li>
+            <li class="buttons">
+                <input type="hidden" name="form_id" value="1124778" />
+
+                <input id="saveForm" class="button_text" type="submit" name="submit" value="Submit Answers" />
+            </li>
+        </ul>
+
+    </form>
+
+</div>
+<!--<img id="bottom" src="bottom.png" alt="">-->
+<script type="text/javascript" src="static/js/libraries/rating.min.js"></script>
+
+<script src="static/js/questionnaire.js"></script>
+<script>
+
+  currentMMD = '{{mmd}}';
+  progress = '{{progress}}';
+  console.log(currentMMD);
+  //$('#MMDid').append("<table width='900px'><td><b>MMD ID:</b><i>"+currentMMD+'</td><td  style="text-align:right"></i> <b>Progress:</b> <font style="color: green;">'+progress+'<font></td></table>');
+
+  $('#progress').append('<font style="color: green;">'+'<b>Progress:</b> '+progress+'<font>');
+</script>
+</body>
+</html>

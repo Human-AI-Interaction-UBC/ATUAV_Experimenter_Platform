@@ -18,10 +18,9 @@ from application.backend.fixation_detector import FixationDetector
 from application.backend.emdat_component import EMDATComponent
 from application.backend.ml_component import MLComponent
 
-
-
-
 import params
+
+
 ##########################################
 
 define("port", default=8888, help="run on the given port", type=int)
@@ -124,7 +123,7 @@ class MainHandler(tornado.web.RequestHandler):
         q1 = self.get_argument('element_1')
         if(int(q1)==1):
             self.application.mmd_order = [3,5,9,11,18,20,27,28,30,60,62,66,72,74,76]
-            self.application.mmd_order = [3]
+            #suffle MMD order
             random.shuffle(self.application.mmd_order)
             self.application.mmd_index = 0
             self.redirect('/userID')
@@ -311,7 +310,8 @@ class UserIDHandler(tornado.web.RequestHandler):
         self.application.conn.execute('INSERT INTO User_data VALUES (?,?,?)', user_data)
         self.application.conn.commit()
 
-        self.redirect('/prestudy')
+        # self.redirect('/prestudy') FOR TEST
+        self.redirect('/mmd')
 
 class PreStudyHandler(tornado.web.RequestHandler):
     def get(self):

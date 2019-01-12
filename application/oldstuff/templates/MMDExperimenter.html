@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+		<meta charset="UTF-8">
+		<title>MMD Intervention study</title>
+    <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="static/css/highlighter.css"/>
+    <link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+    <script>
+        currentMMD = '{{mmd}}';
+        console.log(currentMMD);
+    </script>
+  </head>
+  <body>
+  <div  ng-app="visreferences" id='textandvis' class='col-md-9 row' ng-controller="AppCtrl" ng-cloak>
+    <svg id="overlayText" height="840" width="450" style="position: absolute;">
+
+    </svg>
+    <div id='theText' class='col-md-5'>
+    </div>
+    <div id ='visualization'class='col-md-4' ng-show="imgSrc">
+      <img id='theChart' src="{{!imgSrc}}"></img>
+    </div>
+  </div>
+  <br>
+  <form id="form1"  method="post" >
+      <div>
+          <br>
+          <input type="submit" value="Next">
+      </div>
+  </form>
+
+  <script src="static/js/libraries/jquery.js"></script>
+  <script src="static/js/libraries/bootstrap.js"></script>
+  <script src="static/js/libraries/angular.js"></script>
+  <script src="static/js/libraries/ui-bootstrap-0.7.0.min.js"></script>
+  <script src="static/js/libraries/d3.v3.js"></script>
+
+  <script src="static/js/utils.js"></script>
+  <script src="static/js/vis.js"></script>
+
+  <script src="static/js/marksmanager.js"></script>
+  <script src="static/js/spanmanager.js"></script>
+  <script src="static/js/referencemapper.js"></script>
+  <script src="static/js/angular/controllers.js"></script>
+
+  <script src="static/js/textOverlayIntervention.js"></script>
+  <script src="static/js/coordinatesExtractor.js"></script>
+  <script src="static/js/angular/app.js"></script>
+
+  </body>
+</html>

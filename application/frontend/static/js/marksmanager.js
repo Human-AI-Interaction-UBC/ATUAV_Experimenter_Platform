@@ -115,6 +115,7 @@
 					"unhighlight": function(interventions, to_be_removed) {
 						console.log("desaturate - unhighlight")
 						var tuple_ids = Object.values(interventions).map(function(obj) {return obj.tuple_id});
+
 						console.log("NEW TUPLE IDS")
 						console.log(tuple_ids)
 						var self = this,
@@ -128,9 +129,9 @@
 						var transition_out = to_be_removed.transition_out || 0;
 						d3.selectAll(marks.unselected_marks)
 							.transition()
+							.duration(transition_out)
 							.attr('fill-opacity', desat? DESATURATION: 0)
 							.attr('stroke-width', 0) //Enamul: to remove Bolding Intervention
-							.duration(transition_out)
 							.each('end', function() {
 								d3.select(this).classed('selected', 'false');
 							});

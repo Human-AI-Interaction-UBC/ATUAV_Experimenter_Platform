@@ -190,7 +190,7 @@ class AdaptationLoop():
         """
 
         #get all the rules/interventions which have event_name as the delivery_trigger
-        query_results = self.conn.execute("""SELECT name, delivery_sql_condition, intervention_name, active_retrigger
+        query_results = self.conn.execute("""SELECT name, delivery_sql_condition, intervention_name, active_retrigger, trigger_other_removals
                                             FROM rule, rule_task, rule_delivery_trigger, rule_intervention_payload
                                             WHERE rule.name = rule_task.rule_name and rule_task.task = ?
                                             and rule.name = rule_intervention_payload.rule_name
@@ -200,10 +200,13 @@ class AdaptationLoop():
         #filter the triggered rules to rules to deliver based on their delivery sql conditional
         #if the delivery condtional is satisfied, update the application state ie. active = 1
         to_deliver_rules = []
+        to_remove = []
+        to_set_active = []
         for rule in triggered_rules:
             rule_name = rule['name']
             intervention_name = rule['intervention_name']
             active_retrigger = rule['active_retrigger']
+            remove_others = rule['trigger_other_removals'] #remove any of these if they are active
             #check the rule if it is not currently active or if active_retrigger = 1
             if active_retrigger == 1 or not self.app_state_controller.isInterventionActive(intervention_name):
                 #if both the rule and intervention has not exceeded max repeats
@@ -213,13 +216,37 @@ class AdaptationLoop():
                         results = self.conn.execute("SELECT * FROM intervention WHERE intervention.name = ?", (intervention_name,))
                         intervention_params = results.fetchone()
                         to_deliver_rules.append(intervention_params)
-                        self.app_state_controller.setInterventionActive(intervention_name, rule_name, time_stamp)
-                        #print("triggered: " + rule_name + " deliverying: " + intervention_name)
+                        to_set_active.append([intervention_name, rule_name, time_stamp])
+                        #here is where we parse to get each removal, and remove it if it's active
+                        if remove_others:
+                            list_to_be_removed = remove_others.split(",")
+                            for a_rule in list_to_be_removed:
+                                removal_query_results = self.conn.execute("""SELECT intervention_name
+                                                                    FROM rule_intervention_payload
+                                                                    WHERE rule_intervention_payload.rule_name = ?""", (a_rule,))
+                                results_remove_query = removal_query_results.fetchall()
+                                for remove_int in results_remove_query:
+                                    target_bar = remove_int['intervention_name']
+                                    if self.app_state_controller.isInterventionActive(target_bar):
+                                        if target_bar not in to_remove:
+                                            self.app_state_controller.setInterventionInactive(target_bar)
+                                            to_remove.append(target_bar)
+
+
 
         if to_deliver_rules:
             to_deliver_rules = json.dumps({'deliver': to_deliver_rules})
-            #print to_deliver_rules
+            print rule_name
+            print to_deliver_rules
+            for a_rule in to_set_active:
+                self.app_state_controller.setInterventionActive(a_rule[0], a_rule[1], a_rule[2])
+                #print("triggered: " + rule_name + " deliverying: " + intervention_name)
             self.liveWebSocket.write_message(to_deliver_rules)
+
+        if to_remove:
+            to_remove = json.dumps({'remove': to_remove})
+            print to_remove
+            self.liveWebSocket.write_message(to_remove)
 
     def __deliverAllInterventions__(self, event_name, task, time_stamp):
 
@@ -283,7 +310,7 @@ class AdaptationLoop():
         print("EVALUATING: " + event_name)
 
         #remove all interventions that have this event as a removal_triggger
-        self.__removeExpiredInterventions__(event_name, task)
+        #self.__removeExpiredInterventions__(event_name, task)
 
         #deliver new interventions for all interventions that have this event as deliver_trigger
         self.__deliverNewInterventions__(event_name, task, time_stamp)

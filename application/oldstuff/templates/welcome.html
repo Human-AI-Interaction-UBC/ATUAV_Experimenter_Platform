@@ -1,0 +1,69 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<script src="static/js/libraries/jquery.js"></script>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Welcome to the experiment</title>
+
+	<link rel="stylesheet" href="static/css/font-awesome.min.css">
+	<link rel="stylesheet" href="static/css/rating.min.css">
+	<link rel="stylesheet" href="static/css/rating.min.css">
+	<link rel="stylesheet" href="static/css/view.css">
+	<script type="text/javascript" src="static/js/view.js"></script>
+
+	<script>
+      currentMMD = '{{mmd}}';
+      console.log(currentMMD);
+      questions = '{{questions}}';
+      console.log(questions);
+      var parser = new DOMParser;
+      var dom = parser.parseFromString(
+          '<!doctype html><body>' + questions,
+          'text/html');
+      var decodedString = dom.body.textContent;
+
+      console.log(decodedString);
+      questionObj = JSON.parse(decodedString);
+      //console.log(JSON.stringify(questionObj));
+	</script>
+
+</head>
+<body id="main_body" >
+
+<!--<img id="top" src="top.png" alt="">-->
+
+<div id="form_container">
+
+	<!--<h1><a>Your feedback</a></h1>-->
+	<div class="form_description">
+		<h2>Welcome to the experiment</h2>
+	</div>
+
+	<form id="form_questionnaire" class="appnitro"  method="post" >
+		<div>Start a new experiment</div>
+		<div>Resume a previous experiment</div>
+		<input type="hidden" id="answers" name="answers" value="">
+
+		<ul>
+
+			<li id="ErrorContainer">
+
+			</li>
+			<li class="buttons">
+				<input type="hidden" name="form_id" value="1124778" />
+
+				<input id="saveForm" class="button_text" type="submit" name="submit" value="Submit Answers" />
+			</li>
+		</ul>
+
+	</form>
+
+</div>
+<!--<img id="bottom" src="bottom.png" alt="">-->
+
+<script src="static/js/welcome.js"></script>
+
+</body>
+</html>

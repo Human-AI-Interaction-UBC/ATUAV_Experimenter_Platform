@@ -63,7 +63,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         self.websocket_ping_interval = 0
         self.websocket_ping_timeout = float("inf")
-        self.app_state_control = ApplicationStateController(3)
+        self.app_state_control = ApplicationStateController(30)
         self.adaptation_loop = AdaptationLoop(self.app_state_control)
         self.adaptation_loop.liveWebSocket = self
 
@@ -96,7 +96,7 @@ class MainHandler(tornado.web.RequestHandler):
         #self.render('mmd.html', mmd="3")
         #self.render('mmd.html', mmd="3")
 
-        self.render('MMDIntervention.html', mmd="3")
+        self.render('MMDIntervention.html', mmd="30")
         #self.render('questionnaire.html', mmd="3", questions = mmdQuestions)
 
 
@@ -115,7 +115,7 @@ class MainHandler(tornado.web.RequestHandler):
             #print 'new user id'
             #print int(rows[0][0])+1 # maximum valued ID
             #self.application.cur_user = int(rows[0][0])+1
-            self.application.mmd_order = [73,3,5,9,11,18,20,27,28,30,60,62,66,72,74,76] #removed MMD 73
+            self.application.mmd_order = [3,5,9,11,18,20,27,28,30,60,62,66,72,74,76] #removed MMD 73
             #random.shuffle(self.application.mmd_order)
             print self.application.mmd_order
             self.application.mmd_index = 0

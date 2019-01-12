@@ -100,8 +100,8 @@
             "b":0.37,
             "orientation":1,
             "g":0.78,
-            "top":100,
-            "height":216,
+            "top":101,
+            "height":215,
             "width":24,
             "r":0.6,
             "id":2,
@@ -212,10 +212,10 @@
             "g":0.82,
             "top": 260,
             "height":56,
-            "width":24,
+            "width":23,
             "r":0.83,
             "id":12,
-            "left":545
+            "left":546
          }
       ]
    },
@@ -223,26 +223,26 @@
    "references":{
       "100":{
          "tuple_ids":"1,2",
-         "sentence_start_char":477,
-         "sentence_end_char":622,
+         "sentence_start_char":456,
+         "sentence_end_char":624,
          "edu_merge":"{100+101}"
       },
       "101":{
          "tuple_ids":3,
-         "sentence_start_char":446,
-         "sentence_end_char":453,
+         "sentence_start_char":384,
+         "sentence_end_char":456,
          "edu_merge":"{100+101}"
       },
       "102":{
          "tuple_ids":"4,6",
-         "sentence_start_char":628,
-         "sentence_end_char":674,
+         "sentence_start_char":624,
+         "sentence_end_char":749,
          "edu_merge":"{}"
       },
       "103":{
          "tuple_ids":5,
-         "sentence_start_char":884,
-         "sentence_end_char":1023,
+         "sentence_start_char":879,
+         "sentence_end_char":1088,
          "edu_merge":"{}"
       }
    },

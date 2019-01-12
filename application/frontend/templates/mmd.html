@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<html ng-app="visreferences">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Highlighting application for crowdsourced results</title>
+
+    <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"/>
+
+    <link rel="stylesheet" type="text/css" href="static/css/highlighter.css"/>
+
+    <link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+
+
+
+</head>
+
+<body ng-controller="AppCtrl" ng-cloak>
+<div id= "container">
+<div id="textandvis">
+<!-- <h2>ATUAV MMD study</h2> -->
+
+<!-- <select id="mmdOptions">
+</select> -->
+
+<br>
+
+<table>
+
+    <tr>
+
+        <td>
+
+            <div id="theText">
+
+
+
+            </div>
+
+        </td>
+
+        <td>
+
+            <div id="visualization">
+
+
+
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+<form id="form1"  method="post" >
+
+    <div>
+
+        <br>
+
+        <!--<button id = 'button_next'type="button" >Next</button>-->
+
+        <input type="submit" value="Next">
+
+
+
+
+
+    </div>
+
+</form>
+
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
+<script src="static/js/d3.v3/d3.v3.js"></script>
+
+
+
+<script src="static/js/main.js"></script>
+
+
+
+<script>
+
+    currentMMD = '{{mmd}}';
+
+    loadMMD(currentMMD);
+
+</script>
+
+
+</div>
+</div>
+
+</body>
+
+</html>

@@ -520,29 +520,25 @@ function handleDelivery(obj) {
  * @param {Object} args - arguments for the highlighting, specified in the database
  */
 function highlightVisOnly(referenceID, transition_in, args) {
-    setTimeout(function () {
+      console.log("Timestamp start:");
+      var d = new Date();
+      console.log(d.getTime());
       var tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
-      //debugger;
       $scopeGlobal.curMarksManager.highlight(tuple_ids , referenceID.tuple_id, transition_in, args);
-    },transition_in*1.2);
+      console.log("Timestamp start:");
+      var d = new Date();
+      console.log(d.getTime());
 }
 
 /**
  * Highlighting the graph legend
  */
 function highlightLegend(referenceID, transition_in, args) {
-  setTimeout(function () {
-      $scopeGlobal.curMarksManager.highlightLegend(transition_in, args);
-  },transition_in*1.2);
+    $scopeGlobal.curMarksManager.highlightLegend(transition_in, args);
 }
 
 
 function removeAllInterventions(referenceID) {
   //if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
-    console.log("REMOVED")
-    console.log("success")
-    setTimeout(function(){
-      $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
-    }, referenceID.transition_out*1.2);
-  //}
+    $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
 }

@@ -78,9 +78,9 @@ var AppCtrl = function($scope, $http, $location) {
           $scope.visualReferences = data.visual_references;
           $scope.curReference = data.references
           startEndCoords = [];
-          for (i = 0; i < Object.keys($scope.curReference).length; i++) {
-            startEndCoords.push({"start": $scope.curReference[100 + i]['sentence_start_char'], "end": $scope.curReference[100 + i]['sentence_end_char']})
-          }
+          Object.keys($scope.curReference).forEach(function(key) {
+            startEndCoords.push({"start": $scope.curReference[key]['sentence_start_char'], "end": $scope.curReference[key]['sentence_end_char']})
+          });
           $scope.selectedReference = 0;
           $scope.lastSelectedReference = -1;
           document.getElementById("theText").innerHTML =$scope.curText;
@@ -92,7 +92,10 @@ var AppCtrl = function($scope, $http, $location) {
           console.log($scope.aggregatedData)
           //uncomment this to store the json data
           //sendJSONtoTornado($scope.aggregatedData,$scope.curConditionId );
-          console.log($scope.coordinatesofSentences[0].polygonCoords);
+          for (var i = 0; i < $scope.coordinatesofRefSentences.length; i++) {
+              //Do something
+              console.log($scope.coordinatesofRefSentences[i].polygonCoords);
+          }
           //drawOverlay($scope.aggregatedData.sentenceData[0].polygonCoords);
           //console.log($scope.aggregatedData.sentenceData[0].polygonCoords)
           console.log("drew overlay")
