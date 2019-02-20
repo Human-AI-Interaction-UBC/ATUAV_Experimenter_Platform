@@ -238,9 +238,16 @@ class AdaptationLoop():
             to_deliver_rules = json.dumps({'deliver': to_deliver_rules})
             print rule_name
             print to_deliver_rules
-            for a_rule in to_set_active:
-                self.app_state_controller.setInterventionActive(a_rule[0], a_rule[1], a_rule[2])
+            rules_to_set_active = set([])
+            for an_intervention in to_set_active:
+                rules_to_set_active.add(an_intervention[1])
+                self.app_state_controller.setInterventionActive(an_intervention[0], an_intervention[1], an_intervention[2])
                 #print("triggered: " + rule_name + " deliverying: " + intervention_name)
+
+
+            for rule in rules_to_set_active:
+                self.app_state_controller.setRuleActive(rule, time_stamp)
+
             self.liveWebSocket.write_message(to_deliver_rules)
 
         if to_remove:

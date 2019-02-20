@@ -140,8 +140,8 @@
 					"highlight": function(tuple_ids, reference_id, transition_in, args) {
 						console.log("desaturate - highlight")
 						var self = this,
-							marks = self.getSelectedMarks(tuple_ids);
-							selected_mark = self.getSelectedMarks([reference_id]);
+							marks = self.getSelectedMarks(tuple_ids);  //used for desat
+							selected_mark = self.getSelectedMarks([reference_id]); //used for bolding
 							console.log("tuple_ids " + tuple_ids);
 							console.log("reference_id " + reference_id);
 							console.log("args" + args);
@@ -153,6 +153,9 @@
 							var desat = args.desat;
 							var bold = args.bold;
 							var bold_thickness = args.bold_thickness || 1;
+							//console.log("dash_value:", args.dash);
+							//var dash = "0, 0"
+							//if (args.dash) dash = "12, 4"
 
 	            	/*if(arrow){
 									self.arrowwidth = 25;
@@ -202,6 +205,7 @@
 	              d3.selectAll(selected_mark.selected_marks)
 	                .attr('stroke', 'white')
 									.attr('stroke-width', 0)
+									//.attr('stroke-dasharray', (dash))
 	                .transition()
 	                .duration(transition_in)
 	                //.attr('fill-opacity', 0)

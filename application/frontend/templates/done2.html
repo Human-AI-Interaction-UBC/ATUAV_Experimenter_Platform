@@ -3,13 +3,31 @@
 <html>
 
 <head>
-<link rel="stylesheet" href="static/css/view.css">
-  <title>Done2</title></head>
+  <link rel="stylesheet" href="static/css/view.css">
+  <title>Done2</title>
+
+  <style>
+  li{
+    margin-top: 8px;
+  }
+  </style>
+
+</head>
+
 <body>
-  <br><br><br><br><br><br><br>
+  <br><br><br><br><br><br><br><br><br><br><br>
 <h1>Thank you so much. It's now time for the paper-based tests</h1>
+  <br><br><br><br>
 
+<h4>Summary of the rating of the interventions :</h4>
+<div id="summary_question_adaptation"></div>
 
+<script>
+    var text_answers = '{{summary_question_adaptation}}';
+    text_answers = text_answers.replace(/&lt;li&gt;/g, "<li>");
+
+    document.getElementById("summary_question_adaptation").innerHTML = text_answers;
+</script>
 
 </body>
 </html>

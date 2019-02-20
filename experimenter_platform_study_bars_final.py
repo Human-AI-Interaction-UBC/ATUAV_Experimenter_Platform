@@ -34,26 +34,7 @@ ML_COMPONENT = "ml_component"
 
 class Application(tornado.web.Application):
     def __init__(self):
-        self.mmd_pilot_subset = params.PILOT_MMD_SUBSET
-
-        #Randomize the type of intervention (desat or bold) for the pilot (must be done prior to build the tables in app_state_control)
-#        temp_mmd_ids = params.PILOT_MMD_SUBSET
-#        random.shuffle(temp_mmd_ids)
-#        conn = sqlite3.connect(params.GAZE_EVENT_RULES_PATH)
-#        i = 0
-#        for temp_mmd in temp_mmd_ids:
-#            if i%2 == 0: #desat = true
-#                conn.execute("""UPDATE intervention
-#                    SET arguments = replace( replace(arguments, '"bold": false', '"bold": true') , '"desat": true', '"desat": false')
-#                    WHERE name LIKE ?""", (str(temp_mmd)+"%",))
-#                conn.commit()
-#            else: #bold = true
-#                conn.execute("""UPDATE intervention
-#                    SET arguments = replace( replace(arguments, '"bold": true', '"bold": false') , '"desat": false', '"desat": true')
-#                    WHERE name LIKE ?""", (str(temp_mmd)+"%",))
-#                conn.commit()
-#            i += 1
-#        conn.close()
+        #self.mmd_pilot_subset = params.PILOT_MMD_SUBSET
 
         #init platform and connects url with code
         self.tobii_controller = TobiiController()
@@ -82,6 +63,7 @@ class Application(tornado.web.Application):
                                              (r"/(Sample_bars_2.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/sample_MMD", SampleHandler), (r"/(ExampleMMD.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/sample_Q", SampleHandler2), (r"/(ExampleQ.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+            (r"/sample_intervention", SampleHandler3), (r"/(post_question_adaptation.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/calibration", CalibrationHandler), (r"/(blank_cross.jpg)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/tobii", TobiiHandler),
             (r"/ready", ReadyHandler),
@@ -146,8 +128,7 @@ class MainHandler(tornado.web.RequestHandler):
 
         q1 = self.get_argument('element_1')
         if(int(q1)==1):
-            #self.application.mmd_order = [3,5,9,11,18,20,27,28,30,60,62,66,72,74,76]
-            self.application.mmd_order = self.application.mmd_pilot_subset
+            self.application.mmd_order = [3,5,9,11,20,27,28,30,60,62,66,72,74,76] #remove 18
             random.shuffle(self.application.mmd_order)
             self.application.mmd_index = 0
             self.redirect('/userID')
@@ -275,9 +256,7 @@ class QuestionnaireHandler(tornado.web.RequestHandler):
         # hard-coded two questions as they appear in all mmds
         questions = []
         questions.append([self.application.cur_mmd, "1", "The snippet I read was easy to understand.", "Likert", "Subjective"])
-
         questions.append([self.application.cur_mmd, "2", "I would be interested in reading the full article.", "Likert", "Subjective"])
-
         questions.extend(query_results.fetchall())
 
         return json.dumps(questions)
@@ -334,8 +313,8 @@ class UserIDHandler(tornado.web.RequestHandler):
         self.application.conn.execute('INSERT INTO User_data VALUES (?,?,?)', user_data)
         self.application.conn.commit()
 
-        # self.redirect('/prestudy') FOR TEST
-        self.redirect('/mmd')
+        self.redirect('/prestudy')
+        #self.redirect('/mmd')
 
 class PreStudyHandler(tornado.web.RequestHandler):
     def get(self):
@@ -370,6 +349,12 @@ class SampleHandler(tornado.web.RequestHandler):
 class SampleHandler2(tornado.web.RequestHandler):
     def get(self):
         self.render("sample_questionnaire.html")
+    def post(self):
+        self.redirect('/sample_intervention')
+
+class SampleHandler3(tornado.web.RequestHandler):
+    def get(self):
+        self.render("sample_adaptation.html")
     def post(self):
         self.redirect('/tobii')
 
@@ -423,9 +408,12 @@ class FinalHandler2(tornado.web.RequestHandler):
         q8 = self.get_argument('adapt_wellintegrated')
         q9 = self.get_argument('adapt_satisfied')
         q10 = self.get_argument('adapt_reuse')
+        q11 = self.get_argument('comments_like')
+        q12 = self.get_argument('comments_dislike')
+        q13 = self.get_argument('comments_howimprove')
 
-        pre_data = [self.application.cur_user, q1,q2,q3,q4,q5,q6,q7,q8,q9,q10]
-        self.application.conn.execute('INSERT INTO final_question_adaptation VALUES (?,?,?,?,?,?,?,?,?,?,?)', pre_data)
+        pre_data = [self.application.cur_user, q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11,q12,q13]
+        self.application.conn.execute('INSERT INTO final_question_adaptation VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', pre_data)
         self.application.conn.commit()
 
         print ""
@@ -441,6 +429,11 @@ class FinalHandler2(tornado.web.RequestHandler):
         print "I was satisfied with the interventions  ="+str(q9)
         print "I would like to have these interventions again when I read these types of snippet = "+str(q10)
         print ""
+        print "What I liked: "+str(q11)
+        print ""
+        print "What I disliked: "+str(q12)
+        print ""
+        print "How to improve: "+str(q13)
 
         self.redirect('/done2')
 
@@ -465,7 +458,10 @@ class DoneHandler2(tornado.web.RequestHandler):
                         <li>7. The interventions appeared at the right time when reading the snippet = "+user_answers[7]+"  \
                         <li>8. The interventions were well integrated into the snippet = "+user_answers[8]+"  \
                         <li>9. I was satisfied with the interventions = "+user_answers[9]+"  \
-                        <li>10. I would like to have these interventions again when I read these types of snippet = "+user_answers[10]+""
+                        <li>10. I would like to have these interventions again when I read these types of snippet = "+user_answers[10]+"  \
+                        <li>11. What did I like: "+user_answers[11]+"  \
+                        <li>12. What did I dislike: "+user_answers[12]+"  \
+                        <li>13. My suggestions to improve the interventions: "+user_answers[13]+""
 
         self.render('done2.html', summary_question_adaptation=summary_answers)
 

@@ -2,9 +2,10 @@
 var ws;
 var interventions;
 var curMarksManager;
+var old_active_interventions;
 
 function init() {
-  $.getJSON('static/data/' + 62 + '.json',
+  $.getJSON('static/data_updated/' + 62 + '.json',
       function(data) {
         var marks = data.marks;
         curMarksManager = new MarksManager(marks.marks, document.getElementById('theChart'));
@@ -18,6 +19,21 @@ function highlightVisOnly(referenceID, transition_in, args) {
   //  removeAllInterventions(referenceID); TODO: commented out
     //setTimeout(function () {
       var tuple_ids = Object.values(interventions).map(function(obj){ return obj.tuple_id});
+
+      //highlightRelatedTuples($scopeGlobal, tuple_ids , referenceID, transition_in, args);
+      curMarksManager.highlight(tuple_ids , referenceID.tuple_id, transition_in, args);
+
+
+    //},transition_in*1.2); //TODO:CHECK
+}
+
+
+function highlightVisOnly_recency(referenceID, transition_in, args) {
+    //}
+  //  removeAllInterventions(referenceID); TODO: commented out
+    //setTimeout(function () {
+      var tuple_ids = Object.values(interventions).map(function(obj){ return obj.tuple_id});
+
       //highlightRelatedTuples($scopeGlobal, tuple_ids , referenceID, transition_in, args);
       curMarksManager.highlight(tuple_ids , referenceID.tuple_id, transition_in, args);
 
@@ -60,12 +76,15 @@ function run() {
         }
 
         interventions[interventionName] = { tuple_id: referenceID, args: args, transition_out: intervention.transition_out };
+
       //highlightVisOnly($scopeGlobal.selectedReference);
 
         eval(func)(interventions[interventionName], transition_in, args);
-        console.log("Timestamp end:");
-        var d = new Date();
-        console.log(d.getTime());
+        //console.log('Concat test:', interventions.map(a => a.tuple_id));
+        //$scopeGlobal.old_active_interventions = $scopeGlobal.old_active_interventions.concat(interventions.map(a => a.tuple_id));
+        //console.log("Timestamp end:");
+        //var d = new Date();
+        //console.log(d.getTime());
       }
 
     }

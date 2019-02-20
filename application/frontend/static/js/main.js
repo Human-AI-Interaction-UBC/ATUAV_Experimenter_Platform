@@ -19,7 +19,7 @@ var currentMMD; //by default
 });
 */
 
-d3.json("static/data/conditions.json", function(data){
+d3.json("static/data_updated/conditions.json", function(data){
 
 	 var selectHtml = "";
      MMDSet = data;
@@ -47,7 +47,7 @@ function loadMMD(mmdName){
 
      console.log(mmdName);
 
-     d3.json("static/data/"+mmdName+".json", function(data){
+     d3.json("static/data_updated/"+mmdName+".json", function(data){
           $("#theText").html(data.text);
           //console.log('<img src='+data.chart+'');
           $("#visualization").html('<img id="theChart" src="static/'+data.chart+'">' );

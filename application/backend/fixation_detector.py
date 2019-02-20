@@ -133,6 +133,7 @@ class FixationDetector(DetectionComponent):
                     x_fixation /= points_in_fixation
                     y_fixation /= points_in_fixation
                     self.tobii_controller.add_fixation(Efix[0][3], Efix[0][4], Efix[0][2], Sfix[0])
+                    #####
                     for aoi in self.AOIS:
                         if (utils.point_inside_polygon(x_fixation, y_fixation, self.AOIS[aoi])):
                             self.cur_fix_id += 1

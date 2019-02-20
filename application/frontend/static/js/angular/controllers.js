@@ -33,6 +33,7 @@ var AppCtrl = function($scope, $http, $location) {
   };
   /***** Server communications block *****/
   $scopeGlobal.interventions = {};
+  $scopeGlobal.old_active_interventions = [];
   $scopeGlobal.ws = new WebSocket("ws://localhost:8888/websocket");
   // Generic app.js functions for triggering/dremoving interventions
   $scopeGlobal.ws.onmessage = function (evt) {
@@ -48,7 +49,7 @@ var AppCtrl = function($scope, $http, $location) {
   $scope.curSpanManager;
   console.log(currentMMD);
   // Fetch the conditions
-  $http.get('static/data/conditions.json').
+  $http.get('static/data_updated/conditions.json').
       success(function(data, status, headers) {
         $scope.conditions = data;
         if (data.length > 0) {

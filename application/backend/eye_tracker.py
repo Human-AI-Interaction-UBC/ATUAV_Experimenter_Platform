@@ -3,7 +3,8 @@ import sys
 import params
 #This sets the path in our computer to where the eyetracker stuff is located
 #sys.path.append('/Users/Preetpal/desktop/ubc_4/experimenter_platform/modules')
-sys.path.append('C:\\Users\\admin\\Desktop\\experimenter_platform\\modules')
+#sys.path.append('C:\\Users\\admin\\Desktop\\experimenter_platform\\modules')
+sys.path.append('C:\\Users\\admin\\Desktop\\experimenter_platform_core\\ATUAV_Experimenter_Platform\\Modules')
 
 from tobii.eye_tracking_io.basic import EyetrackerException
 
@@ -265,6 +266,7 @@ class TobiiController:
 		#self.flushData()
 		self.gazeData = []
 		self.eventData = []
+		self.EndFixations = []
 		#Preetpals code
 		#Empty the arrays needed for fixation algorithm
 		#May need to also empty the websocket set
@@ -278,9 +280,29 @@ class TobiiController:
 		self.aoi_ids = {}
 		self.dpt_id = 0
 
+
+	def logFixations(self, user_id, task_id):
+		"""Log the recorded fixations for the current user and task
+
+		arguments
+		user_id ID of current user_id
+		task_id ID of current task
+
+		keyword arguments
+		None
+
+		returns
+		None
+		"""
+		with open(str(params.LOG_PREFIX) + "_user_" + str(user_id) + "_task_"+str(task_id) + "_raw_fixations.csv", "wb") as f:
+			f.write( "x,y,duration,start_time\n" ) # header
+			for fix in self.EndFixations:
+				f.write( ",".join([str(x) for x in fix])+"\n" )
+
+
 	def on_gazedata(self,error,gaze):
 
-		"""AAdds new data point to the raw data arrays. If x, y coordinate data is not available,
+		"""Adds new data point to the raw data arrays. If x, y coordinate data is not available,
 		stores the coordinates for this datapoint as (-1280, -1024). Any other feature,
 		if not available, is stored as -1.
 

@@ -493,6 +493,7 @@ function handleRemoval(obj) {
  *    and parameters for for them
  */
 function handleDelivery(obj) {
+  //THIS FUNCTION IS USED!
   console.log("Received a deliver call");
   console.log(obj)
   for (let intervention of obj.deliver) {
@@ -508,7 +509,37 @@ function handleDelivery(obj) {
       var referenceID = args.id;
     }
     $scopeGlobal.interventions[interventionName] = { tuple_id: args.id, args: args, transition_out: intervention.transition_out };
+    //args.dash = false
     eval(func)($scopeGlobal.interventions[interventionName], transition_in, args);
+
+    //4 lines of CODE ADDED HERE TO GENRATE highlightVisOnly_recency
+    if (func == 'highlightVisOnly_recency') {
+      var index =  $scopeGlobal.old_active_interventions.indexOf(args.id);
+      if (index !== -1) $scopeGlobal.old_active_interventions.splice(index, 1);
+    }
+
+  }
+
+  //CODE ADDED HERE TO GENRATE highlightVisOnly_recency
+  if (func == 'highlightVisOnly_recency') {
+    console.log('old_activeA:', $scopeGlobal.old_active_interventions)
+    var tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
+
+    if ($scopeGlobal.old_active_interventions.length > 0){
+      //args.color = 'grey'
+      args.color = '#606060'
+      //args.dash = true
+      //args.bold_thickness = args.bold_thickness/2
+      for (let a_mark of $scopeGlobal.old_active_interventions) {
+        //console.log('Attempting to grey:', a_mark)
+        $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, args);
+      }
+    }
+
+
+    $scopeGlobal.old_active_interventions = $scopeGlobal.old_active_interventions.concat(tuple_ids);
+    $scopeGlobal.old_active_interventions = [...new Set($scopeGlobal.old_active_interventions)]
+    console.log('old_activeB:', $scopeGlobal.old_active_interventions)
   }
 }
 
@@ -520,14 +551,27 @@ function handleDelivery(obj) {
  * @param {Object} args - arguments for the highlighting, specified in the database
  */
 function highlightVisOnly(referenceID, transition_in, args) {
-      console.log("Timestamp start:");
-      var d = new Date();
-      console.log(d.getTime());
+      //console.log("Timestamp start:");
+      //var d = new Date();
+      //console.log(d.getTime());
       var tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
       $scopeGlobal.curMarksManager.highlight(tuple_ids , referenceID.tuple_id, transition_in, args);
-      console.log("Timestamp start:");
-      var d = new Date();
-      console.log(d.getTime());
+      //console.log("Timestamp start:");
+      //var d = new Date();
+      //console.log(d.getTime());
+}
+
+
+function highlightVisOnly_recency(referenceID, transition_in, args) {
+    //}
+  //  removeAllInterventions(referenceID); TODO: commented out
+    //setTimeout(function () {
+      var tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
+      //highlightRelatedTuples($scopeGlobal, tuple_ids , referenceID, transition_in, args);
+      $scopeGlobal.curMarksManager.highlight(tuple_ids , referenceID.tuple_id, transition_in, args);
+
+
+    //},transition_in*1.2); //TODO:CHECK
 }
 
 /**

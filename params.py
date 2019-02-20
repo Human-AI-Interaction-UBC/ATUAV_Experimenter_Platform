@@ -3,8 +3,9 @@ PILOT_CONDITION_NO_REMOVAL = True
 #PILOT_CONDITION_NO_REMOVAL = False
 
 #PILOT mmd subset to load
-#PILOT_MMD_SUBSET = [3,9,11,20,27,60,74]
-PILOT_MMD_SUBSET = [5,28,30,62,66,72,76]
+#PILOT_MMD_SUBSET = [3,9,11,20,27,60,74] #try and ensure 74 is in removal
+#PILOT_MMD_SUBSET = [5,28,30,62,66,72,76]
+PILOT_MMD_SUBSET = [5]
 
 # Project paths:
 # Reference highlighting rules
@@ -43,8 +44,8 @@ USE_FIXATION_PATH_FEATURES = True
 USE_TRANSITION_AOI_FEATURES = True
 
 # Sets of features to keep
-KEEP_TASK_FEATURES = True
-KEEP_GLOBAL_FEATURES = True
+KEEP_TASK_FEATURES = False
+KEEP_GLOBAL_FEATURES = False
 
 #Frequency of ML/EMDAT calls:
 EMDAT_CALL_PERIOD = 10000
@@ -63,3 +64,6 @@ PUPIL_ADJUSTMENT = "rpscenter"
 # The amount of time to wait after starting a new task before starting recording
 # fixations (to account for html loading time)
 FIX_DETECTION_DELAY = 1000000
+
+#Logs configuration
+LOG_PREFIX = "./log/AdaptiveMSNV_log"

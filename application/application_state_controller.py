@@ -247,10 +247,12 @@ class ApplicationStateController():
         """
         file = self.__getDBCommands__()
         #TODO: robust check of log dir
-        file_name = './log/log_for_user_' + str(user_id) + "_task_" + str(self.currTask) + ".sql"
+        file_name = str(params.LOG_PREFIX) + '_user_' + str(user_id) + "_task_" + str(self.currTask) + ".sql"
         with open (file_name, 'w') as fd:
           file.seek (0)
           shutil.copyfileobj (file, fd)
+
+        ####
 
     def changeTask(self, task, user_id = 9999):
 
@@ -533,8 +535,8 @@ class ApplicationStateController():
 
         """Apply state changes in the User Model for a rule and its associated intervention
                 - sets the invertention to be active
-                - increments the occurences of both the rule and the intervention
-                - update the time stamp of the last occurence for the rule and intervention
+                - increments the occurences of the intervention
+                - update the time stamp of the last occurence for the intervention
 
         arguments
         intervention_name             -- string, name of the intervention to update
@@ -555,6 +557,24 @@ class ApplicationStateController():
             self.conn.execute("UPDATE intervention_state SET active = 1, occurences = ? WHERE intervention = ?", (occurences, intervention_name))
             self.conn.execute("INSERT INTO intervention_state values (?, 1, ?, ?)", (intervention_name, time_stamp, occurences))
         self.conn.commit()
+
+
+    def setRuleActive(self, rule_name, time_stamp):
+
+        """Apply state changes in the User Model for a rule
+                - sets the rule to be active
+                - increments the occurence of the rule
+                - update the time stamp of the last occurence for the rule
+
+        arguments
+        rule_name                     -- string, name of the associated rule to update
+        time_stamp                    -- time stamp of triggering event
+
+        keyword arguments
+        None
+
+        """
+
         #update rule occurences
         rule_occurences = self.conn.execute("SELECT occurences FROM rule_state WHERE rule = ?", (rule_name,)).fetchone()
         if rule_occurences is None:

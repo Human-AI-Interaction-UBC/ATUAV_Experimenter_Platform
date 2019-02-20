@@ -36,6 +36,7 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         if (message == "close"):
+            self.tobii_controller.logFixations(self.application.cur_user, next_task)
             self.stop_detection_components()
             self.tobii_controller.stopTracking()
             self.tobii_controller.destroy()
@@ -44,8 +45,12 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
 
         elif (message.find("switch_task") != -1):
             result = message.split(":")
+            cur_task = next_task
             next_task = int(result[1])
 
+            #we want to log the fixations in self.tobii_controller.EndFixations for user N and task G
+            #log_for_user_pilot_7B_task_9_raw_fixations.csv
+            self.tobii_controller.logFixations(self.application.cur_user, cur_task)
             self.stop_detection_components()
             self.tobii_controller.stopTracking()
             self.app_state_control.changeTask(next_task)
@@ -54,6 +59,7 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
             return
 
         else:
+            self.tobii_controller.logFixations(self.application.cur_user, next_task)
             self.stop_detection_components()
             self.tobii_controller.stopTracking()
             self.tobii_controller.destroy()
