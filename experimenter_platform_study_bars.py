@@ -9,7 +9,7 @@ import random
 
 # Imports required for EYE TRACKING Code:
 import time
-from application.backend.eye_tracker import TobiiController
+from application.backend.eye_tracker_newsdk import TobiiControllerNewSdk
 from application.middleend.adaptation_loop import AdaptationLoop
 from application.application_state_controller import ApplicationStateController
 from application.application_web_socket import ApplicationWebSocket
@@ -35,9 +35,8 @@ class Application(tornado.web.Application):
     def __init__(self):
         #connects url with code
 
-        self.tobii_controller = TobiiController()
-        self.tobii_controller.waitForFindEyeTracker()
-        self.tobii_controller.activate(self.tobii_controller.eyetrackers.keys()[0])
+        self.tobii_controller = TobiiControllerNewSdk()
+        self.tobii_controller.activate()
         self.app_state_control = ApplicationStateController(0)
         self.adaptation_loop = AdaptationLoop(self.app_state_control)
 

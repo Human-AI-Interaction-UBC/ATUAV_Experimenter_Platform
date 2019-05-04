@@ -1,3 +1,7 @@
+# Eyetracker type
+#EYETRACKER_TYPE = "IS4_Large_Peripheral" # 4C eyetracker
+EYETRACKER_TYPE = "Tobii T120" # Old eyetracker
+
 #Pilot condition
 PILOT_CONDITION_NO_REMOVAL = True
 #PILOT_CONDITION_NO_REMOVAL = False
