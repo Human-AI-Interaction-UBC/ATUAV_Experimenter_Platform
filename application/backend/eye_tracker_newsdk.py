@@ -82,17 +82,12 @@ class TobiiControllerNewSdk:
 		"""
 
 		print "Connecting to: ", params.EYETRACKER_TYPE
-		while len(self.eyetrackers) == 0:
-			print("Connected to: ")
+		while self.eyetracker is None:
 			eyetrackers = tr.find_all_eyetrackers()
-			print eyetrackers, len(eyetrackers)
 			for tracker in eyetrackers:
-				print tracker.model
 				self.eyetrackers[tracker.model] = tracker
-			print "done"
-		print("Connected to: ")
-		print(self.eyetrackers)
-		self.eyetracker = self.eyetrackers[params.EYETRACKER_TYPE]
+			self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
+		print "Connected to: ", params.EYETRACKER_TYPE 
 
 	def startTracking(self):
 
