@@ -122,7 +122,7 @@ function findCoordinatesofRefSentences(textElementID, coordinatesofChar, startEn
     var sentenceEndPosition = paragraphText.indexOf(sentSpanCoord[i].sentence) + sentSpanCoord[i].sentence.length-1;
     var coordofSentStartPosition = coordinatesofChar[sentenceStartPosition];
     var coordofSentEndPosition = coordinatesofChar[sentenceEndPosition];
-    let refId = startEndCoords.refId;
+    let refId = startEndCoords[i].refId;
 
     // eight points needed to build the polygon
     sentencePolygonCoordinates.push(
@@ -170,7 +170,6 @@ function sendJSONtoTornado(jsonObj, MMDid){
 }
 
 function writePolygonToDb(jsonObj, MMDid) {
-    jsonObj.filename = MMDid+'.json';
     $.ajax({
         url: '/writePolygon',
 
