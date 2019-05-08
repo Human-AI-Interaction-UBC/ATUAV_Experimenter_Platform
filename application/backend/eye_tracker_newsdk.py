@@ -1,11 +1,11 @@
 
-import sys
+import sys, os
 import params
 #This sets the path in our computer to where the eyetracker stuff is located
 #sys.path.append('/Users/Preetpal/desktop/ubc_4/experimenter_platform/modules')
 #sys.path.append('E\\Users\\admin\\Desktop\\experimenter_platform\\modules')
 sys.path.append('E:\\Users\\admin\\Desktop\\experimenter_platform_core\\ATUAV_Experimenter_Platform\\Modules')
-sys.path.append('E:\\Users\\admin\\Desktop\\experimenter_platform_core\\ATUAV_Experimenter_Platform\\tobii_binder')
+sys.path.append(os.path.join(sys.path[0],'tobii_binder'))
 
 import os
 import datetime
@@ -82,12 +82,12 @@ class TobiiControllerNewSdk:
 		"""
 
 		print "Connecting to: ", params.EYETRACKER_TYPE
-		while self.eyetracker is None:
-			eyetrackers = tr.find_all_eyetrackers()
-			for tracker in eyetrackers:
-				self.eyetrackers[tracker.model] = tracker
-			self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
-		print "Connected to: ", params.EYETRACKER_TYPE 
+		#while self.eyetracker is None:
+		#	eyetrackers = tr.find_all_eyetrackers()
+		#	for tracker in eyetrackers:
+		#		self.eyetrackers[tracker.model] = tracker
+		#	self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
+		print "Connected to: ", params.EYETRACKER_TYPE
 
 	def startTracking(self):
 
@@ -116,7 +116,7 @@ class TobiiControllerNewSdk:
 		self.pupilsize = []
 		self.pupilvelocity = []
 		self.head_distance = []
-		self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
+		#self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
 		print("=================== SLEEPING =========================")
 		time.sleep(1)
 		print("=================== WOKE UP =========================")
@@ -139,7 +139,7 @@ class TobiiControllerNewSdk:
 					calls TobiiTracker.flushData before resetting both
 					self.gazeData and self.eventData
 		"""
-		self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.on_gazedata)
+		#self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.on_gazedata)
 		#self.flushData()
 		self.gazeData = []
 		self.eventData = []

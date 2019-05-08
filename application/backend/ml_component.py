@@ -20,7 +20,7 @@ class MLComponent(DetectionComponent):
         classifier.loadModelParameters()
         """
 
-    def run():
+    def run(self):
         ## Do something
         """
         ### With self.emdat_component, you have access to interval and task features

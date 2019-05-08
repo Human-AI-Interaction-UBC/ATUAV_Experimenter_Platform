@@ -17,6 +17,8 @@ from application.application_web_socket import ApplicationWebSocket
 from application.backend.fixation_detector import FixationDetector
 from application.backend.emdat_component import EMDATComponent
 from application.backend.ml_component import MLComponent
+from application.backend.mouse_keyboard_event_detector import MouseKeyboardEventDetector
+
 
 import params
 
@@ -30,6 +32,7 @@ ADAPTATION_LOOP = "adaptation_loop"
 FIXATION_ALGORITHM = "fixation_algorithm"
 EMDAT_COMPONENT = "emdat_component"
 ML_COMPONENT = "ml_component"
+MOUSE_KEY_COMPONENT = "mouse_key_component"
 
 class Application(tornado.web.Application):
     def __init__(self):
@@ -43,13 +46,15 @@ class Application(tornado.web.Application):
         self.fixation_component = FixationDetector(self.tobii_controller, self.adaptation_loop)
         self.emdat_component = EMDATComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.EMDAT_CALL_PERIOD)
         self.ml_component = MLComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.EMDAT_CALL_PERIOD, emdat_component = self.emdat_component)
+        self.mouse_key_component = MouseKeyboardEventDetector(self.tobii_controller, self.adaptation_loop, self.emdat_component, params.USE_MOUSE, params.USE_KEYBOARD)
 
         websocket_dict = {TOBII_CONTROLLER: self.tobii_controller,
                          APPLICATION_STATE_CONTROLLER: self.app_state_control,
                          ADAPTATION_LOOP: self.adaptation_loop,
                          FIXATION_ALGORITHM: self.fixation_component,
                          EMDAT_COMPONENT: self.emdat_component,
-                         ML_COMPONENT: self.ml_component}
+                         ML_COMPONENT: self.ml_component,
+                         MOUSE_KEY_COMPONENT: self.mouse_key_component}
         handlers = [
             (r"/", MainHandler),
             (r"/mmd", MMDHandler),
