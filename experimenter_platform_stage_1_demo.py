@@ -34,13 +34,15 @@ class Application(tornado.web.Application):
             (r"/MMDIntervention", MMDInterventionHandler),
             (r"/questionnaire", QuestionnaireHandler),
             (r"/saveCoordinates", AjaxHandler),
+            (r"/writePolygon", PolygonAjaxHandler),
             (r"/resume", ResumeHandler),
             (r"/websocket", WebSocketHandler),
 
         ]
         #connects to database
         self.conn = sqlite3.connect('database.db')
-        #"global variable" to save current UserID of session
+        self.conn2 = sqlite3.connect(params.USER_MODEL_STATE_PATH)
+    #"global variable" to save current UserID of session
         UserID = -1;
         #global variable to track start and end times
         start_time = '';
@@ -318,7 +320,6 @@ class MMDHandler(tornado.web.RequestHandler):
 class AjaxHandler(tornado.web.RequestHandler):
     def post(self):
 
-
         jsonobj = json.loads(self.request.body)
         print jsonobj
 
@@ -327,6 +328,19 @@ class AjaxHandler(tornado.web.RequestHandler):
         file = open('application/frontend/static/AOICoordinates/'+jsonobj['filename'], 'w')
         file.write(self.request.body)
         file.close()
+
+
+class PolygonAjaxHandler(tornado.web.RequestHandler):
+    def post(self):
+
+        json_obj = json.loads(self.request.body)
+        for polygon_obj in json_obj:
+            ref_id = 'ref_' + polygon_obj.refId
+            polygon = polygon_obj.polygonCoords
+            polygon_data = (polygon, ref_id, self.application.cur_mmd)
+            self.application.conn2.execute('UPDATE aoi SET polygon =? WHERE name =? AND task=?', polygon_data)
+        self.application.conn2.commit()
+        self.redirect('/')
 
 class PreStudyHandler(tornado.web.RequestHandler):
     def get(self):
