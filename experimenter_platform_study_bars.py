@@ -401,8 +401,9 @@ class PolygonAjaxHandler(tornado.web.RequestHandler):
         # gets polygon coordinates and refIds from frontend coordinateRefSentences
         json_obj = json.loads(self.request.body)
         for polygon_obj in json_obj:
-            ref_id = 'ref_' + polygon_obj.refId
-            polygon = polygon_obj.polygonCoords
+            ref_id = 'ref_' + polygon_obj['refId']
+            polygon = polygon_obj['polygonCoords']
+            polygon.map(lambda p: tuple(p))
             polygon_data = (ref_id, self.application.cur_mmd, polygon, polygon)
             # updates polygon in entry in db with same refId and task number
             self.application.conn2.execute('INSERT INTO aoi(name, task, polygon) VALUES (?,?,?) ON DUPLICATE KEY UPDATE polygon=?', polygon_data)
