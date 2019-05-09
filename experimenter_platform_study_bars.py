@@ -71,10 +71,12 @@ class Application(tornado.web.Application):
             (r"/done", DoneHandler),
             (r"/final_question", FinalHandler), (r"/(post_question.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/done2", DoneHandler2),
+            (r"/writePolygon", PolygonAjaxHandler),
             (r"/websocket", MMDWebSocket, dict(websocket_dict = websocket_dict))
         ]
         #connects to database
         self.conn = sqlite3.connect('database.db')
+        self.conn2 = sqlite3.connect(params.USER_MODEL_STATE_PATH)
         #"global variable" to save current UserID of session
         UserID = -1;
         #global variable to track start and end times
@@ -392,6 +394,22 @@ class FinalHandler(tornado.web.RequestHandler):
 class DoneHandler2(tornado.web.RequestHandler):
     def get(self):
         self.render("done2.html")
+
+
+class PolygonAjaxHandler(tornado.web.RequestHandler):
+    def post(self):
+        # gets polygon coordinates and refIds from frontend coordinateRefSentences
+        json_obj = json.loads(self.request.body)
+        for polygon_obj in json_obj:
+            ref_id = 'ref_' + polygon_obj.refId
+            polygon = polygon_obj.polygonCoords
+            polygon_data = (ref_id, self.application.cur_mmd, polygon, polygon)
+            # updates polygon in entry in db with same refId and task number
+            self.application.conn2.execute('INSERT INTO aoi(name, task, polygon) VALUES (?,?,?) ON DUPLICATE KEY UPDATE polygon=?', polygon_data)
+            # self.application.conn2.execute('UPDATE aoi SET polygon =? WHERE name =? AND task=?', polygon_data)
+        self.application.conn2.commit()
+        self.redirect('/')
+
 
 #main function is first thing to run when application starts
 def main():
