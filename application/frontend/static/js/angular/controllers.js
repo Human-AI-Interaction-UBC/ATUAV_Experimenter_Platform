@@ -48,10 +48,17 @@ var AppCtrl = function($scope, $http, $location) {
   $scope.curMarksManager;
   $scope.curSpanManager;
   console.log(currentMMD);
+  let isInitialAccess = true;
   // Fetch the conditions
   $http.get('static/data_updated/conditions.json').
       success(function(data, status, headers) {
         $scope.conditions = data;
+        console.log("called get conditions");
+        if (isInitialAccess) {
+            console.log("first initialization");
+          $scope.initialRenderToGenerateAOIs();
+            isInitialAccess = false;
+        }
         if (data.length > 0) {
           $scope.curConditionId = data[0];
             if(currentMMD){
@@ -97,12 +104,33 @@ var AppCtrl = function($scope, $http, $location) {
               //Do something
               console.log($scope.coordinatesofRefSentences[i]);
           }
-          writePolygonToDb($scope.coordinatesofRefSentences, $scope.curConditionId);
+          // writePolygonToDb($scope.coordinatesofRefSentences, $scope.curConditionId);
           //drawOverlay($scope.aggregatedData.sentenceData[0].polygonCoords);
           //console.log($scope.aggregatedData.sentenceData[0].polygonCoords)
           console.log("drew overlay")
 
       });
+  };
+
+  $scope.initialRenderToGenerateAOIs = function() {
+    for (let condition in $scope.conditions) {
+        $http.get('static/data_updated/' + condition + '_updated.json').
+        success(function(data, status, headers) {
+            // Reset the worker filter
+            $scope.imgSrc = 'static/' + data.chart;
+            $scope.curText = data.text;
+            $scope.curReference = data.references;
+            let startEndCoords = [];
+            Object.keys($scope.curReference).forEach(function(key) {
+                startEndCoords.push({"refId": key, "start": $scope.curReference[key]['sentence_start_char'], "end": $scope.curReference[key]['sentence_end_char']})
+            });
+            document.getElementById("theText").innerHTML =$scope.curText;
+            $scope.coordinatesofChar = findCoordinatesofCharacters("#theTextParagraph");
+            $scope.coordinatesofRefSentences = findCoordinatesofRefSentences("#theTextParagraph", $scope.coordinatesofChar, startEndCoords);
+            console.log($scope.coordinatesofRefSentences);
+            // writePolygonToDb($scope.coordinatesofRefSentences, $scope.curConditionId);
+        });
+    }
   };
   angular.element(document.getElementById('theChart')).on('load',
       function() {

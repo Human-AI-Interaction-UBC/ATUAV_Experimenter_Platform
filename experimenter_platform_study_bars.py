@@ -403,9 +403,7 @@ class PolygonAjaxHandler(tornado.web.RequestHandler):
         for polygon_obj in json_obj:
             ref_id = 'ref_' + polygon_obj['refId']
             polygon = polygon_obj['polygonCoords']
-            # polygon_blob = polygon.dumps(polygon)
-            polygon_tuple = str(list(map(lambda p: tuple(p), polygon)))
-            # polygon_data = (polygon_blob, ref_id, self.application.cur_mmd)
+            polygon_tuple = str(list(map(lambda p: tuple(p.values()), polygon)))
             polygon_data = (polygon_tuple, ref_id, self.application.cur_mmd)
             # updates polygon in entry in db with same refId and task number
             self.application.conn2.execute('UPDATE aoi SET polygon=? WHERE name=? AND task=?', polygon_data)
