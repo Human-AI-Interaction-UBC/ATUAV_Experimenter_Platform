@@ -5,8 +5,8 @@ from utils import *
 import geometry
 import time
 
-
-class MLComponent(DetectionComponent):
+# Todo: add facial stuff api
+class FacialExpressionDetector(DetectionComponent):
 
     def __init__(self, tobii_controller, app_state_control, callback_time, emdat_component):
         DetectionComponent.__init__(self, tobii_controller, app_state_control, is_periodic = True, callback_time = callback_time)
@@ -20,7 +20,7 @@ class MLComponent(DetectionComponent):
         classifier.loadModelParameters()
         """
 
-    def run(self):
+    def run():
         ## Do something
         """
         ### With self.emdat_component, you have access to interval and task features

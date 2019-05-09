@@ -1,29 +1,25 @@
 
-import sys
+import sys, os
 import params
 #This sets the path in our computer to where the eyetracker stuff is located
 #sys.path.append('/Users/Preetpal/desktop/ubc_4/experimenter_platform/modules')
 #sys.path.append('E\\Users\\admin\\Desktop\\experimenter_platform\\modules')
 sys.path.append('E:\\Users\\admin\\Desktop\\experimenter_platform_core\\ATUAV_Experimenter_Platform\\Modules')
-
-from tobii.eye_tracking_io.basic import EyetrackerException
+sys.path.append(os.path.join(sys.path[0],'tobii_binder'))
 
 import os
 import datetime
 import time
 
-import tobii.eye_tracking_io.mainloop
-import tobii.eye_tracking_io.browsing
-import tobii.eye_tracking_io.eyetracker
-import tobii.eye_tracking_io.time.clock
-import tobii.eye_tracking_io.time.sync
+import tobii_research as tr
+
 import csv
 import numpy as np
 from tornado import gen
 import emdat_utils
 import ast
 
-class TobiiController:
+class TobiiControllerNewSdk:
 
 	"""	The singleton class used to communicate with Tobii eye tracker API: it initializes the eye tracker,
 	stores the raw gaze data, so the detection components can compute the features
@@ -37,9 +33,11 @@ class TobiiController:
 		keyword arguments
 		None
 		"""
+		print("constructing eyetracker object")
 		# eye tracking
-		self.eyetracker = None
 		self.eyetrackers = {}
+		self.eyetracker = None
+
 		self.gazeData = []
 		self.eventData = []
 		self.datafile = None
@@ -55,11 +53,6 @@ class TobiiController:
 		#This contains the websocket to send data to be displayed on front end
 		self.runOnlineFix = True
 		# initialize communications
-		tobii.eye_tracking_io.init()
-		self.clock = tobii.eye_tracking_io.time.clock.Clock()
-		self.mainloop_thread = tobii.eye_tracking_io.mainloop.MainloopThread()
-		self.browser = tobii.eye_tracking_io.browsing.EyetrackerBrowser(self.mainloop_thread, lambda t, n, i: self.on_eyetracker_browser_event(t, n, i))
-		self.mainloop_thread.start()
 		self.aoi_ids = {}
 		self.dpt_id = 0
 
@@ -68,91 +61,11 @@ class TobiiController:
 		self.last_pupil_right = -1
 		self.LastTimestamp = -1
 		self.init_emdat_global_features()
-
-	def waitForFindEyeTracker(self):
-
-		"""Blocks the current thread until Tobii API detects an eye tracker in the system.
-
-		arguments
-		None
-
-		keyword arguments
-		None
-
-		returns
-		None		--	only returns when an entry has been made to the
-					self.eyetrackers dict
-		"""
-		print("looking for eyetracker")
-		while len(self.eyetrackers.keys()) == 0:
-			pass
-		print("found eyetracker")
-
-	def on_eyetracker_browser_event(self, event_type, event_name, eyetracker_info):
-
-		"""Adds a new or updates an existing tracker to self.eyetrackers,
-		if one is available
-
-		arguments
-		event_type		--	a tobii.eye_tracking_io.browsing.EyetrackerBrowser
-						event
-		event_name		--	don't know what this is for; probably passed
-						by some underlying Tobii function, specifying
-						a device name; it's not used within this
-						function
-		eyetracker_info	--	a struct containing information on the eye
-						tracker (e.g. it's product_id)
-
-		keyword arguments
-		None
-
-		returns
-		False			--	returns False after adding a new tracker to
-						self.eyetrackers or after deleting it
-		"""
-
-		# When a new eyetracker is found we add it to the treeview and to the
-		# internal list of eyetracker_info objects
-		if event_type == tobii.eye_tracking_io.browsing.EyetrackerBrowser.FOUND:
-			self.eyetrackers[eyetracker_info.product_id] = eyetracker_info
-			return False
-
-		# Otherwise we remove the tracker from the treeview and the eyetracker_info list...
-		del self.eyetrackers[eyetracker_info.product_id]
-
-		# ...and add it again if it is an update message
-		if event_type == tobii.eye_tracking_io.browsing.EyetrackerBrowser.UPDATED:
-			self.eyetrackers[eyetracker_info.product_id] = eyetracker_info
-		return False
-
-	def destroy(self):
-
-		"""Removes eye tracker and stops all operations
-
-		arguments
-		None
-
-		keyword arguments
-		None
-
-		returns
-		None		--	sets self.eyetracker and self.browser to None;
-					stops browser and the
-					tobii.eye_tracking_io.mainloop.MainloopThread
-		"""
-
-		self.eyetracker = None
-		self.browser.stop()
-		print('browser stop')
-		self.browser = None
-		self.mainloop_thread.stop()
-		print('stop')
-
+        print("constructed eyetracker object")
 	############################################################################
 	# activation methods
 	############################################################################
-
-	def activate(self,eyetracker):
+	def activate(self):
 
 		"""Connects to specified eye tracker
 
@@ -168,45 +81,13 @@ class TobiiController:
 					sets self.syncmanager
 		"""
 
-		eyetracker_info = self.eyetrackers[eyetracker]
-		print "Connecting to:", eyetracker_info
-		tobii.eye_tracking_io.eyetracker.Eyetracker.create_async(self.mainloop_thread,
-													 eyetracker_info,
-													 lambda error, eyetracker: self.on_eyetracker_created(error, eyetracker, eyetracker_info))
-
-		while self.eyetracker==None:
-			pass
-		self.syncmanager = tobii.eye_tracking_io.time.sync.SyncManager(self.clock,eyetracker_info,self.mainloop_thread)
-
-	def on_eyetracker_created(self, error, eyetracker, eyetracker_info):
-
-		"""Function is called by TobiiController.activate, to handle all
-		operations after connecting to a tracker has been succesfull
-
-		arguments
-		error			--	some Tobii error message
-		eyetracker		--	key for the self.eyetracker dict under which
-						the eye tracker that is currently connected
-		eyetracker_info	--	name of the eye tracker to which a
-						connection has been established
-
-		keyword arguments
-		None
-
-		returns
-		None or False	--	returns nothing and sets self.eyetracke on
-						connection success; returns False on failure
-		"""
-
-		if error:
-			print("WARNING! libtobii.TobiiController.on_eyetracker_created: Connection to %s failed because of an exception: %s" % (eyetracker_info, error))
-			if error == 0x20000402:
-				print("WARNING! libtobii.TobiiController.on_eyetracker_created: The selected unit is too old, a unit which supports protocol version 1.0 is required.\n\n<b>Details:</b> <i>%s</i>" % error)
-			else:
-				print("WARNING! libtobii.TobiiController.on_eyetracker_created: Could not connect to %s" % (eyetracker_info))
-			return False
-
-		self.eyetracker = eyetracker
+		print "Connecting to: ", params.EYETRACKER_TYPE
+		while self.eyetracker is None:
+			eyetrackers = tr.find_all_eyetrackers()
+			for tracker in eyetrackers:
+				self.eyetrackers[tracker.model] = tracker
+			self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
+		print "Connected to: ", params.EYETRACKER_TYPE
 
 	def startTracking(self):
 
@@ -224,16 +105,9 @@ class TobiiController:
 					for self.eyetracker.events.OnGazeDataReceived and
 					calls self.eyetracker.StartTracking()
 		"""
-
+		print("starting tracker")
 		self.gazeData = []
 		self.eventData = []
-		self.eyetracker.events.OnGazeDataReceived += self.on_gazedata
-		print("=================== SLEEPING =========================")
-		time.sleep(1)
-		print("=================== WOKE UP =========================")
-
-		self.eyetracker.StartTracking()
-
 		#Preetpal's Code to initialize/empty arrays to be used in fixation algorithm
 		self.x = []
 		self.y = []
@@ -242,6 +116,11 @@ class TobiiController:
 		self.pupilsize = []
 		self.pupilvelocity = []
 		self.head_distance = []
+		self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
+		print("=================== SLEEPING =========================")
+		time.sleep(1)
+		print("=================== WOKE UP =========================")
+
 
 	def stopTracking(self):
 
@@ -260,9 +139,7 @@ class TobiiController:
 					calls TobiiTracker.flushData before resetting both
 					self.gazeData and self.eventData
 		"""
-
-		self.eyetracker.StopTracking()
-		self.eyetracker.events.OnGazeDataReceived -= self.on_gazedata
+		self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.on_gazedata)
 		#self.flushData()
 		self.gazeData = []
 		self.eventData = []
@@ -300,7 +177,7 @@ class TobiiController:
 				f.write( ",".join([str(x) for x in fix])+"\n" )
 
 
-	def on_gazedata(self,error,gaze):
+	def on_gazedata(self, gaze):
 
 		"""Adds new data point to the raw data arrays. If x, y coordinate data is not available,
 		stores the coordinates for this datapoint as (-1280, -1024). Any other feature,
@@ -316,57 +193,62 @@ class TobiiController:
 		returns
 		None		--	appends gaze to self.gazeData list
 		"""
-
 		#Don't need raw gaze so this code is commented out
 		#self.gazeData.append(gaze)
 
 		#Below code is just print statements that are commented out
 		'''
-		print 'Timestamp: ', gaze.Timestamp
-		print 'LeftGazePoint2D: ', gaze.LeftGazePoint2D
-		print 'RightGazePoint2D: ', gaze.RightGazePoint2D
-		print 'LeftEyePosition3D: ', gaze.LeftEyePosition3D
-		print 'RightEyePosition3D', gaze.RightEyePosition3D
-		print 'LeftPupil: ', gaze.LeftPupil
-		print 'RightPupil: ', gaze.RightPupil
+		print gaze.keys()
+		print 'Timestamp: ', gaze["device_time_stamp"]
+		print 'LeftGazePoint2D: ', gaze["left_gaze_point_on_display_area"]
+		print 'RightGazePoint2D: ', gaze["right_gaze_point_on_display_area"]
+		print 'LeftEyePosition3D: ', gaze["left_gaze_point_in_user_coordinate_system"]
+		print 'RightEyePosition3D', gaze["right_gaze_point_in_user_coordinate_system"]
+		print 'LeftPupil: ', gaze["left_pupil_diameter"]
+		print 'RightPupil: ', gaze["right_pupil_diameter"]
+		print gaze["left_gaze_point_validity"]
+		print gaze["right_gaze_point_validity"]
 		'''
 
 		#Below code checks to see if the gaze data is valid. If it is valid then
 		#we average the left and right. Else we use the valid eye. We are multiplying
 		#by 1280 and 1024 because those are the dimensions of the monitor and since
 		#the gaze values returned are between 0 and 1
-		if ((gaze.LeftGazePoint2D.x >= 0) & (gaze.RightGazePoint2D.x >= 0)):
-			self.x.append(((gaze.LeftGazePoint2D.x + gaze.RightGazePoint2D.x)/2) * 1280)
-			self.y.append(((gaze.LeftGazePoint2D.y + gaze.RightGazePoint2D.y)/2) * 1024)
-		elif (gaze.LeftGazePoint2D.x >= 0):
-			self.x.append(gaze.LeftGazePoint2D.x * 1280)
-			self.y.append(gaze.LeftGazePoint2D.y * 1024)
-		elif (gaze.RightGazePoint2D.x >= 0):
-			self.x.append(gaze.RightGazePoint2D.x * 1280)
-			self.y.append(gaze.RightGazePoint2D.y * 1024)
+		if ((gaze["left_gaze_point_on_display_area"][0] >= 0) & (gaze["right_gaze_point_on_display_area"][0] >= 0)):
+			self.x.append(((gaze["left_gaze_point_on_display_area"][0] + gaze["right_gaze_point_on_display_area"][0])/2) * 1280)
+			self.y.append(((gaze["left_gaze_point_on_display_area"][1] + gaze["right_gaze_point_on_display_area"][1])/2) * 1024)
+		elif (gaze["left_gaze_point_on_display_area"][0] >= 0):
+			self.x.append(gaze["left_gaze_point_on_display_area"][0] * 1280)
+			self.y.append(gaze["left_gaze_point_on_display_area"][1] * 1024)
+		elif (gaze["right_gaze_point_on_display_area"][0] >= 0):
+			self.x.append(gaze["right_gaze_point_on_display_area"][0] * 1280)
+			self.y.append(gaze["right_gaze_point_on_display_area"][1] * 1024)
 		else:
 			self.x.append(-1 * 1280)
 			self.y.append(-1 * 1024)
 		# print(gaze.RightGazePoint2D.x * 1280, gaze.RightGazePoint2D.y * 1024)
 		# print("%f" % (time.time() * 1000.0))
+
 		if (params.USE_EMDAT):
 			for aoi, polygon in self.AOIs.iteritems():
-				if utils.point_inside_polygon((self.x[-1], self.y[-1]), polygon):
+				if utils.point_inside_polygon((self[0][-1], self.y[-1]), polygon):
 					self.aoi_ids[aoi].append(self.dpt_id)
 		# Pupil size features
-		self.pupilsize.append(self.get_pupil_size(gaze.LeftPupil, gaze.RightPupil))
+		self.pupilsize.append(self.get_pupil_size(gaze["left_pupil_diameter"], gaze["right_pupil_diameter"]))
 		if (self.last_pupil_right != -1):
-			self.pupilvelocity.append(self.get_pupil_velocity(self.last_pupil_left, self.last_pupil_right, gaze.LeftPupil, gaze.RightPupil, gaze.Timestamp - self.LastTimestamp))
+			self.pupilvelocity.append(self.get_pupil_velocity(self.last_pupil_left, self.last_pupil_right, gaze["left_pupil_diameter"], gaze["right_pupil_diameter"], gaze["device_time_stamp"] - self.LastTimestamp))
 		else:
 			self.pupilvelocity.append(-1)
-		self.time.append(gaze.Timestamp)
-		self.head_distance.append(self.get_distance(gaze.LeftEyePosition3D.z, gaze.RightEyePosition3D.z))
-		self.validity.append(gaze.LeftValidity == 0 or gaze.RightValidity == 0)
+		self.time.append(gaze["device_time_stamp"])
+		self.head_distance.append(self.get_distance(gaze["left_gaze_point_in_user_coordinate_system"][2],																		     gaze["right_gaze_point_in_user_coordinate_system"][2]))
+		self.validity.append(gaze["left_gaze_point_validity"] == 1 or gaze["right_gaze_point_validity"] == 1)
+
 		# for pupil velocity
-		self.last_pupil_left = gaze.LeftPupil
-		self.last_pupil_right = gaze.LeftPupil
-		self.LastTimestamp = gaze.Timestamp
+		self.last_pupil_left = gaze["left_pupil_diameter"]
+		self.last_pupil_right = gaze["right_pupil_diameter"]
+		self.LastTimestamp = gaze["device_time_stamp"]
 		self.dpt_id += 1
+
 
 	def add_fixation(self, x, y, duration, start_time):
 		'''
@@ -384,17 +266,17 @@ class TobiiController:
 	    Used for extracting pupilsize in on_gazedata(). If recordings for both eyes are available, return their average,
 	    else return value for a recorded eye (if any)
 	    Args:
-	        pupilleft - recording of pupil size on left eye
-	        pupilright - recording of pupil size on right eye
+			pupilleft - recording of pupil size on left eye
+			pupilright - recording of pupil size on right eye
 	    Returns:
-	        pupil size to generate pupil features with.
+			pupil size to generate pupil features with.
 	    '''
 	    if pupilleft == 0 and pupilright == 0:
-	        return -1
+			return -1
 	    if pupilleft == 0:
-	        return pupilright
+			return pupilright
 	    if pupilright == 0:
-	        return pupilleft
+			return pupilleft
 	    return (pupilleft + pupilright) / 2.0
 
 
@@ -424,15 +306,15 @@ class TobiiController:
 	    Used for extracting head distance in on_gazedata(). If recordings for both eyes are available, return their average,
 	    else return value for a recorded eye (if any)
 	    Args:
-	        distanceleft - recording of distance on left eye
-	        distanceright - recording of distance size on right eye
+			distanceleft - recording of distance on left eye
+			distanceright - recording of distance size on right eye
 	    '''
 	    if distanceleft == 0 and distanceright == 0:
-	        return -1
+			return -1
 	    if distanceleft == 0:
-	        return distanceright
+			return distanceright
 	    if distanceright == 0:
-	        return distanceleft
+			return distanceleft
 	    return (distanceleft + distanceright) / 2.0
 
 	def update_aoi_storage(self, AOIS):
@@ -451,33 +333,33 @@ class TobiiController:
 				self.emdat_global_features[event_name]['meanfixationduration']      = -1
 				self.emdat_global_features[event_name]['stddevfixationduration']    = -1
 				self.emdat_global_features[event_name]['timetofirstfixation']       = -1
-				self.emdat_global_features[event_name]['timetolastfixation']        = -1
+				self.emdat_global_features[event_name]['timetolastfixation']		= -1
 				self.emdat_global_features[event_name]['proportionnum']			  	= 0
 				self.emdat_global_features[event_name]['proportiontime']			= 0
 				self.emdat_global_features[event_name]['fixationrate']			   	= 0
 				self.emdat_global_features[event_name]['totaltimespent']			= 0
-				self.emdat_global_features[event_name]['meanpupilsize']          	= -1
-				self.emdat_global_features[event_name]['stddevpupilsize']        	= -1
-				self.emdat_global_features[event_name]['maxpupilsize']           	= -1
-				self.emdat_global_features[event_name]['minpupilsize']           	= -1
-				self.emdat_global_features[event_name]['startpupilsize']         	= -1
-				self.emdat_global_features[event_name]['endpupilsize']           	= -1
+				self.emdat_global_features[event_name]['meanpupilsize']		  	= -1
+				self.emdat_global_features[event_name]['stddevpupilsize']			= -1
+				self.emdat_global_features[event_name]['maxpupilsize']		   	= -1
+				self.emdat_global_features[event_name]['minpupilsize']		   	= -1
+				self.emdat_global_features[event_name]['startpupilsize']		 	= -1
+				self.emdat_global_features[event_name]['endpupilsize']		   	= -1
 				self.emdat_global_features[event_name]['meanpupilvelocity']      	= -1
 				self.emdat_global_features[event_name]['stddevpupilvelocity']    	= -1
 				self.emdat_global_features[event_name]['maxpupilvelocity']       	= -1
 				self.emdat_global_features[event_name]['minpupilvelocity']       	= -1
-				self.emdat_global_features[event_name]['numpupilsizes']          	= 0
+				self.emdat_global_features[event_name]['numpupilsizes']		  	= 0
 				self.emdat_global_features[event_name]['numpupilvelocity']       	= 0
-				self.emdat_global_features[event_name]['numdistancedata']        	= 0
+				self.emdat_global_features[event_name]['numdistancedata']			= 0
 				self.emdat_global_features[event_name]['numdistancedata'] 			= 0
 				self.emdat_global_features[event_name]['meandistance']       		= -1
 				self.emdat_global_features[event_name]['stddevdistance']     		= -1
-				self.emdat_global_features[event_name]['maxdistance']        		= -1
-				self.emdat_global_features[event_name]['mindistance']        		= -1
+				self.emdat_global_features[event_name]['maxdistance']				= -1
+				self.emdat_global_features[event_name]['mindistance']				= -1
 				self.emdat_global_features[event_name]['startdistance']      		= -1
-				self.emdat_global_features[event_name]['enddistance']        		= -1
+				self.emdat_global_features[event_name]['enddistance']				= -1
 				self.emdat_global_features[event_name]['total_trans_from']			 = 0
-				self.emdat_global_features[event_name]['startpupilvelocity']        = -1
+				self.emdat_global_features[event_name]['startpupilvelocity']		= -1
 				self.emdat_global_features[event_name]['endpupilvelocity'] 			= 0
 
 				for cur_aoi in AOIS.keys():

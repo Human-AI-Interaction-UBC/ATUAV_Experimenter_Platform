@@ -10,6 +10,7 @@ ADAPTATION_LOOP = "adaptation_loop"
 FIXATION_ALGORITHM = "fixation_algorithm"
 EMDAT_COMPONENT = "emdat_component"
 ML_COMPONENT = "ml_component"
+MOUSE_KEY_COMPONENT = "mouse_key_component"
 
 
 class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
@@ -23,6 +24,7 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
         self.fixation_component = websocket_dict[FIXATION_ALGORITHM]
         self.emdat_component = websocket_dict[EMDAT_COMPONENT]
         self.ml_component = websocket_dict[ML_COMPONENT]
+        self.mouse_key_component = websocket_dict[MOUSE_KEY_COMPONENT]
 
     def open(self):
 
@@ -47,7 +49,6 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
             result = message.split(":")
             cur_task = next_task
             next_task = int(result[1])
-
             #we want to log the fixations in self.tobii_controller.EndFixations for user N and task G
             #log_for_user_pilot_7B_task_9_raw_fixations.csv
             self.tobii_controller.logFixations(self.application.cur_user, cur_task)
@@ -70,11 +71,11 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
         if (params.USE_FIXATION_ALGORITHM):
             self.fixation_component.restart_fixation_algorithm()
             self.fixation_component.start()
+        if (params.USE_MOUSE or params.USE_KEYBOARD):
+            self.mouse_key_component.start()
+
         if (params.USE_EMDAT):
             self.emdat_component.setup_new_emdat_component()
-            print(type(self.emdat_component))
-            print("HAS ATTRIBUTE", hasattr(self.emdat_component, 'start'))
-            #self.emdat_component.print_hi()
             self.emdat_component.start()
             if (params.USE_ML):
                 self.ml_component.start()
@@ -82,6 +83,8 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
     def stop_detection_components(self):
         if (params.USE_FIXATION_ALGORITHM):
             self.fixation_component.stop()
+        if (params.USE_MOUSE or params.USE_KEYBOARD):
+            self.mouse_key_component.stop()            
         if (params.USE_EMDAT):
             self.emdat_component.stop()
             if (params.USE_ML):

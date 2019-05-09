@@ -1,3 +1,7 @@
+# Eyetracker type
+EYETRACKER_TYPE = "IS4_Large_Peripheral" # 4C eyetracker
+#EYETRACKER_TYPE = "Tobii T120" # Old eyetracker
+
 #Pilot condition
 PILOT_CONDITION_NO_REMOVAL = True
 #PILOT_CONDITION_NO_REMOVAL = False
@@ -36,6 +40,9 @@ FRONT_END_TEMPLATE_PATH = "./application/frontend/templates/"
 USE_FIXATION_ALGORITHM = True
 USE_EMDAT = False
 USE_ML = False
+USE_KEYBOARD = True
+USE_MOUSE = True
+
 
 # Features to use
 USE_PUPIL_FEATURES = True
