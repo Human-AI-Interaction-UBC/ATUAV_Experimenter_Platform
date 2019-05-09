@@ -128,7 +128,7 @@ var AppCtrl = function($scope, $http, $location) {
             $scope.coordinatesofChar = findCoordinatesofCharacters("#theTextParagraph");
             $scope.coordinatesofRefSentences = findCoordinatesofRefSentences("#theTextParagraph", $scope.coordinatesofChar, startEndCoords);
             // console.log($scope.coordinatesofRefSentences);
-            writePolygonToDb($scope.coordinatesofRefSentences, $scope.curConditionId);
+            writePolygonToDb($scope.coordinatesofRefSentences, $scope.conditions[condition]);
         });
     }
   };
