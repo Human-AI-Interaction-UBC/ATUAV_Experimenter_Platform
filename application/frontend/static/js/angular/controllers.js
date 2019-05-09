@@ -48,17 +48,17 @@ var AppCtrl = function($scope, $http, $location) {
   $scope.curMarksManager;
   $scope.curSpanManager;
   console.log(currentMMD);
-  let isInitialAccess = true;
+  // let isInitialAccess = true;
   // Fetch the conditions
   $http.get('static/data_updated/conditions.json').
       success(function(data, status, headers) {
         $scope.conditions = data;
-        console.log("called get conditions");
-        if (isInitialAccess) {
-            console.log("first initialization");
-          $scope.initialRenderToGenerateAOIs();
-            isInitialAccess = false;
-        }
+        // console.log("called get conditions");
+        // if (isInitialAccess) {
+        //     console.log("first initialization");
+        //   $scope.initialRenderToGenerateAOIs();
+        //     isInitialAccess = false;
+        // }
         if (data.length > 0) {
           $scope.curConditionId = data[0];
             if(currentMMD){
@@ -113,6 +113,11 @@ var AppCtrl = function($scope, $http, $location) {
   };
 
   $scope.initialRenderToGenerateAOIs = function() {
+      $http.get('static/data_updated/conditions.json').
+      success(function(data, status, headers) {
+          $scope.conditions = data;
+      });
+
     for (let condition in $scope.conditions) {
         $http.get('static/data_updated/' + $scope.conditions[condition] + '_updated.json').
         success(function(data, status, headers) {
