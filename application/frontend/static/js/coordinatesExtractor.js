@@ -170,10 +170,13 @@ function sendJSONtoTornado(jsonObj, MMDid){
 }
 
 function writePolygonToDb(jsonObj, MMDid) {
+  let polygonWithCondition = {};
+  polygonWithCondition['MMDid'] = MMDid;
+  polygonWithCondition['references'] = jsonObj;
     $.ajax({
         url: '/writePolygon',
 
-        data: JSON.stringify(jsonObj),
+        data: JSON.stringify(polygonWithCondition),
         dataType: "JSON",
         type: "POST",
         success: function ( data , status_text, jqXHR) {

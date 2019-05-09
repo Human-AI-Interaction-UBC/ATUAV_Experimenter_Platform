@@ -400,16 +400,15 @@ class PolygonAjaxHandler(tornado.web.RequestHandler):
     def post(self):
         # gets polygon coordinates and refIds from frontend coordinateRefSentences
         json_obj = json.loads(self.request.body)
-        for polygon_obj in json_obj:
+        for polygon_obj in json_obj['references']:
             ref_id = 'ref_' + polygon_obj['refId']
             polygon = polygon_obj['polygonCoords']
             polygon_tuple = str(list(map(lambda p: tuple(p.values()), polygon)))
-            polygon_data = (polygon_tuple, ref_id, self.application.cur_mmd)
+            polygon_data = (polygon_tuple, ref_id, json_obj['MMDid'])
             # updates polygon in entry in db with same refId and task number
             self.application.conn2.execute('UPDATE aoi SET polygon=? WHERE name=? AND task=?', polygon_data)
             # self.application.conn2.execute('UPDATE aoi SET polygon =? WHERE name =? AND task=?', polygon_data)
         self.application.conn2.commit()
-        self.redirect('/')
 
 
 #main function is first thing to run when application starts

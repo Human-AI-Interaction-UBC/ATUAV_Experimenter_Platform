@@ -114,7 +114,7 @@ var AppCtrl = function($scope, $http, $location) {
 
   $scope.initialRenderToGenerateAOIs = function() {
     for (let condition in $scope.conditions) {
-        $http.get('static/data_updated/' + condition + '_updated.json').
+        $http.get('static/data_updated/' + $scope.conditions[condition] + '_updated.json').
         success(function(data, status, headers) {
             // Reset the worker filter
             $scope.imgSrc = 'static/' + data.chart;
@@ -127,8 +127,8 @@ var AppCtrl = function($scope, $http, $location) {
             document.getElementById("theText").innerHTML =$scope.curText;
             $scope.coordinatesofChar = findCoordinatesofCharacters("#theTextParagraph");
             $scope.coordinatesofRefSentences = findCoordinatesofRefSentences("#theTextParagraph", $scope.coordinatesofChar, startEndCoords);
-            console.log($scope.coordinatesofRefSentences);
-            // writePolygonToDb($scope.coordinatesofRefSentences, $scope.curConditionId);
+            // console.log($scope.coordinatesofRefSentences);
+            writePolygonToDb($scope.coordinatesofRefSentences, $scope.curConditionId);
         });
     }
   };
