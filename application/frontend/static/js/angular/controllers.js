@@ -132,7 +132,7 @@ var AppCtrl = function($scope, $http, $location) {
     }
   };
 
-  document.getElementById('polygonButton').addEventListener('click', function() {$scope.initialRenderToGenerateAOIs()});
+  // document.getElementById('polygonButton').addEventListener('click', function() {$scope.initialRenderToGenerateAOIs()});
   angular.element(document.getElementById('theChart')).on('load',
       function() {
         initReferences($scope);
