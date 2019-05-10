@@ -22,38 +22,34 @@ class MouseKeyboardEventDetector(DetectionComponent):
     								))
         if use_keyboard:
 			self.listeners.append(keyboard.Listener(
-#            					    on_release=on_release,
+            					    #on_release=on_release,
 								    on_press=self.on_press
                                     ))
 
-    def run(self):
+	def run(self):
         ## Do something
-        """
-        ### With self.emdat_component, you have access to interval and task features
-        ### With self.tobii_controller, you have access to global features
-        predicted_features['your_feature'] = classifier.predict(features_you_need)
-        """
+		"""
+		### With self.emdat_component, you have access to interval and task features
+		### With self.tobii_controller, you have access to global features
+		predicted_features['your_feature'] = classifier.predict(features_you_need)
+		"""
+		self.cur_mouse_event_id = 0
+		self.AOIS = self.app_state_control.getMouseAoiMapping()
         for listener in self.listeners:
 			listener.start()
-        #self.notify_app_state_controller()
-        self.predicted_features = {}
-        self.id += 1
         pass
 
-    def notify_app_state_controller(self):
-        """
-        send features to the database
-        """
-    # TODO: FIX TIMESTAMP
-        for feature in predicted_features.keys():
-            if feature in self.feature_select:
-                val = "high" if predicted_features['feature'] >= self.threshold else "low"
-                self.application_state_controller.updateMlTable(feature, self.id, feature, time.time(), predicted_features[feature], val)
+    def notify_app_state_controller(self, aoi, time_stamp, pressed):
+		self.cur_mouse_event_id += 1
+		self.application_state_controller.updateMouseTable(aoi, self.cur_mouse_event_id, time_stamp, pressed)
+		self.adaptation_loop.evaluateRules(aoi, time_stamp)
 
     def on_click(self, x, y, button, pressed):
-	    print('{0} at {1}'.format(
-	        'Pressed' if pressed else 'Released',
-	        (x, y)))
+		print('{0} at {1}'.format( 'Pressed' if pressed else 'Released', (x, y)))
+		for aoi in self.AOIS:
+			if (utils.point_inside_polygon(x, y, self.AOIS[aoi])):
+				self.notify_app_state_controller(aoi, self.tobii_controller.LastTimestamp, pressed == 1)
+				break
 
     def on_press(self, key):
         try:
