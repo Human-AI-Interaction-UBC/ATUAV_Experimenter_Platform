@@ -42,8 +42,6 @@ var AppCtrl = function($scope, $http, $location) {
         handleRemoval(obj);
     } else if (obj.deliver != null) {
         handleDelivery(obj);
-    } else if (obj.generatingAOI != null) {
-        $scope.initialRenderToGenerateAOIs();
     }
   }
   /***************************************/
@@ -100,38 +98,11 @@ var AppCtrl = function($scope, $http, $location) {
               //Do something
               console.log($scope.coordinatesofRefSentences[i]);
           }
-          // writePolygonToDb($scope.coordinatesofRefSentences, $scope.curConditionId);
           //drawOverlay($scope.aggregatedData.sentenceData[0].polygonCoords);
           //console.log($scope.aggregatedData.sentenceData[0].polygonCoords)
           console.log("drew overlay")
 
       });
-  };
-
-  $scope.initialRenderToGenerateAOIs = function() {
-      $http.get('static/data_updated/conditions.json').
-      success(function(data, status, headers) {
-          $scope.conditions = data;
-      });
-
-    for (let condition in $scope.conditions) {
-        $http.get('static/data_updated/' + $scope.conditions[condition] + '_updated.json').
-        success(function(data, status, headers) {
-            // Reset the worker filter
-            $scope.imgSrc = 'static/' + data.chart;
-            $scope.curText = data.text;
-            $scope.curReference = data.references;
-            let startEndCoords = [];
-            Object.keys($scope.curReference).forEach(function(key) {
-                startEndCoords.push({"refId": key, "start": $scope.curReference[key]['sentence_start_char'], "end": $scope.curReference[key]['sentence_end_char']})
-            });
-            document.getElementById("theText").innerHTML =$scope.curText;
-            $scope.coordinatesofChar = findCoordinatesofCharacters("#theTextParagraph");
-            $scope.coordinatesofRefSentences = findCoordinatesofRefSentences("#theTextParagraph", $scope.coordinatesofChar, startEndCoords);
-            // console.log($scope.coordinatesofRefSentences);
-            writePolygonToDb($scope.coordinatesofRefSentences, $scope.conditions[condition]);
-        });
-    }
   };
 
   // document.getElementById('polygonButton').addEventListener('click', function() {$scope.initialRenderToGenerateAOIs()});
