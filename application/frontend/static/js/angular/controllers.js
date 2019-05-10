@@ -53,12 +53,6 @@ var AppCtrl = function($scope, $http, $location) {
   $http.get('static/data_updated/conditions.json').
       success(function(data, status, headers) {
         $scope.conditions = data;
-        // console.log("called get conditions");
-        // if (isInitialAccess) {
-        //     console.log("first initialization");
-        //   $scope.initialRenderToGenerateAOIs();
-        //     isInitialAccess = false;
-        // }
         if (data.length > 0) {
           $scope.curConditionId = data[0];
             if(currentMMD){
