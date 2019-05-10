@@ -13,7 +13,6 @@ class MouseKeyboardEventDetector(DetectionComponent):
         self.predicted_features = {}
         self.id = 1
         self.emdat_component = emdat_component
-        #self.feature_select = self.application_state_controller.getMouseKeyboardFeatures()
         self.listeners = []
         if use_mouse:
             self.listeners.append(mouse.Listener(
