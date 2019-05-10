@@ -14,10 +14,10 @@ PILOT_MMD_SUBSET = [5]
 # Project paths:
 # Reference highlighting rules
 #RUN USING:  python -u experimenter_platform_stage_1_demo.py
-USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight_test.db"
+USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight.db"
 #GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight.db"
 if PILOT_CONDITION_NO_REMOVAL:
-    GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_pilot_noremoval_test.db"
+    GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_pilot_noremoval.db"
 else:
     GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_pilot_removal.db"
 

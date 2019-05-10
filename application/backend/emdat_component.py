@@ -62,6 +62,7 @@ class EMDATComponent(DetectionComponent):
         the last call to EMDAT Component, merges it with previously computed
         features and sends the results to the Application State.
         """
+        print("Running EMDAT")
         start_time = time.time()
         print(self.pups_idx, len(self.tobii_controller.time))
         self.start_time = self.tobii_controller.time[self.pups_idx]

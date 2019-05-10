@@ -23,8 +23,6 @@ class DetectionComponent():
         self.application_state_controller = self.adaptation_loop.app_state_controller
         self.is_periodic = is_periodic
         self.callback_time = callback_time
-        print("querying db")
-        print("queried db")
 
     @abstractmethod
     def notify_app_state_controller(self):

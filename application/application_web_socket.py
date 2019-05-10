@@ -68,6 +68,7 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
             return
 
     def start_detection_components(self):
+        print("Starting the components")
         if (params.USE_FIXATION_ALGORITHM):
             self.fixation_component.restart_fixation_algorithm()
             self.fixation_component.start()
@@ -84,7 +85,7 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
         if (params.USE_FIXATION_ALGORITHM):
             self.fixation_component.stop()
         if (params.USE_MOUSE or params.USE_KEYBOARD):
-            self.mouse_key_component.stop()            
+            self.mouse_key_component.stop()
         if (params.USE_EMDAT):
             self.emdat_component.stop()
             if (params.USE_ML):

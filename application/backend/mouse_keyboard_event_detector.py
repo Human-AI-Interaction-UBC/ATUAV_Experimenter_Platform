@@ -25,24 +25,21 @@ class MouseKeyboardEventDetector(DetectionComponent):
             					    #on_release=on_release,
 								    on_press=self.on_press
                                     ))
+        print("Constructed the mouse listener")
 
-	def run(self):
-        ## Do something
-		"""
-		### With self.emdat_component, you have access to interval and task features
-		### With self.tobii_controller, you have access to global features
-		predicted_features['your_feature'] = classifier.predict(features_you_need)
-		"""
-		self.cur_mouse_event_id = 0
-		self.AOIS = self.app_state_control.getMouseAoiMapping()
-        for listener in self.listeners:
-			listener.start()
-        pass
 
     def notify_app_state_controller(self, aoi, time_stamp, pressed):
-		self.cur_mouse_event_id += 1
-		self.application_state_controller.updateMouseTable(aoi, self.cur_mouse_event_id, time_stamp, pressed)
-		self.adaptation_loop.evaluateRules(aoi, time_stamp)
+        self.cur_mouse_event_id += 1
+        self.application_state_controller.updateMouseTable(aoi, self.cur_mouse_event_id, time_stamp, pressed)
+        self.adaptation_loop.evaluateRules(aoi, time_stamp)
+
+    def run(self):
+        ## Do something
+        print("RUNNING THE MOUSE")
+        self.cur_mouse_event_id = 0
+        self.AOIS = self.app_state_control.getMouseAoiMapping()
+        for listener in self.listeners:
+            listener.start()
 
     def on_click(self, x, y, button, pressed):
 		print('{0} at {1}'.format( 'Pressed' if pressed else 'Released', (x, y)))
