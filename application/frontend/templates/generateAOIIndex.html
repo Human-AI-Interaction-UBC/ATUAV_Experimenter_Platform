@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="visreferences">
+<html>
 <title>Welcome to the MMD Study 1</title>
 <head>
     <link rel="stylesheet" href="static/css/view.css">
@@ -7,18 +7,12 @@
     <script src="static/js/libraries/jquery.js"></script>
 
 </head>
-<body ng-controller="AppCtrl">
-<h1>Generating the AOIs for all the experiment conditions... </h1>
+<body>
+<h1>Generate the AOIs for all the experiment conditions here: </h1>
 <div class="aoi">
-    <button id="polygonButton" onclick="$scope.initialRenderToGenerateAOIs()">generate AOIs</button>
+    <form id="form_index" class="appnitro" method="post" action="/">
+        <input type="submit" value="generate AOIs">
+    </form>
 </div>
-
-<script src="static/js/libraries/bootstrap.js"></script>
-<script src="static/js/libraries/angular.js"></script>
-<script src="static/js/libraries/ui-bootstrap-0.7.0.min.js"></script>
-<script src="static/js/libraries/d3.v3.js"></script>
-<script src="static/js/angular/controllers.js"></script>
-<script src="static/js/coordinatesExtractor.js"></script>
-<script src="static/js/angular/app.js"></script>
 </body>
 </html>
