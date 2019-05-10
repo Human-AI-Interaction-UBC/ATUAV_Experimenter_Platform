@@ -42,6 +42,8 @@ var AppCtrl = function($scope, $http, $location) {
         handleRemoval(obj);
     } else if (obj.deliver != null) {
         handleDelivery(obj);
+    } else if (obj.generatingAOI != null) {
+        $scope.initialRenderToGenerateAOIs();
     }
   }
   /***************************************/

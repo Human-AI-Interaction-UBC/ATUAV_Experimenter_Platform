@@ -437,6 +437,7 @@ app.config(function($locationProvider) {
 });
 
 app.controller('AppCtrl', AppCtrl);
+app.controller('AOIController', AOIController);
 
 function isArray(o) {
   return Object.prototype.toString.call(o) === '[object Array]';

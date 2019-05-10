@@ -59,9 +59,6 @@ class Application(tornado.web.Application):
         handlers = [
             (r"/", MainHandler),
             (r"/aoi", AOIHandler),
-            (r"/calibration", CalibrationHandler), (r"/(blank_cross.jpg)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
-            (r"/tobii", TobiiHandler),
-            (r"/ready", ReadyHandler),
             (r"/writePolygon", PolygonAjaxHandler),
             (r"/websocket", MMDWebSocket, dict(websocket_dict=websocket_dict))
         ]
@@ -116,30 +113,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 class AOIHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render('MMDforAOI.html')
-
-
-class TobiiHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render("load_tobii.html")
-
-    def post(self):
-        self.redirect('/calibration')
-
-
-class CalibrationHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render("calibration.html")
-
-    def post(self):
-        self.redirect('/ready')
-
-
-class ReadyHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render("ready.html")
-    def post(self):
-        self.redirect('/mmd')
+        self.render('MMDforAOI.html', mmd="3")
 
 
 class PolygonAjaxHandler(tornado.web.RequestHandler):
