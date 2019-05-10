@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="visreferences">
 <title>Welcome to the MMD Study 1</title>
 <head>
     <link rel="stylesheet" href="static/css/view.css">
     <script type="text/javascript" src="static/js/libraries/view.js"></script>
     <script src="static/js/libraries/jquery.js"></script>
-    <script src="static/js/angular/controller.js"></script>
+    <script src="static/js/angular/controllers.js"></script>
 
 </head>
 <body ng-controller="AppCtrl">
-<h1>Generate the AOIs for all the experiment conditions here: </h1>
+<h1>Generating the AOIs for all the experiment conditions... </h1>
 <div class="aoi">
-    <button class="polygonButton" onclick="initialRenderToGenerateAOIs()">generate AOIs</button>
+    <button class="polygonButton" href="" ng-click="initialRenderToGenerateAOIs()">generate AOIs</button>
 </div>
 </body>
 </html>
