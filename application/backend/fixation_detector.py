@@ -38,7 +38,7 @@ class FixationDetector(DetectionComponent):
             and params.MINDUR for respectively the distance and the smallest possible time length of a fixation.
             The method is a coroutine, which means that it can pause its execution and give control to other components of the platform.
         """
-        print(self.AOIS)
+        print(self.AOIS, "Started fixation algorithm")
         #list of lists, each containing [starttime, endtime, duration, endx, endy]
         self.EndFixations = []
         #Keep track of index in x,y,time array
