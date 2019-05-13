@@ -91,13 +91,15 @@ class MMDWebSocket(ApplicationWebSocket):
 
     def on_message(self, message):
         print("RECEIVED MESSAGE: " + message)
-        self.stop_detection_components()
-        self.tobii_controller.stopTracking()
-        self.tobii_controller.destroy()
+        if(message == "done_generating"):
+            self.stop_detection_components()
+            self.tobii_controller.stopTracking()
+            self.tobii_controller.destroy()
         return
 
     def on_close(self):
         self.app_state_control.logTask(user_id=self.application.cur_user)
+        self.close()
 
 
 class MainHandler(tornado.web.RequestHandler):

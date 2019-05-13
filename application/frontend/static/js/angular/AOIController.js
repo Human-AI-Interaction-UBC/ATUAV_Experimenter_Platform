@@ -24,7 +24,6 @@ var AOIController = function($scope, $http, $location) {
     /***** Server communications block *****/
     $scopeGlobal.ws = new WebSocket("ws://localhost:8888/websocket");
     /***************************************/
-    console.log(currentMMD);
     // Fetch the conditions
         $http.get('static/data_updated/conditions.json').
         success(function(data, status, headers) {
@@ -49,6 +48,7 @@ var AOIController = function($scope, $http, $location) {
                     writePolygonToDb($scope.coordinatesofRefSentences, $scope.conditions[condition]);
                 });
             }
+            $scopeGlobal.ws.close();
         });
 
     angular.element(document.getElementById('theChart')).on('load',
