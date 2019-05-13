@@ -23,6 +23,9 @@ var AOIController = function($scope, $http, $location) {
 
     /***** Server communications block *****/
     $scopeGlobal.ws = new WebSocket("ws://localhost:8888/websocket");
+    $scopeGlobal.ws.onmessage = function (evt) {
+        alert(evt.data)
+    };
     /***************************************/
     // Fetch the conditions
         $http.get('static/data_updated/conditions.json').
