@@ -105,8 +105,10 @@ class MMDWebSocket(ApplicationWebSocket):
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
 
+        self.application.cur_user = -1
+        self.application.cur_mmd = 3
         self.application.start_time = str(datetime.datetime.now().time())
-        self.render('MMDforAOI.html', mmd="3")
+        self.render('MMDforAOI.html', mmd=self.application.cur_mmd)
 
 
 class PolygonAjaxHandler(tornado.web.RequestHandler):
