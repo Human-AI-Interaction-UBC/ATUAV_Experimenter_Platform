@@ -176,8 +176,10 @@ class ApplicationStateController():
                 self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `interval_value` INTEGER, `task_value` TEXT, `runtime_value` TEXT, PRIMARY KEY(`id`) )".format(table_name))
             elif user['type'] == 'ml':
                 self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `raw_prediction` REAL, `value` TEXT, PRIMARY KEY(`id`) )".format(table_name))
+            elif user['type'] == 'mouse':
+                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `is_press` BOOLEAN, PRIMARY KEY(`id`) )".format(table_name))
             else:
-                raise NotImplementedError("Invalid Type: The supported types are `fix` `ml` and `emdat`")
+                raise NotImplementedError("Invalid Type: The supported types are `fix` `ml` `emdat` and 'mouse'")
             self.conn.commit() #commit after every creation?
 
     def __deleteTaskDynamicTables__(self):
@@ -352,6 +354,32 @@ class ApplicationStateController():
         #print mapping
         return mapping
 
+    def getMouseAoiMapping(self):
+        """ Returns a mapping of the mouse user states (event name) to aoi's
+
+        arguments
+        None
+
+        keyword arguments
+        None
+
+        returns
+        Dict    -- contains a mapping of the mouse user state as keys
+                to the polygon coordinates of their respective aoi's
+        """
+        mapping = {}
+        query_results = self.conn.execute("SELECT user_state.event_name, polygon FROM aoi, user_state, user_state_task WHERE user_state.aoi = aoi.name AND aoi.task = ? AND user_state.event_name = user_state_task.event_name AND user_state_task.task = ? AND type = 'mouse'", (str(self.currTask), str(self.currTask)))
+        aoi_results = query_results.fetchall()
+        for aoi in aoi_results:
+            event_name = aoi['event_name']
+
+            polygon = aoi['polygon']
+            mapping[event_name] = ast.literal_eval(polygon)
+
+        #print mapping
+        return mapping
+
+
     def getEdmatFeatures(self):
 
         """ Returns a mapping of the emdat user states (event names) to its associated emdat feature
@@ -445,6 +473,28 @@ class ApplicationStateController():
         if not (isinstance(id, int) and isinstance(time_start, long) and isinstance(time_end, long) and isinstance(duration, int)):
             raise TypeError('Value for columns of a fixation table must be an int')
         self.conn.execute("INSERT INTO {} VALUES (?,?,?,?)".format(table), (id, time_start, time_end, duration))
+        self.conn.commit()
+
+    def updateMouseTable(self, table, id, time_stamp, is_press):
+
+        """ Insert a new row into a mouse event table
+
+        arguments
+        table       -- String, name of an existing dynamic fixation table
+                    (ie. one of the user states)
+        id          -- int, id associated with the mouse event
+        time_stamp  -- long, timestamp of the mouse click in ms
+        is_press    -- bool, True if the event is press, False if release
+
+        keyword arguments
+        None
+
+        returns
+        None
+        """
+        if not (isinstance(id, int) and isinstance(time_stamp, long) and isinstance(is_press, bool)):
+            raise TypeError('Invalid value for the mouse table')
+        self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (id, time_stamp, is_press))
         self.conn.commit()
 
     def updateEmdatTable(self, id, emdat_features):
