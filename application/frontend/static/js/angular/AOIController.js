@@ -48,11 +48,12 @@ var AOIController = function($scope, $http, $location) {
                     writePolygonToDb($scope.coordinatesofRefSentences, $scope.conditions[condition]);
                 });
             }
-            $scopeGlobal.ws.close();
         });
 
     angular.element(document.getElementById('theChart')).on('load',
         function() {
             initReferences($scope);
         });
+
+    $scopeGlobal.ws.send("done_generating");
 };

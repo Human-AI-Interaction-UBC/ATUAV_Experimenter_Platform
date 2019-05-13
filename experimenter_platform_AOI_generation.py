@@ -95,11 +95,11 @@ class MMDWebSocket(ApplicationWebSocket):
             self.stop_detection_components()
             self.tobii_controller.stopTracking()
             self.tobii_controller.destroy()
+            self.render('doneAOI.html')
         return
 
     def on_close(self):
         self.app_state_control.logTask(user_id=self.application.cur_user)
-        self.close()
 
 
 class MainHandler(tornado.web.RequestHandler):
