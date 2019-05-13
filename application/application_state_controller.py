@@ -492,7 +492,7 @@ class ApplicationStateController():
         returns
         None
         """
-        if not (isinstance(id, int) and isinstance(time_stamp, long) and isinstance(is_press, bool)):
+        if not (isinstance(id, int) and isinstance(time_stamp, int) and isinstance(is_press, bool)):
             raise TypeError('Invalid value for the mouse table')
         self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (id, time_stamp, is_press))
         self.conn.commit()
