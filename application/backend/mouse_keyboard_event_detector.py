@@ -8,8 +8,8 @@ from pynput import mouse, keyboard
 
 class MouseKeyboardEventDetector(DetectionComponent):
 
-    def __init__(self, tobii_controller, app_state_control, emdat_component, use_mouse, use_keyboard):
-        DetectionComponent.__init__(self, tobii_controller, app_state_control, is_periodic = False)
+    def __init__(self, tobii_controller, application_state_controller, emdat_component, use_mouse, use_keyboard):
+        DetectionComponent.__init__(self, tobii_controller, application_state_controller, is_periodic = False)
         self.predicted_features = {}
         self.id = 1
         self.emdat_component = emdat_component
@@ -37,7 +37,7 @@ class MouseKeyboardEventDetector(DetectionComponent):
         ## Do something
         print("RUNNING THE MOUSE")
         self.cur_mouse_event_id = 0
-        self.AOIS = self.app_state_control.getMouseAoiMapping()
+        self.AOIS = self.application_state_controller.getMouseAoiMapping()
         for listener in self.listeners:
             listener.start()
 
