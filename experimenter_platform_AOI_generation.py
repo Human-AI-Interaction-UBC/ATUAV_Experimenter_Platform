@@ -58,7 +58,6 @@ class Application(tornado.web.Application):
                           MOUSE_KEY_COMPONENT: self.mouse_key_component}
         handlers = [
             (r"/", MainHandler),
-            (r"/aoi", AOIHandler),
             (r"/writePolygon", PolygonAjaxHandler),
             (r"/websocket", MMDWebSocket, dict(websocket_dict=websocket_dict))
         ]
@@ -105,14 +104,6 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
 
         self.application.start_time = str(datetime.datetime.now().time())
-        self.render('generateAOIIndex.html')
-
-    def post(self):
-        self.redirect('/aoi')
-
-
-class AOIHandler(tornado.web.RequestHandler):
-    def get(self):
         self.render('MMDforAOI.html', mmd="3")
 
 
