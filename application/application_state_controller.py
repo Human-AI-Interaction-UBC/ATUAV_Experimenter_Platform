@@ -477,7 +477,7 @@ class ApplicationStateController():
         self.conn.execute("INSERT INTO {} VALUES (?,?,?,?)".format(table), (id, time_start, time_end, duration))
         self.conn.commit()
 
-    def updateMouseTable(self, table, id, time_stamp, is_press):
+    def updateMouseTable(self, table, id, mouse_event):
 
         """ Insert a new row into a mouse event table
 
@@ -494,9 +494,9 @@ class ApplicationStateController():
         returns
         None
         """
-        if not (isinstance(id, int) and isinstance(time_stamp, int) and isinstance(is_press, bool)):
+        if not (isinstance(id, int) and isinstance(mouse_event.time_stamp, int) and isinstance(mouse_event.is_press, bool)):
             raise TypeError('Invalid value for the mouse table')
-        self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (id, time_stamp, is_press))
+        self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (id, mouse_event.time_stamp, mouse_event.is_press))
         self.conn.commit()
 
     def updateDragDropTable(self, table, dd_event):

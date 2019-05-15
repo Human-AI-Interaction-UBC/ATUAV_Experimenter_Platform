@@ -41,14 +41,17 @@ class MouseKeyboardEventDetector(DetectionComponent):
     def notify_app_state_controller(self):
         while self.run_mouse_checks:
 			if self.mouse_queue.qsize() > 0:
-				aoi, time_stamp, pressed = self.mouse_queue.get()
-				print("MOUSE click in AOI: ", aoi)
+				click = self.mouse_queue.get()
+				print("MOUSE click in AOI: ", click.aoi)
 				self.cur_mouse_event_id += 1
-				self.application_state_controller.updateMouseTable(aoi, self.cur_mouse_event_id, time_stamp, pressed)
-				self.adaptation_loop.evaluateRules(aoi, time_stamp)
+				self.application_state_controller.updateMouseTable(click.aoi, self.cur_mouse_event_id, click)
+				self.adaptation_loop.evaluateRules(click.aoi, click.time_stamp)
 			elif self.drag_drop_queue.qsize() > 0:
+				# TODO: Figure out what to do with drag/drops outside of AOIs
+				drag_drop = self.mouse_queue.get()
         		self.cur_dragdrop_event_id += 1
-				self.application_state_controller.updateDragDropTable(aoi, self.cur_mouse_event_id, time_stamp, pressed)
+				self.application_state_controller.updateDragDropTable(drag_drop.aoi, self.cur_dragdrop_event_id, drag_drop)
+				self.adaptation_loop.evaluateRules(drag_drop.aoi, drag_drop.time_stamp)
             else:
                 yield
 
@@ -72,12 +75,14 @@ class MouseKeyboardEventDetector(DetectionComponent):
                 break
 		if pressed:
 			self.last_press = this_click
-		#else:
-		#	distance_to_press = utils.euclidean_distance((x, y), (self.last_press.x, self.last_press.y))
-		#	time_since_press = self.tobii_controller.LastTimestamp - self.last_press.time_stamp
-		#	if time_since_press > self.min_drag_drop_dur and distance_to_press > self.min_drag_drop_dist:
-				# Drag and drop event detected
-		#	self.last_press = None
+		else:
+			distance_to_press = utils.euclidean_distance((x, y), (self.last_press.x, self.last_press.y))
+			curr_timestamp = self.tobii_controller.LastTimestamp
+			time_since_press = curr_timestamp - self.last_press.time_stamp
+			if time_since_press > self.min_drag_drop_dur and distance_to_press > self.min_drag_drop_dist:
+				self.drag_drop_queue.put(DragDropMouseEvent(self.last_press.time_stamp, time_since_press, distance_to_press, drag_start=True, aoi=last_press.aoi))
+				self.drag_drop_queue.put(DragDropMouseEvent(curr_timestamp, time_since_press, distance_to_press, drag_start=False, aoi=this_click.aoi))
+			self.last_press = None
 
     def on_press(self, key):
         try:

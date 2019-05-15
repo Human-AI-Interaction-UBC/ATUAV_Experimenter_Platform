@@ -7,8 +7,11 @@ class BasicMouseEvent():
         self.is_press = is_press
         self.time_stamp = timestamp
 
-class DragDropMouseEvent(BasicMouseEvent):
+class DragDropMouseEvent():
 
-    def __init__(self, aoi=None, is_drag=False, x=-1, y=-1, is_press=False, timestamp=-1):
-        DetectionComponent.__init__(self, aoi, x, y, is_press, timestamp)
-        self.is_drag = is_drag
+    def __init__(self, time_stamp, duration, displacement, drag_start, aoi=None):
+        self.drag_start = drag_start
+		self.aoi = aoi
+        self.duration = duration
+        self.time_stamp = timestamp
+        self.displacement = displacement
