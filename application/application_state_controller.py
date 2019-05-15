@@ -178,8 +178,10 @@ class ApplicationStateController():
                 self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `raw_prediction` REAL, `value` TEXT, PRIMARY KEY(`id`) )".format(table_name))
             elif user['type'] == 'mouse':
                 self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `is_press` BOOLEAN, PRIMARY KEY(`id`) )".format(table_name))
+            elif user['type'] == 'drag_drop':
+                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `drag_start` BOOLEAN, duration INTEGER, displacement REAL,  PRIMARY KEY(`id`) )".format(table_name))
             else:
-                raise NotImplementedError("Invalid Type: The supported types are `fix` `ml` `emdat` and 'mouse'")
+                raise NotImplementedError("Invalid Type: The supported types are `fix` `ml` `emdat`, 'mouse', 'drag_drop'")
             self.conn.commit() #commit after every creation?
 
     def __deleteTaskDynamicTables__(self):
@@ -496,6 +498,26 @@ class ApplicationStateController():
             raise TypeError('Invalid value for the mouse table')
         self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (id, time_stamp, is_press))
         self.conn.commit()
+
+    def updateDragDropTable(self, table, dd_event):
+
+        """ Insert a new row into a mouse event table
+
+        arguments
+        table       -- String, name of an existing dynamic fixation table
+                    (ie. one of the user states)
+
+        keyword arguments
+        None
+
+        returns
+        None
+        """
+        if not (isinstance(dd_event.id, int) and isinstance(dd_event.time_stamp, int) and isinstance(dd_event.drag_start, bool) and isinstance(dd_event.duration, int) and isinstance(dd_event.displacement, float)):
+            raise TypeError('Invalid value for the mouse table')
+        self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (dd_event.id, dd_event.time_stamp, dd_event.drag_start, dd_event.duration, dd_event.displacement))
+        self.conn.commit()
+
 
     def updateEmdatTable(self, id, emdat_features):
 
