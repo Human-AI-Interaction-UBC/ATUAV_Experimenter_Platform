@@ -7,17 +7,10 @@ import datetime
 import json
 import random
 
-# Imports required for EYE TRACKING Code:
 import time
-from application.backend.eye_tracker_newsdk import TobiiControllerNewSdk
 from application.middleend.adaptation_loop import AdaptationLoop
 from application.application_state_controller import ApplicationStateController
 from application.application_web_socket import ApplicationWebSocket
-
-from application.backend.fixation_detector import FixationDetector
-from application.backend.emdat_component import EMDATComponent
-from application.backend.ml_component import MLComponent
-from application.backend.mouse_keyboard_event_detector import MouseKeyboardEventDetector
 
 
 import params
@@ -29,33 +22,15 @@ define("port", default=8888, help="run on the given port", type=int)
 TOBII_CONTROLLER = "tobii_controller"
 APPLICATION_STATE_CONTROLLER = "application_state_controller"
 ADAPTATION_LOOP = "adaptation_loop"
-FIXATION_ALGORITHM = "fixation_algorithm"
-EMDAT_COMPONENT = "emdat_component"
-ML_COMPONENT = "ml_component"
-MOUSE_KEY_COMPONENT = "mouse_key_component"
 
 
 class Application(tornado.web.Application):
     def __init__(self):
         # connects url with code
-
-        self.tobii_controller = TobiiControllerNewSdk()
-        self.tobii_controller.activate()
         self.app_state_control = ApplicationStateController(0)
         self.adaptation_loop = AdaptationLoop(self.app_state_control)
-
-        self.fixation_component = FixationDetector(self.tobii_controller, self.adaptation_loop)
-        self.emdat_component = EMDATComponent(self.tobii_controller, self.adaptation_loop, callback_time=params.EMDAT_CALL_PERIOD)
-        self.ml_component = MLComponent(self.tobii_controller, self.adaptation_loop, callback_time=params.EMDAT_CALL_PERIOD, emdat_component=self.emdat_component)
-        self.mouse_key_component = MouseKeyboardEventDetector(self.tobii_controller, self.adaptation_loop, self.emdat_component, params.USE_MOUSE, params.USE_KEYBOARD)
-
-        websocket_dict = {TOBII_CONTROLLER: self.tobii_controller,
-                          APPLICATION_STATE_CONTROLLER: self.app_state_control,
-                          ADAPTATION_LOOP: self.adaptation_loop,
-                          FIXATION_ALGORITHM: self.fixation_component,
-                          EMDAT_COMPONENT: self.emdat_component,
-                          ML_COMPONENT: self.ml_component,
-                          MOUSE_KEY_COMPONENT: self.mouse_key_component}
+        websocket_dict = {APPLICATION_STATE_CONTROLLER: self.app_state_control,
+                          ADAPTATION_LOOP: self.adaptation_loop}
         handlers = [
             (r"/", MainHandler),
             (r"/writePolygon", PolygonAjaxHandler),
@@ -84,18 +59,9 @@ class MMDWebSocket(ApplicationWebSocket):
         self.websocket_ping_interval = 0
         self.websocket_ping_timeout = float("inf")
         self.adaptation_loop.liveWebSocket = self
-        print self.tobii_controller.eyetrackers
-
-        # self.start_detection_components()
-        # self.tobii_controller.startTracking()
 
     def on_message(self, message):
         print("RECEIVED MESSAGE: " + message)
-        if(message == "done_generating"):
-            self.stop_detection_components()
-            self.tobii_controller.stopTracking()
-            self.tobii_controller.destroy()
-            self.render('doneAOI.html')
         return
 
     def on_close(self):
@@ -120,8 +86,11 @@ class PolygonAjaxHandler(tornado.web.RequestHandler):
             polygon = polygon_obj['polygonCoords']
             polygon_tuple = str(list(map(lambda p: tuple(p.values()), polygon)))
             polygon_data = (polygon_tuple, ref_id, json_obj['MMDid'])
+            polygon_data2 = (ref_id, json_obj['MMDid'], polygon_tuple)
+            print (polygon_data)
             # updates polygon in entry in db with same refId and task number
             self.application.conn.execute('UPDATE aoi SET polygon=? WHERE name=? AND task=?', polygon_data)
+            # self.application.conn.execute('INSERT INTO aoi (name, task, polygon) VALUES (?,?,?)', polygon_data2)
         self.application.conn.commit()
 
 
