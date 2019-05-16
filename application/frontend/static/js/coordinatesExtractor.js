@@ -169,10 +169,12 @@ function sendJSONtoTornado(jsonObj, MMDid){
 
 }
 
-function writePolygonToDb(jsonObj, MMDid) {
+
+function writePolygonToDb(jsonObj, MMDid, isLast) {
   let polygonWithCondition = {};
   polygonWithCondition['MMDid'] = MMDid;
   polygonWithCondition['references'] = jsonObj;
+  console.log(isLast);
     $.ajax({
         url: '/writePolygon',
 
@@ -180,6 +182,10 @@ function writePolygonToDb(jsonObj, MMDid) {
         dataType: "JSON",
         type: "POST",
         success: function ( data , status_text, jqXHR) {
+          if (isLast) {
+            console.log('is last');
+              $scopeGlobal.ws.send("done_generating");
+          }
             console.log('ajax success')
         },
         error: function ( data , status_text, jqXHR ) {
