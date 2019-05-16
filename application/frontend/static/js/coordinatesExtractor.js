@@ -169,7 +169,6 @@ function sendJSONtoTornado(jsonObj, MMDid){
 
 }
 
-
 function writePolygonToDb(jsonObj, MMDid, isLast) {
   let polygonWithCondition = {};
   polygonWithCondition['MMDid'] = MMDid;

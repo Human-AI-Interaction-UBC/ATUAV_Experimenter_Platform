@@ -48,10 +48,9 @@ var AOIController = function($scope, $http, $location) {
                     document.getElementById("theText").innerHTML =$scope.curText;
                     $scope.coordinatesofChar = findCoordinatesofCharacters("#theTextParagraph");
                     $scope.coordinatesofRefSentences = findCoordinatesofRefSentences("#theTextParagraph", $scope.coordinatesofChar, startEndCoords);
-                    writePolygonToDb($scope.coordinatesofRefSentences, $scope.conditions[condition]);
+                    writePolygonToDb($scope.coordinatesofRefSentences, $scope.conditions[condition], condition == ($scope.conditions.length - 1));
                 });
             }
-            // $scopeGlobal.ws.send("done_generating");in
         });
 
     angular.element(document.getElementById('theChart')).on('load',

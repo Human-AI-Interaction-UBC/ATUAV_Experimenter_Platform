@@ -1,6 +1,9 @@
 import tornado
 from tornado.options import define, options
 import os.path
+import itertools
+import operator
+import re
 
 import sqlite3
 import datetime
@@ -62,10 +65,28 @@ class MMDWebSocket(ApplicationWebSocket):
 
     def on_message(self, message):
         print("RECEIVED MESSAGE: " + message)
+        if (message == "done_generating"):
+            self.writeAOIsToFile()
         return
 
     def on_close(self):
-        self.app_state_control.logTask(user_id=self.application.cur_user)
+        print('closed connection')
+
+    def writeAOIsToFile(self):
+        query_result2 = self.application.conn.execute('SELECT task, polygon FROM aoi ORDER BY task')
+        allAOIs = query_result2.fetchall()
+        aoiByTask = [(task, [polygon for _, polygon in aois]) for task, aois in itertools.groupby(allAOIs, operator.itemgetter(0))]
+
+        for aoiSet in aoiByTask:
+            aoiFileName = str(aoiSet[0])
+            f=open(aoiFileName + ".aoi", "w+")
+            aoiRefs = ','.join(aoiSet[1])
+            noSpace = re.sub(r" ", '', aoiRefs)
+            tabSeparated = re.sub(r"\),", '\t', noSpace)
+            extraCommasRemoved = re.sub(r"\],", '\t', tabSeparated)
+            final = re.sub(r"([\(\)\[\]])", '', extraCommasRemoved)
+            print(final)
+            f.write("ref\t" + final + "\n")
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -84,7 +105,6 @@ class PolygonAjaxHandler(tornado.web.RequestHandler):
         query_results = self.application.conn.execute('SELECT name FROM aoi WHERE task=?', (json_obj['MMDid'],))
         aois = query_results.fetchall()
         aoi_array = [aoi for sublist in aois for aoi in sublist]
-        print(aoi_array)
         for polygon_obj in json_obj['references']:
             ref_id = 'ref_' + polygon_obj['refId']
             polygon = polygon_obj['polygonCoords']
