@@ -85,6 +85,8 @@ class MMDWebSocket(ApplicationWebSocket):
         self.websocket_ping_interval = 0
         self.websocket_ping_timeout = float("inf")
         self.adaptation_loop.liveWebSocket = self
+        self.application.conn.execute('DELETE FROM aoi')
+        self.application.conn.commit()
 
     def on_message(self, message):
         print("RECEIVED MESSAGE: " + message)
@@ -125,20 +127,13 @@ class PolygonAjaxHandler(tornado.web.RequestHandler):
     def post(self):
         # gets polygon coordinates and refIds from frontend coordinateRefSentences
         json_obj = json.loads(self.request.body, object_pairs_hook=collections.OrderedDict)
-        query_results = self.application.conn.execute('SELECT name FROM aoi WHERE task=?', (json_obj['MMDid'],))
-        aois = query_results.fetchall()
-        aoi_array = [aoi for sublist in aois for aoi in sublist]
         for polygon_obj in json_obj['references']:
             ref_id = 'ref_' + polygon_obj['refId']
             polygon = polygon_obj['polygonCoords']
             polygon_tuple = str(list(map(lambda p: tuple(p.values()), polygon)))
-            polygon_data = (polygon_tuple, ref_id, json_obj['MMDid'])
             polygon_data2 = (ref_id, json_obj['MMDid'], polygon_tuple)
             # updates polygon in entry in db with same refId and task number
-            if (ref_id in aoi_array):
-                self.application.conn.execute('UPDATE aoi SET polygon=? WHERE name=? AND task=?', polygon_data)
-            else:
-                self.application.conn.execute('INSERT INTO aoi (name, task, polygon) VALUES (?,?,?)', polygon_data2)
+            self.application.conn.execute('INSERT INTO aoi (name, task, polygon) VALUES (?,?,?)', polygon_data2)
         self.application.conn.commit()
 
 
