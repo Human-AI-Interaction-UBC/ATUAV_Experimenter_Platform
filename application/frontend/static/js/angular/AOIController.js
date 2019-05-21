@@ -48,6 +48,7 @@ var AOIController = function($scope, $http, $location) {
                     document.getElementById("theText").innerHTML =$scope.curText;
                     $scope.coordinatesofChar = findCoordinatesofCharacters("#theTextParagraph");
                     $scope.coordinatesofRefSentences = findCoordinatesofRefSentences("#theTextParagraph", $scope.coordinatesofChar, startEndCoords);
+                    console.log($scope.coordinatesofRefSentences);
                     writePolygonToDb($scope.coordinatesofRefSentences, $scope.conditions[condition], condition == ($scope.conditions.length - 1));
                 });
             }

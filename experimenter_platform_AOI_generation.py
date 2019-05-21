@@ -12,15 +12,15 @@ import json
 import random
 
 import time
-from application.backend.eye_tracker_newsdk import TobiiControllerNewSdk
+# from application.backend.eye_tracker_newsdk import TobiiControllerNewSdk
 from application.middleend.adaptation_loop import AdaptationLoop
 from application.application_state_controller import ApplicationStateController
 from application.application_web_socket import ApplicationWebSocket
 
-from application.backend.fixation_detector import FixationDetector
-from application.backend.emdat_component import EMDATComponent
-from application.backend.ml_component import MLComponent
-from application.backend.mouse_keyboard_event_detector import MouseKeyboardEventDetector
+# from application.backend.fixation_detector import FixationDetector
+# from application.backend.emdat_component import EMDATComponent
+# from application.backend.ml_component import MLComponent
+# from application.backend.mouse_keyboard_event_detector import MouseKeyboardEventDetector
 
 
 import params
@@ -41,22 +41,23 @@ MOUSE_KEY_COMPONENT = "mouse_key_component"
 class Application(tornado.web.Application):
     def __init__(self):
         # connects url with code
-        self.tobii_controller = TobiiControllerNewSdk()
-        self.tobii_controller.activate()
+        # self.tobii_controller = TobiiControllerNewSdk()
+        # self.tobii_controller.activate()
         self.app_state_control = ApplicationStateController(0)
         self.adaptation_loop = AdaptationLoop(self.app_state_control)
 
-        self.fixation_component = FixationDetector(self.tobii_controller, self.adaptation_loop)
-        self.emdat_component = EMDATComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.EMDAT_CALL_PERIOD)
-        self.ml_component = MLComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.EMDAT_CALL_PERIOD, emdat_component = self.emdat_component)
-        self.mouse_key_component = MouseKeyboardEventDetector(self.tobii_controller, self.adaptation_loop, self.emdat_component, params.USE_MOUSE, params.USE_KEYBOARD)
-        websocket_dict = {TOBII_CONTROLLER: self.tobii_controller,
+        # self.fixation_component = FixationDetector(self.tobii_controller, self.adaptation_loop)
+        # self.emdat_component = EMDATComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.EMDAT_CALL_PERIOD)
+        # self.ml_component = MLComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.EMDAT_CALL_PERIOD, emdat_component = self.emdat_component)
+        # self.mouse_key_component = MouseKeyboardEventDetector(self.tobii_controller, self.adaptation_loop, self.emdat_component, params.USE_MOUSE, params.USE_KEYBOARD)
+        websocket_dict = {
+            # TOBII_CONTROLLER: self.tobii_controller,
                           APPLICATION_STATE_CONTROLLER: self.app_state_control,
-                          ADAPTATION_LOOP: self.adaptation_loop,
-                          FIXATION_ALGORITHM: self.fixation_component,
-                          EMDAT_COMPONENT: self.emdat_component,
-                          ML_COMPONENT: self.ml_component,
-                          MOUSE_KEY_COMPONENT: self.mouse_key_component}
+                          ADAPTATION_LOOP: self.adaptation_loop}
+                          # FIXATION_ALGORITHM: self.fixation_component,
+                          # EMDAT_COMPONENT: self.emdat_component,
+                          # ML_COMPONENT: self.ml_component,
+                          # MOUSE_KEY_COMPONENT: self.mouse_key_component}
         handlers = [
             (r"/", MainHandler),
             (r"/writePolygon", PolygonAjaxHandler),

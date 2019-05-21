@@ -4,7 +4,7 @@ import os
 import shutil
 from tornado import gen
 from tornado.ioloop import IOLoop
-from StringIO import StringIO
+from io import StringIO
 import ast
 import params
 
@@ -122,11 +122,11 @@ class ApplicationStateController():
         None
         """
 
-        print "initializing application"
+        print ("initializing application")
         self.__readDBFromDisk__()
-        self.__deleteAllDynamicTables__()
-        self.__updateTaskAndUserState__(self.currTask)
-        self.__createDynamicTables__()
+        # self.__deleteAllDynamicTables__()
+        # self.__updateTaskAndUserState__(self.currTask)
+        # self.__createDynamicTables__()
 
     def __updateTaskAndUserState__(self, task):
 
@@ -148,6 +148,8 @@ class ApplicationStateController():
         self.eventNames = []
         for user in self.userStates:
             self.eventNames.append(user['event_name'])
+        self.conn.close()
+        self.conn = sqlite3.connect(":memory:")
 
     def __createDynamicTables__(self):
 
@@ -169,7 +171,7 @@ class ApplicationStateController():
         self.conn.commit()
         for user in self.userStates:
             table_name = user['event_name']
-            print "creating table:" + table_name
+            print ("creating table:" + table_name)
             if user['type'] == 'fix':
                 self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_start` INTEGER, `time_end` INTEGER, `duration` INTEGER, PRIMARY KEY(`id`) )".format(table_name))
             elif user['type'] == 'emdat':
@@ -219,17 +221,23 @@ class ApplicationStateController():
         None
         """
 
-        print "deleting all dynamic tables"
-
+        print ("deleting all dynamic tables")
         self.conn.execute("DROP TABLE IF EXISTS intervention_state")
         self.conn.execute("DROP TABLE IF EXISTS rule_state")
         self.conn.commit()
+
+        self.conn = sqlite3.connect(params.USER_MODEL_STATE_PATH)
+        cur = self.conn.cursor()
+        cur.execute("PRAGMA database_list")
+        rows = cur.fetchall()
+        for row in rows:
+            print(row[0], row[1], row[2])
 
         query_results = self.conn.execute('SELECT user_state.event_name FROM user_state')
         userStates = query_results.fetchall()
 
         for user in userStates:
-            table_name = user['event_name']
+            table_name = user[0]
             self.conn.execute("DROP TABLE IF EXISTS {}".format(table_name))
         self.conn.commit()
 
@@ -273,11 +281,11 @@ class ApplicationStateController():
         returns
         None
         """
-        print "Switching to task: " + str(task)
-        self.logTask(user_id)
-        self.__deleteTaskDynamicTables__()
-        self.__updateTaskAndUserState__(task)
-        self.__createDynamicTables__()
+        print ("Switching to task: " + str(task))
+        # self.logTask(user_id)
+        # self.__deleteTaskDynamicTables__()
+        # self.__updateTaskAndUserState__(task)
+        # self.__createDynamicTables__()
 
 
     def resetApplication(self, user_id = 9999):
@@ -297,7 +305,7 @@ class ApplicationStateController():
         None
         """
 
-        self.logTask(user_id)
+        # self.logTask(user_id)
         self.__deleteAllDynamicTables__()
         self.__writeDBToDisk__()
 
