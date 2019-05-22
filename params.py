@@ -40,8 +40,8 @@ FRONT_END_TEMPLATE_PATH = "./application/frontend/templates/"
 USE_FIXATION_ALGORITHM = True
 USE_EMDAT = False
 USE_ML = False
-USE_KEYBOARD = True
-USE_MOUSE = True
+USE_KEYBOARD = False
+USE_MOUSE = False
 
 
 # Features to use
