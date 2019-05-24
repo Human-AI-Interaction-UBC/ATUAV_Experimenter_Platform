@@ -179,7 +179,7 @@ class ApplicationStateController():
             elif user['type'] == 'mouse':
                 self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `is_press` BOOLEAN, PRIMARY KEY(`id`) )".format(table_name))
             elif user['type'] == 'keyboard':
-                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `is_press` BOOLEAN, PRIMARY KEY(`id`) )".format(table_name))
+                self.conn.execute("CREATE TABLE keyboard ( `id` INTEGER, `time_stamp` INTEGER, key STRING, PRIMARY KEY(`id`) )")
             elif user['type'] == 'drag_drop':
                 self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `drag_start` BOOLEAN, duration INTEGER, displacement REAL,  PRIMARY KEY(`id`) )".format(table_name))
             elif user['type'] == 'double_click':
@@ -539,6 +539,25 @@ class ApplicationStateController():
         if not (isinstance(dd_event.id, int) and isinstance(dd_event.time_stamp, int) and isinstance(dd_event.drag_start, bool) and isinstance(dd_event.duration, int) and isinstance(dd_event.displacement, float)):
             raise TypeError('Invalid value for the mouse table')
         self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (dd_event.id, dd_event.time_stamp, dd_event.drag_start, dd_event.duration, dd_event.displacement))
+        self.conn.commit()
+
+    def updateKeyboardTable(self, id, key_event):
+
+        """ Insert a new row into a mouse event table
+
+        arguments
+        table       -- String, name of an existing dynamic fixation table
+                    (ie. one of the user states)
+
+        keyword arguments
+        None
+
+        returns
+        None
+        """
+        if not isinstance(key_event.time_stamp, int) and isinstance(key_event.key, string)):
+            raise TypeError('Invalid value for the keyboard table')
+        self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (id, key_event.time_stamp, key_event.key))
         self.conn.commit()
 
 

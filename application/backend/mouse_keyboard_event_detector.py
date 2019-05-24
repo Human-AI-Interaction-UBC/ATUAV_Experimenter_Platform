@@ -23,6 +23,7 @@ class MouseKeyboardEventDetector(DetectionComponent):
 			self.min_drag_drop_dist = 0
         	self.mouse_queue = Queue.Queue()
         	self.double_click_queue = Queue.Queue()
+			self.keyboard_queue = Queue.Queue()
             self.listeners.append(mouse.Listener(
     								#on_move=on_move,
                                     #on_scroll=on_scroll,
@@ -49,9 +50,13 @@ class MouseKeyboardEventDetector(DetectionComponent):
 			elif self.drag_drop_queue.qsize() > 0:
 				# TODO: Figure out what to do with drag/drops outside of AOIs
 				drag_drop = self.mouse_queue.get()
-        		self.cur_dragdrop_event_id += 1
+				self.cur_dragdrop_event_id += 1
 				self.application_state_controller.updateDoubleClickTable(drag_drop.aoi, self.cur_dragdrop_event_id, drag_drop)
 				self.adaptation_loop.evaluateRules(drag_drop.aoi, drag_drop.time_stamp)
+			elif self.keyboard_queue.qsize() > 0:
+				key_event = self.keyboard_queue.get()
+				self.keyboard_event_id += 1
+				self.application_state_controller.updateKeyboardTable(self.keyboard_event_id, key_event)
             else:
                 yield
 
@@ -59,7 +64,8 @@ class MouseKeyboardEventDetector(DetectionComponent):
         ## Do something
         print("RUNNING THE MOUSE")
         self.cur_mouse_event_id = 0
-        self.cur_dragdrop_event_id = 0
+        self.cur_doubleclick_event_id = 0
+		self.keyboard_event_id = 0
         self.AOIS = self.application_state_controller.getMouseAoiMapping()
         print("AOIS in mouse: ", self.AOIS)
         for listener in self.listeners:
@@ -79,18 +85,16 @@ class MouseKeyboardEventDetector(DetectionComponent):
 			curr_timestamp = self.tobii_controller.LastTimestamp
 			time_since_release = curr_timestamp - self.last_release.time_stamp
 			if time_since_release > self.min_double_click_dur:
-				self.double_click_queue.put(DoubleClickMouseEvent(self.last_release.time_stamp, True, aoi=last_press.aoi))
+				self.double_click_queue.put(DoubleClickMouseEvent(self.last_release.time_stamp, True, aoi=last_release.aoi))
 				self.double_click_queue.put(DoubleClickMouseEvent(curr_timestamp, False, aoi=this_click.aoi))
 			self.last_release = this_click
 			self.last_press = None
 
     def on_press(self, key):
         try:
-            print('alphanumeric key {0} pressed'.format(
-                key.char))
+            self.keyboard_queue.put(KeyboardEvent(self.keyboard_event_id, self.tobii_controller.LastTimestamp, key.char))
         except AttributeError:
-            print('special key {0} pressed'.format(
-                key))
+            self.keyboard_queue.put(KeyboardEvent(self.keyboard_event_id, self.tobii_controller.LastTimestamp, key))
 
     def stop(self):
         self.run_mouse_checks = False

@@ -23,3 +23,10 @@ class DoubleClickMouseEvent():
 		self.aoi = aoi
         self.duration = duration
         self.time_stamp = time_stamp
+
+class KeyboardEvent():
+
+    def __init__(self, time_stamp, key):
+		self.aoi = aoi
+        self.key = key
+        self.time_stamp = time_stamp
