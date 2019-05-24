@@ -2,27 +2,28 @@
  * Created by enamul on 6/3/2017.
  */
 function findCoordinatesofCharacters(textElementID) {
-  var coordinatesChars = [];
-  var newText =  "";
-  var oldText = $(textElementID).text().trim();
+  let coordinatesChars = [];
+  let text = $(textElementID).text().trim();
+  $(textElementID).html(text);
+  let range = document.createRange();
+  let start = 0;
+  let end = 0;
+  let textElem = document.getElementById("theTextParagraph").childNodes[0];
 
-  for (var i = 0, len = oldText.length; i < len; i++) {
-    newText+= '<span>'+oldText[i]+ '</span>';
+  for (var i = 0, len = text.length; i < len; i++) {
+    let oldChar = text[i];
+    end = start+oldChar.length;
+    range.setStart(textElem, start);
+    range.setEnd(textElem, end);
+    let newChar = range.getBoundingClientRect();
+    let newCharCoordinates = {};
+    newCharCoordinates.top = newChar.top;
+    newCharCoordinates.left = newChar.left;
+    newCharCoordinates.width = newChar.width;
+    newCharCoordinates.height = newChar.height;
+    coordinatesChars.push(newCharCoordinates);
+    start = end;
   }
-  //console.log(newText);
-
-  $(textElementID).html(newText);
-
-  $spans = $(textElementID).find('span');
-  $spans.each(function(){
-    var $span = $(this),
-        $offset = $span.offset();
-    $offset.width = $span.innerWidth();
-    $offset.height = $span.innerHeight();
-    coordinatesChars.push($offset);
-    //console.log($offset);
-  });
-  $(textElementID).html(oldText);
   return coordinatesChars;
 }
 
