@@ -43,20 +43,19 @@ class MouseKeyboardEventDetector(DetectionComponent):
         while self.run_mouse_checks:
 			if self.mouse_queue.qsize() > 0:
 				click = self.mouse_queue.get()
-				print("MOUSE click in AOI: ", click.aoi)
 				self.cur_mouse_event_id += 1
 				self.application_state_controller.updateMouseTable(click.aoi, self.cur_mouse_event_id, click)
 				self.adaptation_loop.evaluateRules(click.aoi, click.time_stamp)
-			elif self.drag_drop_queue.qsize() > 0:
-				# TODO: Figure out what to do with drag/drops outside of AOIs
-				drag_drop = self.mouse_queue.get()
-				self.cur_dragdrop_event_id += 1
-				self.application_state_controller.updateDoubleClickTable(drag_drop.aoi, self.cur_dragdrop_event_id, drag_drop)
-				self.adaptation_loop.evaluateRules(drag_drop.aoi, drag_drop.time_stamp)
+			elif self.double_click_queue.qsize() > 0:
+				double_click = self.double_click_queue.get()
+				self.cur_doubleclick_event_id += 1
+				self.application_state_controller.updateDoubleClickTable(double_click.aoi, self.cur_doubleclick_event_id, double_click)
+				self.adaptation_loop.evaluateRules(double_click.aoi, double_click.time_stamp)
 			elif self.keyboard_queue.qsize() > 0:
 				key_event = self.keyboard_queue.get()
 				self.keyboard_event_id += 1
 				self.application_state_controller.updateKeyboardTable(self.keyboard_event_id, key_event)
+				self.adaptation_loop.evaluateRules("keyboard", key_event.time_stamp)
             else:
                 yield
 
@@ -85,7 +84,7 @@ class MouseKeyboardEventDetector(DetectionComponent):
 			curr_timestamp = self.tobii_controller.LastTimestamp
 			time_since_release = curr_timestamp - self.last_release.time_stamp
 			if time_since_release > self.min_double_click_dur:
-				self.double_click_queue.put(DoubleClickMouseEvent(self.last_release.time_stamp, True, aoi=last_release.aoi))
+				self.double_click_queue.put(DoubleClickMouseEvent(self.last_release.time_stamp, True, aoi=self.last_release.aoi))
 				self.double_click_queue.put(DoubleClickMouseEvent(curr_timestamp, False, aoi=this_click.aoi))
 			self.last_release = this_click
 			self.last_press = None
