@@ -27,6 +27,30 @@ import params
 
 
 ##########################################
+"""
+This script will generate all the text AOI coordinates for each MSNV, and write it to the database.
+    - It will render each MSNV to get the coordinates, so just open up localhost:8888 once you have started up the 
+      script and the script will do everything else
+    - There is no notification for the script being done, but once it's done flashing it's usually done - (I can add 
+      some kind of notification if that is preferred)
+      
+This script will also write all the .aoi files needed for the draw_text_AOIs.R, to verify that the AOIs have been 
+generated correctly.
+    - for the R script to run properly, you will need:
+        - all the .aoi files
+        - a screenshot for every MSNV that you have a .aoi file for
+        - all of the above in the same directory
+    - all you have to do is change the path in the R script to be the path where your files are in, and check the array 
+      of MSNVs that the script is looking for is the same as the numbers you have for your .aoi files
+
+If you are running this locally, without an eyetracker:
+    - you can comment out everything related to the following:
+        - "tobii_controller"
+        - "fixation_algorithm
+        - "emdat_component"
+        - "ml_component"
+        - "mouse_key_component"
+"""
 
 define("port", default=8888, help="run on the given port", type=int)
 TOBII_CONTROLLER = "tobii_controller"
