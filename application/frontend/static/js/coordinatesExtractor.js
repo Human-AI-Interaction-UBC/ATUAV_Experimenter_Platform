@@ -6,23 +6,13 @@ function findCoordinatesofCharacters(textElementID) {
   let text = $(textElementID).text().trim();
   $(textElementID).html(text);
   let range = document.createRange();
-  let start = 0;
-  let end = 0;
   let textElem = document.getElementById("theTextParagraph").childNodes[0];
 
   for (var i = 0, len = text.length; i < len; i++) {
-    let oldChar = text[i];
-    end = start+oldChar.length;
-    range.setStart(textElem, start);
-    range.setEnd(textElem, end);
+    range.setStart(textElem, i);
+    range.setEnd(textElem, i + 1);
     let newChar = range.getBoundingClientRect();
-    let newCharCoordinates = {};
-    newCharCoordinates.top = newChar.top;
-    newCharCoordinates.left = newChar.left;
-    newCharCoordinates.width = newChar.width;
-    newCharCoordinates.height = newChar.height;
-    coordinatesChars.push(newCharCoordinates);
-    start = end;
+    coordinatesChars.push(newChar);
   }
   return coordinatesChars;
 }
