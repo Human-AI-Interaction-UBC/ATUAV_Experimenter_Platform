@@ -22,7 +22,7 @@ class MouseKeyboardEventDetector(DetectionComponent):
 			self.min_drag_drop_dur = 0
 			self.min_drag_drop_dist = 0
         	self.mouse_queue = Queue.Queue()
-        	self.drag_drop_queue = Queue.Queue()
+        	self.double_click_queue = Queue.Queue()
             self.listeners.append(mouse.Listener(
     								#on_move=on_move,
                                     #on_scroll=on_scroll,
@@ -50,7 +50,7 @@ class MouseKeyboardEventDetector(DetectionComponent):
 				# TODO: Figure out what to do with drag/drops outside of AOIs
 				drag_drop = self.mouse_queue.get()
         		self.cur_dragdrop_event_id += 1
-				self.application_state_controller.updateDragDropTable(drag_drop.aoi, self.cur_dragdrop_event_id, drag_drop)
+				self.application_state_controller.updateDoubleClickTable(drag_drop.aoi, self.cur_dragdrop_event_id, drag_drop)
 				self.adaptation_loop.evaluateRules(drag_drop.aoi, drag_drop.time_stamp)
             else:
                 yield
@@ -76,12 +76,12 @@ class MouseKeyboardEventDetector(DetectionComponent):
 		if pressed:
 			self.last_press = this_click
 		else:
-			distance_to_press = utils.euclidean_distance((x, y), (self.last_press.x, self.last_press.y))
 			curr_timestamp = self.tobii_controller.LastTimestamp
-			time_since_press = curr_timestamp - self.last_press.time_stamp
-			if time_since_press > self.min_drag_drop_dur and distance_to_press > self.min_drag_drop_dist:
-				self.drag_drop_queue.put(DragDropMouseEvent(self.last_press.time_stamp, time_since_press, distance_to_press, drag_start=True, aoi=last_press.aoi))
-				self.drag_drop_queue.put(DragDropMouseEvent(curr_timestamp, time_since_press, distance_to_press, drag_start=False, aoi=this_click.aoi))
+			time_since_release = curr_timestamp - self.last_release.time_stamp
+			if time_since_release > self.min_double_click_dur:
+				self.double_click_queue.put(DoubleClickMouseEvent(self.last_release.time_stamp, True, aoi=last_press.aoi))
+				self.double_click_queue.put(DoubleClickMouseEvent(curr_timestamp, False, aoi=this_click.aoi))
+			self.last_release = this_click
 			self.last_press = None
 
     def on_press(self, key):

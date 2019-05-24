@@ -15,3 +15,11 @@ class DragDropMouseEvent():
         self.duration = duration
         self.time_stamp = timestamp
         self.displacement = displacement
+
+class DoubleClickMouseEvent():
+
+    def __init__(self, time_stamp, is_first_click, aoi=None):
+        self.is_first_click = is_first_click
+		self.aoi = aoi
+        self.duration = duration
+        self.time_stamp = time_stamp
