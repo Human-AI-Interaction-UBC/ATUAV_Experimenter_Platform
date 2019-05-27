@@ -48,7 +48,6 @@ var AppCtrl = function($scope, $http, $location) {
   $scope.curMarksManager;
   $scope.curSpanManager;
   console.log(currentMMD);
-  // let isInitialAccess = true;
   // Fetch the conditions
   $http.get('static/data_updated/conditions.json').
       success(function(data, status, headers) {
@@ -96,7 +95,7 @@ var AppCtrl = function($scope, $http, $location) {
           //sendJSONtoTornado($scope.aggregatedData,$scope.curConditionId );
           for (var i = 0; i < $scope.coordinatesofRefSentences.length; i++) {
               //Do something
-              console.log($scope.coordinatesofRefSentences[i]);
+              console.log($scope.coordinatesofRefSentences[i].polygonCoords);
           }
           //drawOverlay($scope.aggregatedData.sentenceData[0].polygonCoords);
           //console.log($scope.aggregatedData.sentenceData[0].polygonCoords)
@@ -105,7 +104,6 @@ var AppCtrl = function($scope, $http, $location) {
       });
   };
 
-  // document.getElementById('polygonButton').addEventListener('click', function() {$scope.initialRenderToGenerateAOIs()});
   angular.element(document.getElementById('theChart')).on('load',
       function() {
         initReferences($scope);

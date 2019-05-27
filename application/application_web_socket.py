@@ -24,7 +24,7 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
         self.fixation_component = websocket_dict[FIXATION_ALGORITHM]
         self.emdat_component = websocket_dict[EMDAT_COMPONENT]
         self.ml_component = websocket_dict[ML_COMPONENT]
-        self.mouse_key_component = websocket_dict[MOUSE_KEY_COMPONENT]
+        # self.mouse_key_component = websocket_dict[MOUSE_KEY_COMPONENT]
 
     def open(self):
 
@@ -32,7 +32,7 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
         self.websocket_ping_timeout = float("inf")
         self.adaptation_loop.liveWebSocket = self
 
-        print (self.tobii_controller.eyetrackers)
+        print self.tobii_controller.eyetrackers
         self.start_detection_components()
         self.tobii_controller.startTracking()
 

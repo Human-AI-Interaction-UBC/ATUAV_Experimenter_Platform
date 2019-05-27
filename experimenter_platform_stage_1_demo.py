@@ -40,7 +40,7 @@ class Application(tornado.web.Application):
         ]
         #connects to database
         self.conn = sqlite3.connect('database.db')
-    #"global variable" to save current UserID of session
+        #"global variable" to save current UserID of session
         UserID = -1;
         #global variable to track start and end times
         start_time = '';
@@ -317,6 +317,7 @@ class MMDHandler(tornado.web.RequestHandler):
 
 class AjaxHandler(tornado.web.RequestHandler):
     def post(self):
+
 
         jsonobj = json.loads(self.request.body)
         print jsonobj
