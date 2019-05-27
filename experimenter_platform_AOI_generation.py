@@ -33,17 +33,20 @@ This script will generate all the text AOI coordinates for each MSNV, and write 
       script and the script will do everything else
     - There is no notification for the script being done, but once it's done flashing it's usually done - (I can add 
       some kind of notification if that is preferred)
+    - You will know it is done when you see all the .aoi files have been generated
       
 This script will also write all the .aoi files needed for the draw_text_AOIs.R, to verify that the AOIs have been 
 generated correctly.
     - for the R script to run properly, you will need:
         - all the .aoi files
-        - a screenshot for every MSNV that you have a .aoi file for
+        - a screenshot for every MSNV that you have a .aoi file for (named [aoi_number].png)
         - all of the above in the same directory
     - all you have to do is change the path in the R script to be the path where your files are in, and check the array 
       of MSNVs that the script is looking for is the same as the numbers you have for your .aoi files
+    - The R script will create [aoi_number]_drawn.png with the AOI coordinates plotted and drawn for you to verify the
+      AOIs have been generated correctly
 
-If you are running this locally, without an eyetracker:
+If you are running this locally, without an eye tracker:
     - you can comment out everything related to the following:
         - "tobii_controller"
         - "fixation_algorithm
