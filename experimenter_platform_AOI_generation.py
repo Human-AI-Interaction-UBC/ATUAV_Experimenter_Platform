@@ -138,8 +138,7 @@ class MMDWebSocket(ApplicationWebSocket):
             tabSeparated = re.sub(r"\),", '\t', noSpace)
             extraCommasRemoved = re.sub(r"\],", '\t', tabSeparated)
             final = re.sub(r"([\(\)\[\]])", '', extraCommasRemoved)
-            print(final)
-            f.write("ref\t" + final + "\n")
+            f.write(final + "\n")
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -159,9 +158,9 @@ class PolygonAjaxHandler(tornado.web.RequestHandler):
             ref_id = 'ref_' + polygon_obj['refId']
             polygon = polygon_obj['polygonCoords']
             polygon_tuple = str(list(map(lambda p: tuple(p.values()), polygon)))
-            polygon_data2 = (ref_id, json_obj['MMDid'], polygon_tuple)
+            polygon_data = (ref_id, json_obj['MMDid'], polygon_tuple)
             # updates polygon in entry in db with same refId and task number
-            self.application.conn.execute('INSERT INTO aoi (name, task, polygon) VALUES (?,?,?)', polygon_data2)
+            self.application.conn.execute('INSERT INTO aoi (name, task, polygon) VALUES (?,?,?)', polygon_data)
         self.application.conn.commit()
 
 
