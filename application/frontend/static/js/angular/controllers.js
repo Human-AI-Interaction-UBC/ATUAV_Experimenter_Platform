@@ -103,7 +103,6 @@ var AppCtrl = function($scope, $http, $location) {
 
       });
   };
-
   angular.element(document.getElementById('theChart')).on('load',
       function() {
         initReferences($scope);

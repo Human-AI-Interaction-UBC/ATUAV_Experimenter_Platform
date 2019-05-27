@@ -394,7 +394,6 @@ class DoneHandler2(tornado.web.RequestHandler):
     def get(self):
         self.render("done2.html")
 
-
 #main function is first thing to run when application starts
 def main():
     tornado.options.parse_command_line()
