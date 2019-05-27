@@ -178,12 +178,9 @@ class ApplicationStateController():
                 self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `raw_prediction` REAL, `value` TEXT, PRIMARY KEY(`id`) )".format(table_name))
             elif user['type'] == 'mouse':
                 self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `is_press` BOOLEAN, PRIMARY KEY(`id`) )".format(table_name))
+                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, 'x_coord' REAL, 'y_coord' REAL,  PRIMARY KEY(`id`) )".format(table_name + "_double_click"))
             elif user['type'] == 'keyboard':
                 self.conn.execute("CREATE TABLE keyboard ( `id` INTEGER, `time_stamp` INTEGER, key STRING, PRIMARY KEY(`id`) )")
-            elif user['type'] == 'drag_drop':
-                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `drag_start` BOOLEAN, duration INTEGER, displacement REAL,  PRIMARY KEY(`id`) )".format(table_name))
-            elif user['type'] == 'double_click':
-                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `drag_start` BOOLEAN, duration INTEGER, displacement REAL,  PRIMARY KEY(`id`) )".format(table_name))
             else:
                 raise NotImplementedError("Invalid Type: The supported types are `fix` `ml` `emdat`, 'mouse', 'drag_drop'")
             self.conn.commit() #commit after every creation?
@@ -522,7 +519,7 @@ class ApplicationStateController():
         self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (dd_event.id, dd_event.time_stamp, dd_event.drag_start, dd_event.duration, dd_event.displacement))
         self.conn.commit()
 
-    def updateDoubleClickTable(self, table, dd_event):
+    def updateDoubleClickTable(self, table, id, dc_event):
 
         """ Insert a new row into a mouse event table
 
@@ -536,9 +533,11 @@ class ApplicationStateController():
         returns
         None
         """
-        if not (isinstance(dd_event.id, int) and isinstance(dd_event.time_stamp, int) and isinstance(dd_event.drag_start, bool) and isinstance(dd_event.duration, int) and isinstance(dd_event.displacement, float)):
+        print(isinstance(id, int), isinstance(dc_event.time_stamp, int), isinstance(dc_event.x, int), isinstance(dc_event.y, int))
+        print(dc_event.x, dc_event.y)
+        if not (isinstance(id, int) and isinstance(dc_event.time_stamp, int) and isinstance(dc_event.x, int) and isinstance(dc_event.y, int)):
             raise TypeError('Invalid value for the mouse table')
-        self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (dd_event.id, dd_event.time_stamp, dd_event.drag_start, dd_event.duration, dd_event.displacement))
+        self.conn.execute("INSERT INTO {} VALUES (?,?,?,?)".format(table  + "_double_click"), (id, dc_event.time_stamp, dc_event.x, dc_event.y))
         self.conn.commit()
 
     def updateKeyboardTable(self, id, key_event):
@@ -555,7 +554,7 @@ class ApplicationStateController():
         returns
         None
         """
-        if not isinstance(key_event.time_stamp, int) and isinstance(key_event.key, string)):
+        if not isinstance(key_event.time_stamp, int) and isinstance(key_event.key, string):
             raise TypeError('Invalid value for the keyboard table')
         self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (id, key_event.time_stamp, key_event.key))
         self.conn.commit()
