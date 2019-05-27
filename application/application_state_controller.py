@@ -180,7 +180,7 @@ class ApplicationStateController():
                 self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `is_press` BOOLEAN, PRIMARY KEY(`id`) )".format(table_name))
                 self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, 'x_coord' REAL, 'y_coord' REAL,  PRIMARY KEY(`id`) )".format(table_name + "_double_click"))
             elif user['type'] == 'keyboard':
-                self.conn.execute("CREATE TABLE keyboard ( `id` INTEGER, `time_stamp` INTEGER, key STRING, PRIMARY KEY(`id`) )")
+                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, key STRING, PRIMARY KEY(`id`) )".format(table_name))
             else:
                 raise NotImplementedError("Invalid Type: The supported types are `fix` `ml` `emdat`, 'mouse', 'drag_drop'")
             self.conn.commit() #commit after every creation?
@@ -445,7 +445,6 @@ class ApplicationStateController():
         """
 
         query = query.replace("\n"," ") #replace new line symbols in case the sql conditional is multi-lined
-
         try:
             query_results = self.conn.execute(query)
             value = int(query_results.fetchone()['result'])
@@ -540,7 +539,7 @@ class ApplicationStateController():
         self.conn.execute("INSERT INTO {} VALUES (?,?,?,?)".format(table  + "_double_click"), (id, dc_event.time_stamp, dc_event.x, dc_event.y))
         self.conn.commit()
 
-    def updateKeyboardTable(self, id, key_event):
+    def updateKeyboardTable(self, table, id, key_event):
 
         """ Insert a new row into a mouse event table
 

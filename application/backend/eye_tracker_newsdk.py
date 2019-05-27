@@ -247,7 +247,6 @@ class TobiiControllerNewSdk:
 		self.last_pupil_left = gaze["left_pupil_diameter"]
 		self.last_pupil_right = gaze["right_pupil_diameter"]
 		self.LastTimestamp = gaze["device_time_stamp"]
-		print(self.LastTimestamp)
 		self.dpt_id += 1
 
 

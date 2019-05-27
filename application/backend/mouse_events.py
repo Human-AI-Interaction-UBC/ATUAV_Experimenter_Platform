@@ -31,7 +31,6 @@ class DoubleClickMouseEvent(MouseEvent):
 		self.is_first_click = is_first_click
 
 class KeyboardEvent():
-    def __init__(self, key, time_stamp, aoi):
-		self.aoi = aoi
+    def __init__(self, key, time_stamp):
 		self.key = key
 		self.time_stamp = time_stamp

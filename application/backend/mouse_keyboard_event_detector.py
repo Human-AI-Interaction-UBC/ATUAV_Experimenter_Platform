@@ -58,8 +58,8 @@ class MouseKeyboardEventDetector(DetectionComponent):
             elif self.keyboard_queue.qsize() > 0:
                 key_event = self.keyboard_queue.get()
                 self.keyboard_event_id += 1
-                self.application_state_controller.updateKeyboardTable(self.keyboard_event_id, key_event)
-                self.adaptation_loop.evaluateRules("keyboard", key_event.time_stamp)
+                self.application_state_controller.updateKeyboardTable("ref_keyboard", self.keyboard_event_id, key_event)
+                self.adaptation_loop.evaluateRules("ref_keyboard", key_event.time_stamp)
             else:
                 yield
 
@@ -95,9 +95,10 @@ class MouseKeyboardEventDetector(DetectionComponent):
 
     def on_press(self, key):
         try:
-            self.keyboard_queue.put(KeyboardEvent(self.keyboard_event_id, self.tobii_controller.LastTimestamp, key.char))
+            self.keyboard_queue.put(KeyboardEvent(key.char, self.tobii_controller.LastTimestamp))
         except AttributeError:
-            self.keyboard_queue.put(KeyboardEvent(self.keyboard_event_id, self.tobii_controller.LastTimestamp, key))
+            pass
+            #self.keyboard_queue.put(KeyboardEvent(key, self.tobii_controller.LastTimestamp))
 
     def stop(self):
         self.run_mouse_checks = False
