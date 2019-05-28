@@ -215,6 +215,7 @@ class AdaptationLoop():
                     if self.app_state_controller.evaluateConditional(rule['delivery_sql_condition']):
                         results = self.conn.execute("SELECT * FROM intervention WHERE intervention.name = ?", (intervention_name,))
                         intervention_params = results.fetchone()
+                        intervention_params.update({'refId': event_name})
                         to_deliver_rules.append(intervention_params)
                         to_set_active.append([intervention_name, rule_name, time_stamp])
                         #here is where we parse to get each removal, and remove it if it's active
