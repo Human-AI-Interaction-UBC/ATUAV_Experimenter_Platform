@@ -582,7 +582,7 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     $scopeGlobal.curMarksManager.highlight(tuple_ids, referenceID.tuple_id, transition_in, args);
 
     let refToHighlight = $scopeGlobal.startEndCoords.find(function (startEnd) {
-        return startEnd.refId == referenceID.ref_id;
+        return startEnd.refId === referenceID.ref_id;
     });
 
     let paragraph = document.getElementById('theTextParagraph');
