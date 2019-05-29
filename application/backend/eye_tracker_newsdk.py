@@ -82,11 +82,11 @@ class TobiiControllerNewSdk:
 		"""
 
 		print "Connecting to: ", params.EYETRACKER_TYPE
-		#while self.eyetracker is None:
-		#	eyetrackers = tr.find_all_eyetrackers()
-		#	for tracker in eyetrackers:
-		#		self.eyetrackers[tracker.model] = tracker
-		#	self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
+		while self.eyetracker is None:
+			eyetrackers = tr.find_all_eyetrackers()
+			for tracker in eyetrackers:
+				self.eyetrackers[tracker.model] = tracker
+			self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
 		print "Connected to: ", params.EYETRACKER_TYPE
 
 	def startTracking(self):
@@ -116,7 +116,7 @@ class TobiiControllerNewSdk:
 		self.pupilsize = []
 		self.pupilvelocity = []
 		self.head_distance = []
-		#self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
+		self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
 		print("=================== SLEEPING =========================")
 		time.sleep(1)
 		print("=================== WOKE UP =========================")
@@ -139,7 +139,7 @@ class TobiiControllerNewSdk:
 					calls TobiiTracker.flushData before resetting both
 					self.gazeData and self.eventData
 		"""
-		#self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.on_gazedata)
+		self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.on_gazedata)
 		#self.flushData()
 		self.gazeData = []
 		self.eventData = []
