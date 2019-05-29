@@ -576,22 +576,31 @@ function highlightVisOnly_recency(referenceID, transition_in, args) {
 }
 
 function highlightVisAndRef_recency(referenceID, transition_in, args) {
-    var tuple_ids = Object.values($scopeGlobal.interventions).map(function (obj) {
+    let tuple_ids = Object.values($scopeGlobal.interventions).map(function (obj) {
         return obj.tuple_id
     });
     $scopeGlobal.curMarksManager.highlight(tuple_ids, referenceID.tuple_id, transition_in, args);
 
     let refToHighlight = $scopeGlobal.startEndCoords.find(function (startEnd) {
-        return startEnd.refId === referenceID.ref_id;
+      let refNumber = referenceID.ref_id.split("_")[1];
+        return startEnd.refId === refNumber;
     });
 
     let paragraph = document.getElementById('theTextParagraph');
-
     // Create the spans in the text
-    var sm = new SpanManager(paragraph);
-    sm.createSpans([refToHighlight], function(elem, _) {
-        elem.setAttribute('class', 'text-reference');
-    });
+    let sm = new SpanManager(paragraph);
+
+    // if (args.underline) {
+        sm.createSpans([refToHighlight], function(elem, _) {
+          elem.setAttribute('class', 'text-reference');
+        });
+    // }
+
+    // if (args.highlight) {
+        sm.createSpans([refToHighlight], function(elem, _) {
+            elem.setAttribute('class', 'text-highlight');
+        });
+    // }
 
 }
 
