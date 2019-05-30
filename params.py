@@ -13,8 +13,8 @@ PILOT_MMD_SUBSET = [5]
 
 # Project paths:
 # Reference highlighting rules
-#RUN USING:  python -u experimenter_platform_stage_1_demo.py
-USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight_test.db"
+#RUN USING:  python -u experimenter_platform_study_bars_final.py
+USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight.db"
 #GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight.db"
 if PILOT_CONDITION_NO_REMOVAL:
     GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_pilot_noremoval_test.db"
@@ -37,7 +37,7 @@ FRONT_END_STATIC_PATH = "./application/frontend/static/"
 FRONT_END_TEMPLATE_PATH = "./application/frontend/templates/"
 
 # Platform configuration:
-USE_FIXATION_ALGORITHM = True
+USE_FIXATION_ALGORITHM = False
 USE_EMDAT = False
 USE_ML = False
 USE_KEYBOARD = False

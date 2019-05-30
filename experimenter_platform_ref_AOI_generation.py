@@ -12,15 +12,15 @@ import json
 import random
 
 import time
-from application.backend.eye_tracker_newsdk import TobiiControllerNewSdk
+#from application.backend.eye_tracker_newsdk import TobiiControllerNewSdk
 from application.middleend.adaptation_loop import AdaptationLoop
 from application.application_state_controller import ApplicationStateController
 from application.application_web_socket import ApplicationWebSocket
 
-from application.backend.fixation_detector import FixationDetector
-from application.backend.emdat_component import EMDATComponent
-from application.backend.ml_component import MLComponent
-from application.backend.mouse_keyboard_event_detector import MouseKeyboardEventDetector
+#from application.backend.fixation_detector import FixationDetector
+#from application.backend.emdat_component import EMDATComponent
+#from application.backend.ml_component import MLComponent
+#from application.backend.mouse_keyboard_event_detector import MouseKeyboardEventDetector
 
 
 import params
@@ -28,31 +28,17 @@ import params
 
 ##########################################
 """
-This script will generate all the text AOI coordinates for each MSNV, and write it to the database.
+This script will write all the reference sentence AOI files for each MSNV, 
+with each aoi name being the name from the aoi table in the user state db
+    - First an empty log folder in the 1st level of root folder will need to be created
     - It will render each MSNV to get the coordinates, so just open up localhost:8888 once you have started up the 
       script and the script will do everything else
     - There is no notification for the script being done, but once it's done flashing it's usually done - (I can add 
       some kind of notification if that is preferred)
     - You will know it is done when you see all the .aoi files have been generated
       
-This script will also write all the .aoi files needed for the draw_text_AOIs.R, to verify that the AOIs have been 
-generated correctly.
-    - for the R script to run properly, you will need:
-        - all the .aoi files
-        - a screenshot for every MSNV that you have a .aoi file for (named [aoi_number].png)
-        - all of the above in the same directory
-    - all you have to do is change the path in the R script to be the path where your files are in, and check the array 
-      of MSNVs that the script is looking for is the same as the numbers you have for your .aoi files
-    - The R script will create [aoi_number]_drawn.png with the AOI coordinates plotted and drawn for you to verify the
-      AOIs have been generated correctly
-
-If you are running this locally, without an eye tracker:
-    - you can comment out everything related to the following:
-        - "tobii_controller"
-        - "fixation_algorithm
-        - "emdat_component"
-        - "ml_component"
-        - "mouse_key_component"
+Everything related to connection to the eyetracker, ML and mouse keyboard events have been commented out, so that
+it works locally.
 """
 
 define("port", default=8888, help="run on the given port", type=int)
@@ -68,22 +54,23 @@ MOUSE_KEY_COMPONENT = "mouse_key_component"
 class Application(tornado.web.Application):
     def __init__(self):
         # connects url with code
-        self.tobii_controller = TobiiControllerNewSdk()
-        self.tobii_controller.activate()
+        #self.tobii_controller = TobiiControllerNewSdk()
+        #self.tobii_controller.activate()
         self.app_state_control = ApplicationStateController(0)
         self.adaptation_loop = AdaptationLoop(self.app_state_control)
 
-        self.fixation_component = FixationDetector(self.tobii_controller, self.adaptation_loop)
-        self.emdat_component = EMDATComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.EMDAT_CALL_PERIOD)
-        self.ml_component = MLComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.EMDAT_CALL_PERIOD, emdat_component = self.emdat_component)
-        self.mouse_key_component = MouseKeyboardEventDetector(self.tobii_controller, self.adaptation_loop, self.emdat_component, params.USE_MOUSE, params.USE_KEYBOARD)
-        websocket_dict = {TOBII_CONTROLLER: self.tobii_controller,
+        #self.fixation_component = FixationDetector(self.tobii_controller, self.adaptation_loop)
+        #self.emdat_component = EMDATComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.EMDAT_CALL_PERIOD)
+        #self.ml_component = MLComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.EMDAT_CALL_PERIOD, emdat_component = self.emdat_component)
+        #self.mouse_key_component = MouseKeyboardEventDetector(self.tobii_controller, self.adaptation_loop, self.emdat_component, params.USE_MOUSE, params.USE_KEYBOARD)
+        websocket_dict = {#TOBII_CONTROLLER: self.tobii_controller,
                           APPLICATION_STATE_CONTROLLER: self.app_state_control,
-                          ADAPTATION_LOOP: self.adaptation_loop,
-                          FIXATION_ALGORITHM: self.fixation_component,
-                          EMDAT_COMPONENT: self.emdat_component,
-                          ML_COMPONENT: self.ml_component,
-                          MOUSE_KEY_COMPONENT: self.mouse_key_component}
+                          ADAPTATION_LOOP: self.adaptation_loop
+                          #FIXATION_ALGORITHM: self.fixation_component,
+                          #EMDAT_COMPONENT: self.emdat_component,
+                          #ML_COMPONENT: self.ml_component,
+                          #MOUSE_KEY_COMPONENT: self.mouse_key_component
+                          }
         handlers = [
             (r"/", MainHandler),
             (r"/writePolygon", PolygonAjaxHandler),
@@ -92,10 +79,10 @@ class Application(tornado.web.Application):
         # connects to database
         self.conn = sqlite3.connect(params.USER_MODEL_STATE_PATH)
         # "global variable" to save current UserID of session
-        UserID = -1;
+        UserID = -1
         # global variable to track start and end times
-        start_time = '';
-        end_time = '';
+        start_time = ''
+        end_time = ''
         # where to look for the html files
         settings = dict(
             template_path=os.path.join(os.path.dirname(__file__), params.FRONT_END_TEMPLATE_PATH),
@@ -125,19 +112,23 @@ class MMDWebSocket(ApplicationWebSocket):
         print('closed connection')
 
     def writeAOIsToFile(self):
-        query_result2 = self.application.conn.execute('SELECT task, polygon FROM aoi ORDER BY task')
+        query_result2 = self.application.conn.execute('SELECT task, polygon, name FROM aoi ORDER BY task')
         allAOIs = query_result2.fetchall()
-        aoiByTask = [(task, [polygon for _, polygon in aois]) for task, aois in itertools.groupby(allAOIs, operator.itemgetter(0))]
+        aoiByTask = {task: {name: polygon for _, polygon, name in aois} for task, aois in itertools.groupby(allAOIs, operator.itemgetter(0))}
 
-        for aoiSet in aoiByTask:
-            aoiFileName = str(aoiSet[0])
-            f=open(aoiFileName + ".aoi", "w+")
-            aoiRefs = ','.join(aoiSet[1])
-            noSpace = re.sub(r" ", '', aoiRefs)
-            tabSeparated = re.sub(r"\),", '\t', noSpace)
-            extraCommasRemoved = re.sub(r"\],", '\t', tabSeparated)
-            final = re.sub(r"([\(\)\[\]])", '', extraCommasRemoved)
-            f.write(final + "\n")
+        for task, aois in aoiByTask.items():
+            f = open(str(task) + ".aoi", "w+")  
+            to_write = []
+            for ref_name, aoi in aois.items():
+                noSpace = re.sub(r"\s", '', aoi)
+                tabSeparated = re.sub(r"\),\(", '\t', noSpace)
+                bracketsRemoved = re.sub(r"(\)\])|(\[\()", '', tabSeparated)
+                bracketsRemoved = ref_name+'\t'+bracketsRemoved
+                to_write.append(bracketsRemoved)
+
+            to_write = '\n'.join(to_write)
+            f.write(to_write)
+            f.close()
 
 
 class MainHandler(tornado.web.RequestHandler):

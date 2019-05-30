@@ -16,14 +16,14 @@ MOUSE_KEY_COMPONENT = "mouse_key_component"
 class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
 
     def initialize(self, websocket_dict):
-        self.tobii_controller = websocket_dict[TOBII_CONTROLLER]
+        #self.tobii_controller = websocket_dict[TOBII_CONTROLLER]
         self.app_state_control = websocket_dict[APPLICATION_STATE_CONTROLLER]
         self.adaptation_loop = websocket_dict[ADAPTATION_LOOP]
         next_task = self.application.cur_mmd
         self.app_state_control.changeTask(next_task, self.application.cur_user)
-        self.fixation_component = websocket_dict[FIXATION_ALGORITHM]
-        self.emdat_component = websocket_dict[EMDAT_COMPONENT]
-        self.ml_component = websocket_dict[ML_COMPONENT]
+        #self.fixation_component = websocket_dict[FIXATION_ALGORITHM]
+        #self.emdat_component = websocket_dict[EMDAT_COMPONENT]
+        #self.ml_component = websocket_dict[ML_COMPONENT]
         #self.mouse_key_component = websocket_dict[MOUSE_KEY_COMPONENT]
 
     def open(self):
@@ -32,16 +32,17 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
         self.websocket_ping_timeout = float("inf")
         self.adaptation_loop.liveWebSocket = self
 
-        print self.tobii_controller.eyetrackers
-        self.start_detection_components()
-        self.tobii_controller.startTracking()
+        #print self.tobii_controller.eyetrackers
+        #self.start_detection_components()
+        #self.tobii_controller.startTracking()
 
     def on_message(self, message):
+        """
         if (message == "close"):
-            self.tobii_controller.logFixations(self.application.cur_user, next_task)
-            self.stop_detection_components()
-            self.tobii_controller.stopTracking()
-            self.tobii_controller.destroy()
+            #self.tobii_controller.logFixations(self.application.cur_user, next_task)
+            #self.stop_detection_components()
+            #self.tobii_controller.stopTracking()
+            #self.tobii_controller.destroy()
             self.app_state_control.resetApplication()
             return
 
@@ -51,7 +52,7 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
             next_task = int(result[1])
             #we want to log the fixations in self.tobii_controller.EndFixations for user N and task G
             #log_for_user_pilot_7B_task_9_raw_fixations.csv
-            self.tobii_controller.logFixations(self.application.cur_user, cur_task)
+            #self.tobii_controller.logFixations(self.application.cur_user, cur_task)
             self.stop_detection_components()
             self.tobii_controller.stopTracking()
             self.app_state_control.changeTask(next_task)
@@ -60,15 +61,15 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
             return
 
         else:
-            self.tobii_controller.logFixations(self.application.cur_user, next_task)
+            #self.tobii_controller.logFixations(self.application.cur_user, next_task)
             self.stop_detection_components()
-            self.tobii_controller.stopTracking()
-            self.tobii_controller.destroy()
+            #self.tobii_controller.stopTracking()
+            #self.tobii_controller.destroy()
             self.app_state_control.resetApplication()
-            return
+            return"""
 
     def start_detection_components(self):
-        print("Starting the components")
+        """print("Starting the components")
         if (params.USE_FIXATION_ALGORITHM):
             self.fixation_component.restart_fixation_algorithm()
             self.fixation_component.start()
@@ -79,14 +80,14 @@ class ApplicationWebSocket(tornado.websocket.WebSocketHandler):
             self.emdat_component.setup_new_emdat_component()
             self.emdat_component.start()
             if (params.USE_ML):
-                self.ml_component.start()
+                self.ml_component.start()"""
 
     def stop_detection_components(self):
-        if (params.USE_FIXATION_ALGORITHM):
+        """if (params.USE_FIXATION_ALGORITHM):
             self.fixation_component.stop()
         if (params.USE_MOUSE or params.USE_KEYBOARD):
             self.mouse_key_component.stop()
         if (params.USE_EMDAT):
             self.emdat_component.stop()
             if (params.USE_ML):
-                self.ml_component.stop()
+                self.ml_component.stop()"""
