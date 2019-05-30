@@ -605,7 +605,10 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     // }
 
     // if (args.link) {
-      $scopeGlobal.curMarksManager.drawLine(transition_in, referenceID.tuple_id, tuple_ids, 'textandvis');
+      if (typeof document.getElementById('textVisContainer') == null) {
+        $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
+      }
+      $scopeGlobal.curMarksManager.drawLine(transition_in, referenceID.tuple_id, tuple_ids);
     // }
 
 }

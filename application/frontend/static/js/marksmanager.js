@@ -282,30 +282,7 @@
         .style("opacity", 1);
   };
 
-    MarksManager.prototype.drawLine = function(transition_in, id, tuple_ids, elem_id){
-    	let textVisElement = document.getElementById(elem_id);
-    	let textVisCoords = textVisElement.getBoundingClientRect();
-        let containingDiv = document.createElement('div');
-        containingDiv.setAttribute('class','textVisOverlayContainer');
-        containingDiv.style.position = 'absolute';
-        containingDiv.style.width = Math.ceil(textVisCoords.width)+'px';
-        containingDiv.style.height = Math.ceil(textVisCoords.height)+'px';
-
-        let textVisOverlay = document.createElementNS("http://www.w3.org/2000/svg", 'svg:svg');
-        d3.select(textVisOverlay).attr({
-            "class": "textVisOverlay",
-            'height': Math.ceil(textVisCoords.height),
-            "width": Math.ceil(textVisCoords.width)
-        }).style({
-            'position': 'absolute'
-        });
-
-        containingDiv.appendChild(textVisOverlay);
-
-        let parent = textVisElement.parentNode;
-        let nextSibling = textVisElement.nextSibling;
-        parent.insertBefore(containingDiv, nextSibling);
-
+    MarksManager.prototype.drawLine = function(transition_in, id, tuple_ids){
         let ref = document.getElementById('refAOI');
     	let self = this;
     	let marks = self.getSelectedMarks(tuple_ids);
@@ -317,7 +294,7 @@
             console.log(ref.offsetLeft);
             console.log(ref.offsetWidth);
             console.log(ref.offsetParent);
-            d3.select(textVisOverlay).append("line")
+            d3.select(self.textVisOverlay).append("line")
 
                 .attr("class", "line_" + id)
                 .attr("x2", mark_data.left+ mark_data.width/2 + 450).attr("y2", mark_data.height + mark_data.top + 70)
@@ -334,6 +311,32 @@
 
     MarksManager.prototype.removeLines = function() {
     	d3.selectAll('line').remove();
+	};
+
+    MarksManager.prototype.createTextVisOverlay = function(elem_id) {
+        let textVisElement = document.getElementById(elem_id);
+        let textVisCoords = textVisElement.getBoundingClientRect();
+        let containingDiv = document.createElement('div');
+        containingDiv.setAttribute('class','textVisOverlayContainer');
+        containingDiv.setAttribute('id', 'textVisContainer');
+        containingDiv.style.position = 'absolute';
+        containingDiv.style.width = Math.ceil(textVisCoords.width)+'px';
+        containingDiv.style.height = Math.ceil(textVisCoords.height)+'px';
+
+        this.textVisOverlay = document.createElementNS("http://www.w3.org/2000/svg", 'svg:svg');
+        d3.select(this.textVisOverlay).attr({
+            "class": "textVisOverlay",
+            'height': Math.ceil(textVisCoords.height),
+            "width": Math.ceil(textVisCoords.width)
+        }).style({
+            'position': 'absolute'
+        });
+
+        containingDiv.appendChild(this.textVisOverlay);
+
+        let parent = textVisElement.parentNode;
+        let nextSibling = textVisElement.nextSibling;
+        parent.insertBefore(containingDiv, nextSibling);
 	};
 
 	MarksManager.prototype.changeType = function(type) {
