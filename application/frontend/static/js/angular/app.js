@@ -575,6 +575,7 @@ function highlightVisOnly_recency(referenceID, transition_in, args) {
     //},transition_in*1.2); //TODO:CHECK
 }
 
+// is used by intervention
 function highlightVisAndRef_recency(referenceID, transition_in, args) {
     let tuple_ids = Object.values($scopeGlobal.interventions).map(function (obj) {
         return obj.tuple_id
@@ -593,6 +594,7 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     // if (args.underline) {
         sm.createSpans([refToHighlight], function(elem, _) {
           elem.setAttribute('class', 'text-reference');
+          elem.setAttribute('id', 'refAOI');
         });
     // }
 
@@ -600,6 +602,10 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     //     sm.createSpans([refToHighlight], function(elem, _) {
     //         elem.setAttribute('class', 'text-highlight');
     //     });
+    // }
+
+    // if (args.link) {
+      $scopeGlobal.curMarksManager.drawLine(transition_in, referenceID.tuple_id, tuple_ids, 'textandvis');
     // }
 
 }

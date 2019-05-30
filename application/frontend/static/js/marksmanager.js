@@ -281,6 +281,57 @@
         .duration(transition_in)
         .style("opacity", 1);
   };
+
+    MarksManager.prototype.drawLine = function(transition_in, id, tuple_ids, elem_id){
+    	let textVisElement = document.getElementById(elem_id);
+    	let textVisCoords = textVisElement.getBoundingClientRect();
+        let containingDiv = document.createElement('div');
+        containingDiv.setAttribute('class','textVisOverlayContainer');
+        containingDiv.style.position = 'absolute';
+        containingDiv.style.width = Math.ceil(textVisCoords.width)+'px';
+        containingDiv.style.height = Math.ceil(textVisCoords.height)+'px';
+
+        let textVisOverlay = document.createElementNS("http://www.w3.org/2000/svg", 'svg:svg');
+        d3.select(textVisOverlay).attr({
+            "class": "textVisOverlay",
+            'height': Math.ceil(textVisCoords.height),
+            "width": Math.ceil(textVisCoords.width)
+        }).style({
+            'position': 'absolute'
+        });
+
+        containingDiv.appendChild(textVisOverlay);
+
+        let parent = textVisElement.parentNode;
+        let nextSibling = textVisElement.nextSibling;
+        parent.insertBefore(containingDiv, nextSibling);
+
+        let ref = document.getElementById('refAOI');
+    	let self = this;
+    	let marks = self.getSelectedMarks(tuple_ids);
+        for(let i=0;i<marks.selected_marks.length;i++) {
+            let d3mark = d3.select(marks.selected_marks[i]);
+            let mark_data = d3mark.data()[0];
+            self.strokeWidth = 1;
+            console.log(mark_data);
+            console.log(ref.offsetLeft);
+            console.log(ref.offsetWidth);
+            console.log(ref.offsetParent);
+            d3.select(textVisOverlay).append("line")
+
+                .attr("class", "line_" + id)
+                .attr("x2", mark_data.left+ mark_data.width/2 + 450).attr("y2", mark_data.height + mark_data.top + 70)
+                .attr("x1", ref.offsetWidth).attr("y1", ref.offsetTop + ref.offsetHeight)
+                .style("stroke", "red")
+                .style("stroke-dasharray", ("3, 3"))
+                .style("opacity", 0)
+                .style("stroke-width", self.strokeWidth)
+                .transition()
+                .duration(transition_in)
+                .style("opacity", 1);
+        }
+    };
+
 	MarksManager.prototype.changeType = function(type) {
 		var marks;
 
