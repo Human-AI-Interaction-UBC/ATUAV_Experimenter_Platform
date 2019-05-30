@@ -309,8 +309,8 @@
         }
     };
 
-    MarksManager.prototype.removeLines = function() {
-    	d3.selectAll('line').remove();
+    MarksManager.prototype.removeLines = function(tuple_id) {
+    	d3.selectAll(':not(.line_' + tuple_id + ')').remove();
 	};
 
     MarksManager.prototype.createTextVisOverlay = function(elem_id) {
