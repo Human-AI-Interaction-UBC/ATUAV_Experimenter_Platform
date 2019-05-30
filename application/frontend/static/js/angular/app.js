@@ -605,7 +605,7 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     // }
 
     // if (args.link) {
-      if (typeof document.getElementById('textVisContainer') == null) {
+      if (!document.getElementById('textVisContainer')) {
         $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
       }
       $scopeGlobal.curMarksManager.drawLine(transition_in, referenceID.tuple_id, tuple_ids);
