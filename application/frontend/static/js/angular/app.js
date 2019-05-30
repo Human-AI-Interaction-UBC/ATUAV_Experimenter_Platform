@@ -580,8 +580,6 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     let tuple_ids = Object.values($scopeGlobal.interventions).map(function (obj) {
         return obj.tuple_id
     });
-    $scopeGlobal.curMarksManager.highlight(tuple_ids, referenceID.tuple_id, transition_in, args);
-
     let refToHighlight = $scopeGlobal.startEndCoords.find(function (startEnd) {
       let refNumber = referenceID.ref_id.split("_")[1];
         return startEnd.refId === refNumber;
@@ -598,6 +596,8 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
         });
     // }
 
+    $scopeGlobal.curMarksManager.highlight(tuple_ids, referenceID.tuple_id, transition_in, args);
+
     // if (args.highlight) {
     //     sm.createSpans([refToHighlight], function(elem, _) {
     //         elem.setAttribute('class', 'text-highlight');
@@ -608,7 +608,7 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
       if (!document.getElementById('textVisContainer')) {
         $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
       }
-      $scopeGlobal.curMarksManager.drawLine(transition_in, referenceID.tuple_id, tuple_ids);
+      // $scopeGlobal.curMarksManager.drawLine(transition_in, referenceID.tuple_id, tuple_ids);
     // }
 
 }

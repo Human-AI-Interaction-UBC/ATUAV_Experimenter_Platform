@@ -228,6 +228,11 @@
 											//console.log(d3.select(this).property("className"));
 											return marks.selected_marks.length === 0 ? 0 : desat? DESATURATION: 0;
 	                });
+
+                        if (!document.getElementById('textVisContainer')) {
+                            self.createTextVisOverlay('textandvis');
+                        }
+                        self.drawLine(transition_in, reference_id, tuple_ids);
 					},
 					"highlightLegend": function(transition_in, args) {
 						var legend_mark = this.getLegendMark();
@@ -310,7 +315,7 @@
     };
 
     MarksManager.prototype.removeLines = function(tuple_id) {
-    	d3.selectAll(':not(.line_' + tuple_id + ')').remove();
+    	d3.selectAll('.line_' + tuple_id).remove();
 	};
 
     MarksManager.prototype.createTextVisOverlay = function(elem_id) {
