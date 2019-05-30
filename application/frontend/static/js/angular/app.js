@@ -621,4 +621,5 @@ function highlightLegend(referenceID, transition_in, args) {
 function removeAllInterventions(referenceID) {
   //if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
     $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
+    $scopeGlobal.curMarksManager.removeLines();
 }

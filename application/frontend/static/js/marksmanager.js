@@ -332,6 +332,10 @@
         }
     };
 
+    MarksManager.prototype.removeLines = function() {
+    	d3.selectAll('line').remove();
+	};
+
 	MarksManager.prototype.changeType = function(type) {
 		var marks;
 
