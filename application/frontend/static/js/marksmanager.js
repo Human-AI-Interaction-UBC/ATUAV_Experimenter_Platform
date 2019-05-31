@@ -283,22 +283,27 @@
   };
 
     MarksManager.prototype.drawLine = function(transition_in, id, tuple_ids){
+        let self = this;
+        let relativeCoords = {};
         let ref = document.getElementById('refAOI');
-    	let self = this;
-    	let marks = self.getSelectedMarks(tuple_ids);
+        let refRect = ref.getBoundingClientRect();
+        let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
+        relativeCoords.refTop = refRect.top - refParentRect.top;
+        relativeCoords.refLeft = refRect.left - refParentRect.left;
+
+        let marks = self.getSelectedMarks(tuple_ids);
         for(let i=0;i<marks.selected_marks.length;i++) {
-            let d3mark = d3.select(marks.selected_marks[i]);
-            let mark_data = d3mark.data()[0];
+            let markRect = marks.selected_marks[i].getBoundingClientRect();
+            relativeCoords.markLeft = markRect.left - refParentRect.left;
+            relativeCoords.markTop = markRect.top - refParentRect.top;
+
             self.strokeWidth = 1;
-            console.log(mark_data);
-            console.log(ref.offsetLeft);
-            console.log(ref.offsetWidth);
-            console.log(ref.offsetParent);
+
             d3.select(self.textVisOverlay).append("line")
 
                 .attr("class", "line_" + id)
-                .attr("x2", mark_data.left+ mark_data.width/2 + 450).attr("y2", mark_data.height + mark_data.top + 70)
-                .attr("x1", ref.offsetWidth).attr("y1", ref.offsetTop + ref.offsetHeight)
+                .attr("x2", relativeCoords.markLeft + markRect.width/2).attr("y2", markRect.height + relativeCoords.markTop)
+                .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height/2)
                 .style("stroke", "red")
                 .style("stroke-dasharray", ("3, 3"))
                 .style("opacity", 0)
