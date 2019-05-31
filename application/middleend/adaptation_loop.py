@@ -233,8 +233,11 @@ class AdaptationLoop():
                                             self.app_state_controller.setInterventionInactive(target_bar)
                                             to_remove.append(target_bar)
 
-
-
+        if to_remove:
+            to_remove = json.dumps({'remove': to_remove})
+            print to_remove
+            self.liveWebSocket.write_message(to_remove)
+            
         if to_deliver_rules:
             to_deliver_rules = json.dumps({'deliver': to_deliver_rules})
             print rule_name
@@ -251,10 +254,6 @@ class AdaptationLoop():
 
             self.liveWebSocket.write_message(to_deliver_rules)
 
-        if to_remove:
-            to_remove = json.dumps({'remove': to_remove})
-            print to_remove
-            self.liveWebSocket.write_message(to_remove)
 
     def __deliverAllInterventions__(self, event_name, task, time_stamp):
 
