@@ -74,3 +74,6 @@ FIX_DETECTION_DELAY = 1000000
 
 #Logs configuration
 LOG_PREFIX = "./log/AdaptiveMSNV_log"
+
+# Mouse events
+MAX_DOUBLE_CLICK_DUR = 500000
