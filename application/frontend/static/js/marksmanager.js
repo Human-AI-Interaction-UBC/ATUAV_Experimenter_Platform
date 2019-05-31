@@ -228,11 +228,6 @@
 											//console.log(d3.select(this).property("className"));
 											return marks.selected_marks.length === 0 ? 0 : desat? DESATURATION: 0;
 	                });
-
-                        if (!document.getElementById('textVisContainer')) {
-                            self.createTextVisOverlay('textandvis');
-                        }
-                        self.drawLine(transition_in, reference_id, tuple_ids);
 					},
 					"highlightLegend": function(transition_in, args) {
 						var legend_mark = this.getLegendMark();
