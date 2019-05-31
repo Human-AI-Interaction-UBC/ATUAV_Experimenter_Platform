@@ -75,3 +75,14 @@ def mean(data):
     if len(data)==0:
         return 0
     return sum(data) / float(len(data))
+	
+def euclidean_distance(point1, point2):
+    (x1, y1) = point1
+    (x2, y2) = point2
+
+    x1 = float(x1)
+    y1 = float(y1)
+    x2 = float(x2)
+    y2 = float(y2)
+
+    return math.sqrt((x1-x2)**2 + (y1-y2)**2)

@@ -178,8 +178,11 @@ class ApplicationStateController():
                 self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `raw_prediction` REAL, `value` TEXT, PRIMARY KEY(`id`) )".format(table_name))
             elif user['type'] == 'mouse':
                 self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `is_press` BOOLEAN, PRIMARY KEY(`id`) )".format(table_name))
+                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, 'x_coord' REAL, 'y_coord' REAL,  PRIMARY KEY(`id`) )".format(table_name + "_double_click"))
+            elif user['type'] == 'keyboard':
+                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, key STRING, PRIMARY KEY(`id`) )".format(table_name))
             else:
-                raise NotImplementedError("Invalid Type: The supported types are `fix` `ml` `emdat` and 'mouse'")
+                raise NotImplementedError("Invalid Type: The supported types are `fix` `ml` `emdat`, 'mouse', 'drag_drop'")
             self.conn.commit() #commit after every creation?
 
     def __deleteTaskDynamicTables__(self):
@@ -442,7 +445,6 @@ class ApplicationStateController():
         """
 
         query = query.replace("\n"," ") #replace new line symbols in case the sql conditional is multi-lined
-
         try:
             query_results = self.conn.execute(query)
             value = int(query_results.fetchone()['result'])
@@ -475,7 +477,7 @@ class ApplicationStateController():
         self.conn.execute("INSERT INTO {} VALUES (?,?,?,?)".format(table), (id, time_start, time_end, duration))
         self.conn.commit()
 
-    def updateMouseTable(self, table, id, time_stamp, is_press):
+    def updateMouseTable(self, table, id, mouse_event):
 
         """ Insert a new row into a mouse event table
 
@@ -492,10 +494,70 @@ class ApplicationStateController():
         returns
         None
         """
-        if not (isinstance(id, int) and isinstance(time_stamp, int) and isinstance(is_press, bool)):
+        if not (isinstance(id, int) and isinstance(mouse_event.time_stamp, int) and isinstance(mouse_event.is_press, bool)):
             raise TypeError('Invalid value for the mouse table')
-        self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (id, time_stamp, is_press))
+        self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (id, mouse_event.time_stamp, mouse_event.is_press))
         self.conn.commit()
+
+    def updateDragDropTable(self, table, dd_event):
+
+        """ Insert a new row into a mouse event table
+
+        arguments
+        table       -- String, name of an existing dynamic fixation table
+                    (ie. one of the user states)
+
+        keyword arguments
+        None
+
+        returns
+        None
+        """
+        if not (isinstance(dd_event.id, int) and isinstance(dd_event.time_stamp, int) and isinstance(dd_event.drag_start, bool) and isinstance(dd_event.duration, int) and isinstance(dd_event.displacement, float)):
+            raise TypeError('Invalid value for the mouse table')
+        self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (dd_event.id, dd_event.time_stamp, dd_event.drag_start, dd_event.duration, dd_event.displacement))
+        self.conn.commit()
+
+    def updateDoubleClickTable(self, table, id, dc_event):
+
+        """ Insert a new row into a mouse event table
+
+        arguments
+        table       -- String, name of an existing dynamic fixation table
+                    (ie. one of the user states)
+
+        keyword arguments
+        None
+
+        returns
+        None
+        """
+        print(isinstance(id, int), isinstance(dc_event.time_stamp, int), isinstance(dc_event.x, int), isinstance(dc_event.y, int))
+        print(dc_event.x, dc_event.y)
+        if not (isinstance(id, int) and isinstance(dc_event.time_stamp, int) and isinstance(dc_event.x, int) and isinstance(dc_event.y, int)):
+            raise TypeError('Invalid value for the mouse table')
+        self.conn.execute("INSERT INTO {} VALUES (?,?,?,?)".format(table  + "_double_click"), (id, dc_event.time_stamp, dc_event.x, dc_event.y))
+        self.conn.commit()
+
+    def updateKeyboardTable(self, table, id, key_event):
+
+        """ Insert a new row into a mouse event table
+
+        arguments
+        table       -- String, name of an existing dynamic fixation table
+                    (ie. one of the user states)
+
+        keyword arguments
+        None
+
+        returns
+        None
+        """
+        if not isinstance(key_event.time_stamp, int) and isinstance(key_event.key, string):
+            raise TypeError('Invalid value for the keyboard table')
+        self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (id, key_event.time_stamp, key_event.key))
+        self.conn.commit()
+
 
     def updateEmdatTable(self, id, emdat_features):
 
