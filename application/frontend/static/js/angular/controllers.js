@@ -80,7 +80,7 @@ var AppCtrl = function($scope, $http, $location) {
           $scope.curReference = data.references
           startEndCoords = [];
           Object.keys($scope.curReference).forEach(function(key) {
-            startEndCoords.push({"start": $scope.curReference[key]['sentence_start_char'], "end": $scope.curReference[key]['sentence_end_char']})
+            startEndCoords.push({"refId": key, "start": $scope.curReference[key]['sentence_start_char'], "end": $scope.curReference[key]['sentence_end_char']})
           });
           $scope.selectedReference = 0;
           $scope.lastSelectedReference = -1;
