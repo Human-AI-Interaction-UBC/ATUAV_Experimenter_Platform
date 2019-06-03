@@ -285,6 +285,7 @@ class TobiiControllerNewSdk:
 		if (params.USE_EMDAT):
 			for aoi, polygon in self.AOIs.iteritems():
 				if utils.point_inside_polygon((self.x[-1], self.y[-1]), polygon):
+					print("point inside ", aoi)
 					self.aoi_ids[aoi].append(self.dpt_id)
 		self.time.append(time_stamp)
 		self.validity.append(True)
