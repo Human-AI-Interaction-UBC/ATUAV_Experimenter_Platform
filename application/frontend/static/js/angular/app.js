@@ -436,7 +436,11 @@ app.config(function($locationProvider) {
   $locationProvider.html5Mode(true);
 });
 
-app.controller('AppCtrl', AppCtrl);
+if (typeof AppCtrl !== "undefined") {
+    app.controller('AppCtrl', AppCtrl);
+} else {
+    app.controller('AOIController', AOIController);
+}
 
 function isArray(o) {
   return Object.prototype.toString.call(o) === '[object Array]';

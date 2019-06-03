@@ -58,6 +58,7 @@ rect.selected:hover {
 
 #theTextParagraph {
   font-size: 18px;
+  font-kerning: none;
 }
 
 #conditionSelect {

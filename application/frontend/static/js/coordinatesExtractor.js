@@ -2,27 +2,18 @@
  * Created by enamul on 6/3/2017.
  */
 function findCoordinatesofCharacters(textElementID) {
-  var coordinatesChars = [];
-  var newText =  "";
-  var oldText = $(textElementID).text().trim();
+  let coordinatesChars = [];
+  let text = $(textElementID).text().trim();
+  $(textElementID).html(text);
+  let range = document.createRange();
+  let textElem = document.getElementById("theTextParagraph").childNodes[0];
 
-  for (var i = 0, len = oldText.length; i < len; i++) {
-    newText+= '<span>'+oldText[i]+ '</span>';
+  for (var i = 0, len = text.length; i < len; i++) {
+    range.setStart(textElem, i);
+    range.setEnd(textElem, i + 1);
+    let newChar = range.getBoundingClientRect();
+    coordinatesChars.push(newChar);
   }
-  //console.log(newText);
-
-  $(textElementID).html(newText);
-
-  $spans = $(textElementID).find('span');
-  $spans.each(function(){
-    var $span = $(this),
-        $offset = $span.offset();
-    $offset.width = $span.innerWidth();
-    $offset.height = $span.innerHeight();
-    coordinatesChars.push($offset);
-    //console.log($offset);
-  });
-  $(textElementID).html(oldText);
   return coordinatesChars;
 }
 
@@ -89,8 +80,8 @@ function findCoordinatesofRefSentences(textElementID, coordinatesofChar, startEn
   var spanCharAcc = 0
   //put a span for each sentence
   for (var i = 0, len = startEndCoords.length; i < len; i++) {
-    start = startEndCoords[i]['start'];
-    end = startEndCoords[i]['end'];
+    let start = startEndCoords[i]['start'];
+    let end = startEndCoords[i]['end'];
     // for correct string slicing
     if (start == 0) {
       start = 1;
@@ -122,10 +113,12 @@ function findCoordinatesofRefSentences(textElementID, coordinatesofChar, startEn
     var sentenceEndPosition = paragraphText.indexOf(sentSpanCoord[i].sentence) + sentSpanCoord[i].sentence.length-1;
     var coordofSentStartPosition = coordinatesofChar[sentenceStartPosition];
     var coordofSentEndPosition = coordinatesofChar[sentenceEndPosition];
+    let refId = startEndCoords[i].refId;
 
     // eight points needed to build the polygon
     sentencePolygonCoordinates.push(
-      {sentence:sentSpanCoord[i].sentence, start:sentenceStartPosition, end: sentenceEndPosition,
+      {refId: refId,
+      sentence:sentSpanCoord[i].sentence, start:sentenceStartPosition, end: sentenceEndPosition,
       numofwords:sentSpanCoord[i].sentence.split(" ").length,
       polygonCoords:[
       {x:coordofSentStartPosition.left, y:coordofSentStartPosition.top},
@@ -165,6 +158,30 @@ function sendJSONtoTornado(jsonObj, MMDid){
     },
   });
 
+}
+
+function writePolygonToDb(jsonObj, MMDid, isLast) {
+  let polygonWithCondition = {};
+  polygonWithCondition['MMDid'] = MMDid;
+  polygonWithCondition['references'] = jsonObj;
+  console.log(isLast);
+    $.ajax({
+        url: '/writePolygon',
+
+        data: JSON.stringify(polygonWithCondition),
+        dataType: "JSON",
+        type: "POST",
+        success: function ( data , status_text, jqXHR) {
+          if (isLast) {
+            console.log('is last');
+              $scopeGlobal.ws.send("done_generating");
+          }
+            console.log('ajax success')
+        },
+        error: function ( data , status_text, jqXHR ) {
+            console.log('ajax fail')
+        },
+    });
 }
 
 //check whether a point is within the polygon vs
