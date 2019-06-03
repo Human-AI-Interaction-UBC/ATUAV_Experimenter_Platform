@@ -503,12 +503,13 @@ function handleDelivery(obj) {
     var args = JSON.parse(intervention.arguments);
     var referenced_tuples = [];
     var data = $scopeGlobal.datatable.data;
+    let refId = intervention.refId;
     if (args.type == "legend") {
       referenced_tuples.push("legend");
     } else {
       var referenceID = args.id;
     }
-    $scopeGlobal.interventions[interventionName] = { tuple_id: args.id, args: args, transition_out: intervention.transition_out };
+    $scopeGlobal.interventions[interventionName] = { tuple_id: args.id, args: args, transition_out: intervention.transition_out, ref_id: refId};
     //args.dash = false
     eval(func)($scopeGlobal.interventions[interventionName], transition_in, args);
 
@@ -574,6 +575,45 @@ function highlightVisOnly_recency(referenceID, transition_in, args) {
     //},transition_in*1.2); //TODO:CHECK
 }
 
+// is used by intervention
+function highlightVisAndRef_recency(referenceID, transition_in, args) {
+    let tuple_ids = Object.values($scopeGlobal.interventions).map(function (obj) {
+        return obj.tuple_id
+    });
+
+    $scopeGlobal.curMarksManager.highlight(tuple_ids, referenceID.tuple_id, transition_in, args);
+
+    let refToHighlight = $scopeGlobal.startEndCoords.find(function (startEnd) {
+      let refNumber = referenceID.ref_id.split("_")[1];
+        return startEnd.refId === refNumber;
+    });
+
+    let paragraph = document.getElementById('theTextParagraph');
+    // Create the spans in the text
+    let sm = new SpanManager(paragraph);
+
+    if (args.underline) {
+        sm.createSpans([refToHighlight], function(elem, _) {
+          elem.setAttribute('class', 'text-reference');
+          elem.setAttribute('id', 'refAOI');
+        });
+    }
+
+    if (args.highlight) {
+        sm.createSpans([refToHighlight], function(elem, _) {
+            elem.setAttribute('class', 'text-highlight');
+        });
+    }
+
+    if (args.link) {
+      if (!document.getElementById('textVisContainer')) {
+        $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
+      }
+      $scopeGlobal.curMarksManager.drawLine(transition_in, referenceID.tuple_id, tuple_ids);
+    }
+
+}
+
 /**
  * Highlighting the graph legend
  */
@@ -585,4 +625,5 @@ function highlightLegend(referenceID, transition_in, args) {
 function removeAllInterventions(referenceID) {
   //if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
     $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
+    $scopeGlobal.curMarksManager.removeLines(referenceID.tuple_id);
 }
