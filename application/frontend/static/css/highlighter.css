@@ -21,15 +21,15 @@ div {
 }
 
 .text-reference {
-  border: dashed red;
+  border: dotted red;
   border-top-width: 0px;
   border-right-width: 0px;
   border-left-width: 0px;
   border-bottom-width: 1px;
 }
 
-.text-highlight {
-  background-color: rgba(255,0,0,0.2);
+.text-reference-special {
+  background-color: yellow;
 }
 
 .text-reference:hover {

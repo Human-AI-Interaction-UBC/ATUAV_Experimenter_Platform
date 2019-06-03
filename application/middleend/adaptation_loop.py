@@ -215,7 +215,6 @@ class AdaptationLoop():
                     if self.app_state_controller.evaluateConditional(rule['delivery_sql_condition']):
                         results = self.conn.execute("SELECT * FROM intervention WHERE intervention.name = ?", (intervention_name,))
                         intervention_params = results.fetchone()
-                        intervention_params.update({'refId': event_name})
                         to_deliver_rules.append(intervention_params)
                         to_set_active.append([intervention_name, rule_name, time_stamp])
                         #here is where we parse to get each removal, and remove it if it's active
@@ -233,11 +232,8 @@ class AdaptationLoop():
                                             self.app_state_controller.setInterventionInactive(target_bar)
                                             to_remove.append(target_bar)
 
-        if to_remove:
-            to_remove = json.dumps({'remove': to_remove})
-            print to_remove
-            self.liveWebSocket.write_message(to_remove)
-            
+
+
         if to_deliver_rules:
             to_deliver_rules = json.dumps({'deliver': to_deliver_rules})
             print rule_name
@@ -254,6 +250,10 @@ class AdaptationLoop():
 
             self.liveWebSocket.write_message(to_deliver_rules)
 
+        if to_remove:
+            to_remove = json.dumps({'remove': to_remove})
+            print to_remove
+            self.liveWebSocket.write_message(to_remove)
 
     def __deliverAllInterventions__(self, event_name, task, time_stamp):
 
