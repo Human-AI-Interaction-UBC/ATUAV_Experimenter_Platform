@@ -97,7 +97,11 @@
 								else {
 									MarksManager.internal.highlights['desaturate'].unhighlight.call(self);
 								}
-	            });
+	            })
+							.sort(function(a,b) {
+								return a.id - b.id;
+							});
+						console.log(marks);
 						// Extract only the marks that are mentioned
 						var referenced_marks = self.data.reduce(function(acc, val) {
 													if(val.tuple) acc.push(val);
@@ -292,11 +296,47 @@
         relativeCoords.refLeft = refRect.left - refParentRect.left;
 
         let marks = self.getSelectedMarks(tuple_ids);
-        for(let i=0;i<marks.selected_marks.length;i++) {
-            let markRect = marks.selected_marks[i].getBoundingClientRect();
+        if (marks.selected_marks.length > 1) {
+        	let curCluster = [];
+        	let prevMarkIndex = self.marks.findIndex(marks.selected_marks[0]);
+        	for (let i = 1; i < marks.selected_marks.length - 1; i++) {
+        		let curMarkIndex = self.marks.findIndex(marks.selected_marks[i]);
+                if ((curMarkIndex - prevMarkIndex) > 1) {
+                	// not adjacent anymore - end cluster
+                    let markRect = curCluster[0].getBoundingClientRect();
+                    relativeCoords.markLeft = markRect.left - refParentRect.left;
+                    relativeCoords.markTop = markRect.top - refParentRect.top;
+                    let left = markRect.left;
+                    let right = markRect.right;
+                    let top = markRect.top;
+                    let bottom = markRect.bottom
+					for (let j = 1; j < curCluster.length; j++) {
+					}
+
+                    self.strokeWidth = 1;
+
+                    d3.select(self.textVisOverlay).append("line")
+
+                        .attr("class", "line_" + id)
+                        .attr("x2", relativeCoords.markLeft + markRect.width/2).attr("y2", markRect.height + relativeCoords.markTop)
+                        .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height/2)
+                        .style("stroke", "red")
+                        .style("stroke-dasharray", ("3, 3"))
+                        .style("opacity", 0)
+                        .style("stroke-width", self.strokeWidth)
+                        .transition()
+                        .duration(transition_in)
+                        .style("opacity", 1);
+                	curCluster = [];
+				}
+                curCluster.push(marks.selected_marks[i]);
+                prevMarkIndex = curMarkIndex;
+			}
+
+		} else {
+            let markRect = marks.selected_marks[0].getBoundingClientRect();
             relativeCoords.markLeft = markRect.left - refParentRect.left;
             relativeCoords.markTop = markRect.top - refParentRect.top;
-
             self.strokeWidth = 1;
 
             d3.select(self.textVisOverlay).append("line")
@@ -482,7 +522,6 @@
 	};
 	MarksManager.prototype.unhighlight = function(interventions, to_be_removed) {
 		console.log("NEW TUPLE IDS")
-		console.log()
 		MarksManager.internal.highlights[this.type].unhighlight.call(this, interventions, to_be_removed);
 	};
 	MarksManager.prototype.highlightLegend = function(transition_in, args) {
