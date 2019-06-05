@@ -7,11 +7,13 @@ import params
 sys.path.append('E:\\Users\\admin\\Desktop\\experimenter_platform_core\\ATUAV_Experimenter_Platform\\Modules')
 sys.path.append(os.path.join(sys.path[0],'tobii_binder'))
 
+
 import os
 import datetime
 import time
 
 import tobii_research as tr
+import subprocess
 
 import csv
 import numpy as np
@@ -90,6 +92,8 @@ class TobiiControllerNewSdk:
 					self.eyetrackers[tracker.model] = tracker
 				self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
 		else:
+			print(os.path.join(sys.path[0]))
+			subprocess.Popen("application/backend/websocket_app/GazeServer.exe")
 			self.websocket_client = EyetrackerWebsocketClient(self)
 		print "Connected to: ", params.EYETRACKER_TYPE
 
