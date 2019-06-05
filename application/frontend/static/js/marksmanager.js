@@ -298,27 +298,36 @@
         let marks = self.getSelectedMarks(tuple_ids);
         if (marks.selected_marks.length > 1) {
         	let curCluster = [];
-        	let prevMarkIndex = self.marks.findIndex(marks.selected_marks[0]);
+        	let prevMarkIndex = self.marks.findIndex(function (m) {
+        		return m === marks.selected_marks[0];
+            });
+        	curCluster.push(marks.selected_marks[0]);
         	for (let i = 1; i < marks.selected_marks.length - 1; i++) {
-        		let curMarkIndex = self.marks.findIndex(marks.selected_marks[i]);
-                if ((curMarkIndex - prevMarkIndex) > 1) {
-                	// not adjacent anymore - end cluster
-                    let markRect = curCluster[0].getBoundingClientRect();
-                    relativeCoords.markLeft = markRect.left - refParentRect.left;
-                    relativeCoords.markTop = markRect.top - refParentRect.top;
-                    let left = markRect.left;
-                    let right = markRect.right;
-                    let top = markRect.top;
-                    let bottom = markRect.bottom
-					for (let j = 1; j < curCluster.length; j++) {
-					}
+        		let curMarkIndex = self.marks.findIndex(function (m) {
+        			return m === marks.selected_marks[i];
+                });
 
+        		let curMarkRect = marks.selected_marks[i].getBoundingClientRect();
+        		let prevMarkRect = marks.selected_marks[i-1].getBoundingClientRect();
+
+        		let sharedAxis = getSharedAxis(curCluster);
+
+        		if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !sharedAxis.isShared) {
                     self.strokeWidth = 1;
+                    if (sharedAxis.hasOwnProperty('coord')) {
+                    	if (sharedAxis.axis === 'x') {
+                            relativeCoords.markx = sharedAxis.coord - refParentRect.left;
+                            relativeCoords.marky = (sharedAxis.min + sharedAxis.max)/2 - refParentRect.top;
+						} else {
+                            relativeCoords.markx = (sharedAxis.min + sharedAxis.max)/2 - refParentRect.left;
+                            relativeCoords.marky = sharedAxis.coord - refParentRect.top;
+						}
+					}
 
                     d3.select(self.textVisOverlay).append("line")
 
                         .attr("class", "line_" + id)
-                        .attr("x2", relativeCoords.markLeft + markRect.width/2).attr("y2", markRect.height + relativeCoords.markTop)
+                        .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                         .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height/2)
                         .style("stroke", "red")
                         .style("stroke-dasharray", ("3, 3"))
@@ -327,7 +336,7 @@
                         .transition()
                         .duration(transition_in)
                         .style("opacity", 1);
-                	curCluster = [];
+                    curCluster = [];
 				}
                 curCluster.push(marks.selected_marks[i]);
                 prevMarkIndex = curMarkIndex;
@@ -353,6 +362,70 @@
                 .style("opacity", 1);
         }
     };
+
+    function areMarksAdjacent (prevMark, curMark, threshold) {
+    	return Math.abs(prevMark.top - curMark.bottom) < threshold || Math.abs(prevMark.bottom - curMark.top) < threshold ||
+			Math.abs(prevMark.left - curMark.right) < threshold || Math.abs(prevMark.right - curMark.left) < threshold;
+	}
+
+	function getSharedAxis(cluster) {
+    	let shared = {};
+
+    	let prev = cluster[0];
+    	for (let i = 1; i < cluster.length; i++) {
+    		let cur = cluster[1];
+
+    		if (shared.hasOwnProperty('axis')) {
+    			if (shared.axis === 'x') {
+                    shared.min = cur.left < shared.min ? cur.left : shared.min;
+                    shared.max = cur.right > shared.max ? cur.right : shared.max;
+    				if (!(prev.left - cur.left === 0 || prev.right - cur.right === 0)) {
+    					// NO shared axis
+						shared.isShared = false;
+						return shared;
+					}
+				} else if (shared.axis === 'y') {
+                    shared.min = cur.bottom < shared.min ? cur.bottom : shared.min;
+                    shared.max = cur.top > shared.max ? cur.top : shared.max;
+                    if (!(prev.top - cur.top === 0 || prev.bottom - cur.bottom === 0)) {
+                        // NO shared axis
+                        shared.isShared = false;
+                        return shared;
+                    }
+				}
+			} else {
+                if (cur.top - prev.top === 0) {
+                    shared.coord = cur.top;
+                    shared.axis = 'y';
+                    shared.min = cur.left;
+                    shared.max = cur.right;
+                } else if (cur.bottom - prev.bottom === 0) {
+                    shared.coord = cur.bottom;
+                    shared.axis = 'y';
+                    shared.min = cur.left;
+                    shared.max = cur.right;
+                } else if (cur.left - prev.left === 0) {
+                    shared.coord = cur.left;
+                    shared.axis = 'x';
+                    shared.min = cur.bottom;
+                    shared.max = cur.top;
+                } else if (cur.right - prev.right === 0) {
+                    shared.coord = cur.right;
+                    shared.axis = 'x';
+                    shared.min = cur.bottom;
+                    shared.max = cur.top;
+                } else {
+                	// NO shared axis
+                    shared.isShared = false;
+                    return shared;
+				}
+			}
+			prev = cur;
+		}
+
+		shared.isShared = true;
+		return shared;
+	}
 
     MarksManager.prototype.removeLines = function(tuple_id) {
     	d3.selectAll('.line_' + tuple_id).remove();
