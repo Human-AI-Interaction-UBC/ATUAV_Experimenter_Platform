@@ -16,6 +16,7 @@ class EyetrackerWebsocketClient(object):
         print "trying to connect"
         try:
             self.ws = yield websocket_connect(self.gaze_url)
+            IOLoop.instance().add_callback(callback = self.run)
         except Exception, e:
             print "connection error"
         else:
@@ -23,20 +24,18 @@ class EyetrackerWebsocketClient(object):
 
     @gen.coroutine
     def run(self):
-        while self.track_data:
+        while True:
             msg = yield self.ws.read_message()
             #print msg
             if msg is not None:
-                msg = msg.split(",")
-                self.tobii_controller.on_gazedata_4c(float(msg[0]), float(msg[1]), float(msg[2]) * 1000)
+                if self.track_data:
+                    msg = msg.split(",")
+                    self.tobii_controller.on_gazedata_4c(float(msg[0]), float(msg[1]), float(msg[2]) * 1000)
             else:
                 print("Eyetracker websocket connection was interrupted!")
 
-    @gen.coroutine
     def start_tracking(self):
         self.track_data = True
-        IOLoop.instance().add_callback(callback = self.run)
-
 
     def stop_tracking(self):
         self.track_data = False

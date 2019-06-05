@@ -94,7 +94,6 @@ class FixationDetector(DetectionComponent):
             #We are here because start fixation was detected
             while(1):
                 if(Efix == []):
-                    print("found fixation start ", time.time())
                     array_index = array_index + array_iterator
                     #Wait till array has enough data
                     yield self.wait_for_new_data(array_index, array_iterator)
@@ -112,7 +111,6 @@ class FixationDetector(DetectionComponent):
                     #Add the newly found end fixation to our collection of end fixations
                     #Get time stamp for newly found end fixation
                     EfixEndTime = Efix[0][1]
-                    print("fixation end was detected ", time.time())
                     #Update index to data points after newly found end fixation
                     start_fix = self.tobii_controller.time.index(Sfix[0])
                     array_index = self.tobii_controller.time.index(EfixEndTime) + 1
