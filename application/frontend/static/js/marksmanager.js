@@ -300,7 +300,7 @@
         	let curCluster = [];
             let prevMarkRect = marks.selected_marks[0].getBoundingClientRect();
             curCluster.push(prevMarkRect);
-        	for (let i = 1; i < marks.selected_marks.length - 1; i++) {
+        	for (let i = 1; i < marks.selected_marks.length; i++) {
         		let curMarkRect = marks.selected_marks[i].getBoundingClientRect();
 
         		let sharedAxis = getSharedAxis(curCluster);
@@ -370,16 +370,16 @@
 
     		if (shared.hasOwnProperty('axis')) {
     			if (shared.axis === 'x') {
-                    shared.min = cur.left < shared.min ? cur.left : shared.min;
-                    shared.max = cur.right > shared.max ? cur.right : shared.max;
+                    shared.min = cur.top < shared.min ? cur.top : shared.min;
+                    shared.max = cur.bottom > shared.max ? cur.bottom : shared.max;
     				if (!(prev.left - cur.left === 0 && prev.right - cur.right === 0)) {
     					// NO shared axis
 						shared.isShared = false;
 						return shared;
 					}
 				} else if (shared.axis === 'y') {
-                    shared.min = cur.bottom < shared.min ? cur.bottom : shared.min;
-                    shared.max = cur.top > shared.max ? cur.top : shared.max;
+                    shared.min = cur.left < shared.min ? cur.left : shared.min;
+                    shared.max = cur.right > shared.max ? cur.right : shared.max;
                     if (!(prev.top - cur.top === 0 && prev.bottom - cur.bottom === 0)) {
                         // NO shared axis
                         shared.isShared = false;
