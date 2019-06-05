@@ -117,17 +117,20 @@ class MMDWebSocket(ApplicationWebSocket):
         aoiByTask = {task: {name: polygon for _, polygon, name in aois} for task, aois in itertools.groupby(allAOIs, operator.itemgetter(0))}
 
         for task, aois in aoiByTask.items():
-            f = open(str(task) + ".aoi", "w+")  
+            f = open(str(task) + ".aoi", "w+")
+            overall = 'overall_' + str(task)
             to_write = []
             for ref_name, aoi in aois.items():
                 noSpace = re.sub(r"\s", '', aoi)
                 tabSeparated = re.sub(r"\),\(", '\t', noSpace)
                 bracketsRemoved = re.sub(r"(\)\])|(\[\()", '', tabSeparated)
-                bracketsRemoved = ref_name+'\t'+bracketsRemoved
+                overall += '\t'+ bracketsRemoved
+                bracketsRemoved = ref_name+'\t'+ bracketsRemoved
                 to_write.append(bracketsRemoved)
 
             to_write = '\n'.join(to_write)
             f.write(to_write)
+            f.write('\n'+overall)
             f.close()
 
 
