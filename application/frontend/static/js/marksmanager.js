@@ -298,17 +298,10 @@
         let marks = self.getSelectedMarks(tuple_ids);
         if (marks.selected_marks.length > 1) {
         	let curCluster = [];
-        	let prevMarkIndex = self.marks.findIndex(function (m) {
-        		return m === marks.selected_marks[0];
-            });
-        	curCluster.push(marks.selected_marks[0]);
+            let prevMarkRect = marks.selected_marks[0].getBoundingClientRect();
+            curCluster.push(prevMarkRect);
         	for (let i = 1; i < marks.selected_marks.length - 1; i++) {
-        		let curMarkIndex = self.marks.findIndex(function (m) {
-        			return m === marks.selected_marks[i];
-                });
-
         		let curMarkRect = marks.selected_marks[i].getBoundingClientRect();
-        		let prevMarkRect = marks.selected_marks[i-1].getBoundingClientRect();
 
         		let sharedAxis = getSharedAxis(curCluster);
 
@@ -338,8 +331,8 @@
                         .style("opacity", 1);
                     curCluster = [];
 				}
-                curCluster.push(marks.selected_marks[i]);
-                prevMarkIndex = curMarkIndex;
+                curCluster.push(curMarkRect);
+        		prevMarkRect = curMarkRect;
 			}
 
 		} else {
@@ -373,13 +366,13 @@
 
     	let prev = cluster[0];
     	for (let i = 1; i < cluster.length; i++) {
-    		let cur = cluster[1];
+    		let cur = cluster[i];
 
     		if (shared.hasOwnProperty('axis')) {
     			if (shared.axis === 'x') {
                     shared.min = cur.left < shared.min ? cur.left : shared.min;
                     shared.max = cur.right > shared.max ? cur.right : shared.max;
-    				if (!(prev.left - cur.left === 0 || prev.right - cur.right === 0)) {
+    				if (!(prev.left - cur.left === 0 && prev.right - cur.right === 0)) {
     					// NO shared axis
 						shared.isShared = false;
 						return shared;
@@ -387,7 +380,7 @@
 				} else if (shared.axis === 'y') {
                     shared.min = cur.bottom < shared.min ? cur.bottom : shared.min;
                     shared.max = cur.top > shared.max ? cur.top : shared.max;
-                    if (!(prev.top - cur.top === 0 || prev.bottom - cur.bottom === 0)) {
+                    if (!(prev.top - cur.top === 0 && prev.bottom - cur.bottom === 0)) {
                         // NO shared axis
                         shared.isShared = false;
                         return shared;
