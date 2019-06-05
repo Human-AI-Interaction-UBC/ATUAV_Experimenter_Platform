@@ -298,9 +298,13 @@
         let marks = self.getSelectedMarks(tuple_ids);
         if (marks.selected_marks.length > 1) {
         	let curCluster = [];
-        	let prevMarkIndex = self.marks.findIndex(marks.selected_marks[0]);
+        	let prevMarkIndex = self.marks.findIndex(function (m) {
+						return m === marks.selected_marks[0];
+					})
         	for (let i = 1; i < marks.selected_marks.length - 1; i++) {
-        		let curMarkIndex = self.marks.findIndex(marks.selected_marks[i]);
+        		let curMarkIndex = self.marks.findIndex(function (m) {
+							return m === marks.selected_marks[i];
+						})
                 if ((curMarkIndex - prevMarkIndex) > 1) {
                 	// not adjacent anymore - end cluster
                     let markRect = curCluster[0].getBoundingClientRect();
