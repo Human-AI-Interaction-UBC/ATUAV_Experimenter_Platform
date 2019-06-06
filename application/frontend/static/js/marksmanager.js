@@ -364,6 +364,11 @@
 	function getSharedAxis(cluster) {
     	let shared = {};
 
+    	if (cluster.length < 2) {
+    		shared.isShared = true;
+    		return shared;
+		}
+
     	let prev = cluster[0];
     	for (let i = 1; i < cluster.length; i++) {
     		let cur = cluster[i];
