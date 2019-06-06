@@ -300,24 +300,53 @@
         	let curCluster = [];
             let prevMarkRect = marks.selected_marks[0].getBoundingClientRect();
             curCluster.push(prevMarkRect);
-        	for (let i = 1; i < marks.selected_marks.length; i++) {
+            self.strokeWidth = 1;
+
+            for (let i = 1; i < marks.selected_marks.length; i++) {
         		let curMarkRect = marks.selected_marks[i].getBoundingClientRect();
         		let sharedAxis = getSharedAxis(curCluster.concat(curMarkRect));
 
-        		if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !sharedAxis.isShared || curCluster.length === marks.selected_marks.length) {
-                    self.strokeWidth = 1;
+                if (sharedAxis.hasOwnProperty('coord')) {
+                    if (sharedAxis.axis === 'x') {
+                        relativeCoords.markx = sharedAxis.coord - refParentRect.left;
+                        relativeCoords.marky = (sharedAxis.min + sharedAxis.max)/2 - refParentRect.top;
+                    } else {
+                        relativeCoords.markx = (sharedAxis.min + sharedAxis.max)/2 - refParentRect.left;
+                        relativeCoords.marky = sharedAxis.coord - refParentRect.top;
+                    }
+                }
+
+                if (areMarksAdjacent(prevMarkRect, curMarkRect, 20) && sharedAxis.isShared) {
+                    curCluster.push(curMarkRect);
+                    if (curCluster.length === marks.selected_marks.length) {
+                        d3.select(self.textVisOverlay).append("line")
+
+                            .attr("class", "line_" + id)
+                            .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
+                            .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height/2)
+                            .style("stroke", "red")
+                            .style("stroke-dasharray", ("3, 3"))
+                            .style("opacity", 0)
+                            .style("stroke-width", self.strokeWidth)
+                            .transition()
+                            .duration(transition_in)
+                            .style("opacity", 1);
+                        break;
+					}
+				} else {
+                    let sharedAxis = getSharedAxis(curCluster);
                     if (curCluster.length === 1) {
-                    	relativeCoords.markx = curMarkRect.left - refParentRect.left + curMarkRect.width/2;
-                    	relativeCoords.marky = curMarkRect.top - refParentRect.top + curMarkRect.height;
-					} else if (sharedAxis.hasOwnProperty('coord')) {
-                    	if (sharedAxis.axis === 'x') {
+                        relativeCoords.markx = curMarkRect.left - refParentRect.left + curMarkRect.width/2;
+                        relativeCoords.marky = curMarkRect.top - refParentRect.top + curMarkRect.height;
+                    } else if (sharedAxis.hasOwnProperty('coord')) {
+                        if (sharedAxis.axis === 'x') {
                             relativeCoords.markx = sharedAxis.coord - refParentRect.left;
                             relativeCoords.marky = (sharedAxis.min + sharedAxis.max)/2 - refParentRect.top;
-						} else {
+                        } else {
                             relativeCoords.markx = (sharedAxis.min + sharedAxis.max)/2 - refParentRect.left;
                             relativeCoords.marky = sharedAxis.coord - refParentRect.top;
-						}
-					}
+                        }
+                    }
 
                     d3.select(self.textVisOverlay).append("line")
 
@@ -333,7 +362,6 @@
                         .style("opacity", 1);
                     curCluster = [];
 				}
-                curCluster.push(curMarkRect);
         		prevMarkRect = curMarkRect;
 			}
 
