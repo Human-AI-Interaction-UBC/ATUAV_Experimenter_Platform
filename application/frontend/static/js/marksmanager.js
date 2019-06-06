@@ -304,9 +304,12 @@
         		let curMarkRect = marks.selected_marks[i].getBoundingClientRect();
         		let sharedAxis = getSharedAxis(curCluster.concat(curMarkRect));
 
-        		if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !sharedAxis.isShared) {
+        		if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !sharedAxis.isShared || curCluster.length === marks.selected_marks.length) {
                     self.strokeWidth = 1;
-                    if (sharedAxis.hasOwnProperty('coord')) {
+                    if (curCluster.length === 1) {
+                    	relativeCoords.markx = curMarkRect.left - refParentRect.left + curMarkRect.width/2;
+                    	relativeCoords.marky = curMarkRect.top - refParentRect.top + curMarkRect.height;
+					} else if (sharedAxis.hasOwnProperty('coord')) {
                     	if (sharedAxis.axis === 'x') {
                             relativeCoords.markx = sharedAxis.coord - refParentRect.left;
                             relativeCoords.marky = (sharedAxis.min + sharedAxis.max)/2 - refParentRect.top;
