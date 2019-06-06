@@ -286,7 +286,7 @@
         .style("opacity", 1);
   };
 
-    MarksManager.prototype.drawLine = function(transition_in, tuple_ids){
+    MarksManager.prototype.drawLine = function(transition_in, id, tuple_ids){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementById('refAOI');
@@ -319,7 +319,7 @@
 
                     d3.select(self.textVisOverlay).append("line")
 
-                        .attr("class", "line_" + i)
+                        .attr("class", "line_" + id)
                         .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                         .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height/2)
                         .style("stroke", "red")
@@ -343,7 +343,7 @@
 
             d3.select(self.textVisOverlay).append("line")
 
-                .attr("class", "line_" + 0)
+                .attr("class", "line_" + id)
                 .attr("x2", relativeCoords.markLeft + markRect.width/2).attr("y2", markRect.height + relativeCoords.markTop)
                 .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height/2)
                 .style("stroke", "red")

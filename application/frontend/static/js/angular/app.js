@@ -529,7 +529,7 @@ function handleDelivery(obj) {
       let tuple_ids = Object.values($scopeGlobal.interventions).map(function (obj) {
           return obj.tuple_id
       });
-      $scopeGlobal.curMarksManager.drawLine(500, tuple_ids);
+      $scopeGlobal.curMarksManager.drawLine(500, $scopeGlobal.interventions[obj.deliver[0].name].id, tuple_ids);
   }
 
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency
