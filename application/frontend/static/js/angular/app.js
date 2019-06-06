@@ -525,6 +525,13 @@ function handleDelivery(obj) {
 
   }
 
+  if (func == 'highlightVisAndRef_recency') {
+      let tuple_ids = Object.values($scopeGlobal.interventions).map(function (obj) {
+          return obj.tuple_id
+      });
+      $scopeGlobal.curMarksManager.drawLine(500, tuple_ids);
+  }
+
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency
   if (func == 'highlightVisOnly_recency') {
     console.log('old_activeA:', $scopeGlobal.old_active_interventions)
@@ -613,7 +620,7 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
       if (!document.getElementById('textVisContainer')) {
         $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
       }
-      $scopeGlobal.curMarksManager.drawLine(transition_in, referenceID.tuple_id, tuple_ids);
+      // $scopeGlobal.curMarksManager.drawLine(transition_in, referenceID.tuple_id, tuple_ids);
     }
 
 }
