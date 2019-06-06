@@ -302,8 +302,7 @@
             curCluster.push(prevMarkRect);
         	for (let i = 1; i < marks.selected_marks.length; i++) {
         		let curMarkRect = marks.selected_marks[i].getBoundingClientRect();
-
-        		let sharedAxis = getSharedAxis(curCluster);
+        		let sharedAxis = getSharedAxis(curCluster.concat(curMarkRect));
 
         		if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !sharedAxis.isShared) {
                     self.strokeWidth = 1;
