@@ -355,9 +355,10 @@
 			// }
 
 			let curMarkRect = marks.selected_marks[0].getBoundingClientRect();
+			curCluster.push(curMarkRect);
             for (let i = 0; i < marks.selected_marks.length - 1; i++) {
-                let nextMarkRect = marks.selected_marks[i].getBoundingClientRect();
-                let isShared = getSharedAxis(curCluster.concat(curMarkRect)).isShared;
+                let nextMarkRect = marks.selected_marks[i + 1].getBoundingClientRect();
+                let isShared = getSharedAxis(curCluster.concat(nextMarkRect))
                 let sharedAxis = getSharedAxis(curCluster);
 
                 if (sharedAxis.hasOwnProperty('coord')) {
