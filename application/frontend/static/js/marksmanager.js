@@ -351,6 +351,10 @@
                         relativeCoords.marky = sharedAxis.coord - refParentRect.top;
                     }
                 }
+                if (curCluster.length === 1) {
+                    relativeCoords.markx = curCluster[0].left - refParentRect.left + curCluster[0].width/2;
+                    relativeCoords.marky = curCluster[0].top - refParentRect.top + curCluster[0].height;
+                }
                 d3.select(self.textVisOverlay).append("line")
 
                     .attr("class", "line_" + id)
