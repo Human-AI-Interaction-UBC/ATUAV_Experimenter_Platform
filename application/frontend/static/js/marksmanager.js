@@ -296,70 +296,35 @@
         relativeCoords.refLeft = refRect.left - refParentRect.left;
 
         let marks = self.getSelectedMarks(tuple_ids);
-        // if (marks.selected_marks.length > 1) {
-        	let curCluster = [];
-            let prevMarkRect = marks.selected_marks[0].getBoundingClientRect();
-            curCluster.push(prevMarkRect);
-        	for (let i = 1; i < marks.selected_marks.length; i++) {
-        		let curMarkRect = marks.selected_marks[i].getBoundingClientRect();
-        		let isShared = getSharedAxis(curCluster.concat(curMarkRect)).isShared;
-        		let sharedAxis = getSharedAxis(curCluster);
+        let curCluster = [];
+        let prevMarkRect = marks.selected_marks[0].getBoundingClientRect();
+        curCluster.push(prevMarkRect);
+        for (let i = 1; i < marks.selected_marks.length; i++) {
+            let curMarkRect = marks.selected_marks[i].getBoundingClientRect();
+            let isShared = getSharedAxis(curCluster.concat(curMarkRect)).isShared;
+            let sharedAxis = getSharedAxis(curCluster);
 
-                if (sharedAxis.hasOwnProperty('coord')) {
-                    if (sharedAxis.axis === 'x') {
-                        relativeCoords.markx = sharedAxis.coord - refParentRect.left;
-                        relativeCoords.marky = (sharedAxis.min + sharedAxis.max)/2 - refParentRect.top;
-                    } else {
-                        relativeCoords.markx = (sharedAxis.min + sharedAxis.max)/2 - refParentRect.left;
-                        relativeCoords.marky = sharedAxis.coord - refParentRect.top;
-                    }
+            if (sharedAxis.hasOwnProperty('coord')) {
+                if (sharedAxis.axis === 'x') {
+                    relativeCoords.markx = sharedAxis.coord - refParentRect.left;
+                    relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
+                } else {
+                    relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
+                    relativeCoords.marky = sharedAxis.coord - refParentRect.top;
                 }
+            }
 
-        		if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !isShared) {
-                    self.strokeWidth = 1;
-                    if (curCluster.length === 1) {
-                    	relativeCoords.markx = prevMarkRect.left - refParentRect.left + prevMarkRect.width/2;
-                    	relativeCoords.marky = prevMarkRect.top - refParentRect.top + prevMarkRect.height;
-					}
-
-                    d3.select(self.textVisOverlay).append("line")
-
-                        .attr("class", "line_" + id)
-                        .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
-                        .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height/2)
-                        .style("stroke", "red")
-                        .style("stroke-dasharray", ("3, 3"))
-                        .style("opacity", 0)
-                        .style("stroke-width", self.strokeWidth)
-                        .transition()
-                        .duration(transition_in)
-                        .style("opacity", 1);
-                    curCluster = [];
-				}
-                curCluster.push(curMarkRect);
-        		prevMarkRect = curMarkRect;
-			}
-            if (curCluster.length > 0) {
-                let sharedAxis = getSharedAxis(curCluster);
-
-                if (sharedAxis.hasOwnProperty('coord')) {
-                    if (sharedAxis.axis === 'x') {
-                        relativeCoords.markx = sharedAxis.coord - refParentRect.left;
-                        relativeCoords.marky = (sharedAxis.min + sharedAxis.max)/2 - refParentRect.top;
-                    } else {
-                        relativeCoords.markx = (sharedAxis.min + sharedAxis.max)/2 - refParentRect.left;
-                        relativeCoords.marky = sharedAxis.coord - refParentRect.top;
-                    }
-                }
+            if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !isShared) {
+                self.strokeWidth = 1;
                 if (curCluster.length === 1) {
-                    relativeCoords.markx = curCluster[0].left - refParentRect.left + curCluster[0].width/2;
-                    relativeCoords.marky = curCluster[0].top - refParentRect.top + curCluster[0].height;
+                    relativeCoords.markx = prevMarkRect.left - refParentRect.left + prevMarkRect.width / 2;
+                    relativeCoords.marky = prevMarkRect.top - refParentRect.top + prevMarkRect.height;
                 }
-                d3.select(self.textVisOverlay).append("line")
 
+                d3.select(self.textVisOverlay).append("line")
                     .attr("class", "line_" + id)
                     .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
-                    .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height/2)
+                    .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
                     .style("stroke", "red")
                     .style("stroke-dasharray", ("3, 3"))
                     .style("opacity", 0)
@@ -367,27 +332,39 @@
                     .transition()
                     .duration(transition_in)
                     .style("opacity", 1);
+                curCluster = [];
             }
+            curCluster.push(curMarkRect);
+            prevMarkRect = curMarkRect;
+        }
+        if (curCluster.length > 0) {
+            let sharedAxis = getSharedAxis(curCluster);
 
-		// } else {
-        //     let markRect = marks.selected_marks[0].getBoundingClientRect();
-        //     relativeCoords.markLeft = markRect.left - refParentRect.left;
-        //     relativeCoords.markTop = markRect.top - refParentRect.top;
-        //     self.strokeWidth = 1;
-		//
-        //     d3.select(self.textVisOverlay).append("line")
-		//
-        //         .attr("class", "line_" + id)
-        //         .attr("x2", relativeCoords.markLeft + markRect.width/2).attr("y2", markRect.height + relativeCoords.markTop)
-        //         .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height/2)
-        //         .style("stroke", "red")
-        //         .style("stroke-dasharray", ("3, 3"))
-        //         .style("opacity", 0)
-        //         .style("stroke-width", self.strokeWidth)
-        //         .transition()
-        //         .duration(transition_in)
-        //         .style("opacity", 1);
-        // }
+            if (curCluster.length === 1) {
+                relativeCoords.markx = curCluster[0].left - refParentRect.left + curCluster[0].width / 2;
+                relativeCoords.marky = curCluster[0].top - refParentRect.top + curCluster[0].height;
+            } else if (sharedAxis.hasOwnProperty('coord')) {
+                if (sharedAxis.axis === 'x') {
+                    relativeCoords.markx = sharedAxis.coord - refParentRect.left;
+                    relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
+                } else {
+                    relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
+                    relativeCoords.marky = sharedAxis.coord - refParentRect.top;
+                }
+            }
+            
+            d3.select(self.textVisOverlay).append("line")
+                .attr("class", "line_" + id)
+                .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
+                .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
+                .style("stroke", "red")
+                .style("stroke-dasharray", ("3, 3"))
+                .style("opacity", 0)
+                .style("stroke-width", self.strokeWidth)
+                .transition()
+                .duration(transition_in)
+                .style("opacity", 1);
+        }
     };
 
     function areMarksAdjacent (prevMark, curMark, threshold) {
