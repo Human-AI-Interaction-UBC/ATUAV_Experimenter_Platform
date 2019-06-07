@@ -112,9 +112,9 @@ class EMDATComponent(DetectionComponent):
         features_dictionary['length_invalid'] = 0
 		# Pupil features
         features_dictionary['numpupilsizes']    	    = 0
-        features_dictionary['numpupilvelocity']		= 0
+        features_dictionary['numpupilvelocity']		   = 0
         features_dictionary['meanpupilsize'] 			= -1
-        features_dictionary['stddevpupilsize'] 		= -1
+        features_dictionary['stddevpupilsize'] 		    = -1
         features_dictionary['maxpupilsize'] 			= -1
         features_dictionary['minpupilsize'] 			= -1
         features_dictionary['startpupilsize'] 			= -1
@@ -135,13 +135,13 @@ class EMDATComponent(DetectionComponent):
         features_dictionary['startdistance'] 			= -1
         features_dictionary['enddistance'] 				= -1
 		# Path features
-        features_dictionary['numfixdistances'] 		= 0
+        features_dictionary['numfixdistances'] 		    = 0
         features_dictionary['numabsangles'] 			= 0
         features_dictionary['numrelangles'] 			= 0
         features_dictionary['meanpathdistance'] 		= -1
-        features_dictionary['sumpathdistance'] 		= -1
+        features_dictionary['sumpathdistance'] 		    = -1
         features_dictionary['stddevpathdistance'] 		= -1
-        features_dictionary['eyemovementvelocity'] 	= -1
+        features_dictionary['eyemovementvelocity']  	= -1
         features_dictionary['sumabspathangles'] 		= -1
         features_dictionary['abspathanglesrate'] 		= -1
         features_dictionary['meanabspathangles']		= -1
@@ -157,6 +157,21 @@ class EMDATComponent(DetectionComponent):
         features_dictionary['stddevfixationduration'] 	= -1
         features_dictionary['sumfixationduration'] 	= -1
         features_dictionary['fixationrate'] 			= -1
+        # Event features
+        features_dictionary['numevents']                      = 0
+        features_dictionary['numleftclic']                    = 0
+        features_dictionary['numrightclic']                   = 0
+        features_dictionary['numdoubleclic']                  = 0
+        features_dictionary['numkeypressed']                  = 0
+        features_dictionary['leftclicrate']                   = -1
+        features_dictionary['rightclicrate']                  = -1
+        features_dictionary['doubleclicrate']                 = -1
+        features_dictionary['keypressedrate']                 = -1
+#        features_dictionary['timetofirstleftclic']            = -1
+#        features_dictionary['timetofirstrightclic']           = -1
+#        features_dictionary['timetofirstdoubleclic'] = doublec[0].timestamp if len(doublec) > 0 else -1
+#        features_dictionary['timetofirstkeypressed'] = keyp[0].timestamp if len(keyp) > 0 else -1
+
         for aoi in self.AOIS.keys():
             features_dictionary[aoi] = {}
             features_dictionary[aoi]['numfixations'] 			    = 0
@@ -175,8 +190,8 @@ class EMDATComponent(DetectionComponent):
             features_dictionary[aoi]['minpupilsize']               = -1
             features_dictionary[aoi]['startpupilsize']             = -1
             features_dictionary[aoi]['endpupilsize']               = -1
-            features_dictionary[aoi]['startpupilvelocity']             = -1
-            features_dictionary[aoi]['endpupilvelocity']               = -1
+            features_dictionary[aoi]['startpupilvelocity']         = -1
+            features_dictionary[aoi]['endpupilvelocity']           = -1
 
             features_dictionary[aoi]['meanpupilvelocity']          = -1
             features_dictionary[aoi]['stddevpupilvelocity']        = -1
@@ -193,6 +208,16 @@ class EMDATComponent(DetectionComponent):
             features_dictionary[aoi]['startdistance']              = -1
             features_dictionary[aoi]['enddistance']                = -1
             features_dictionary[aoi]['total_trans_from']           = 0
+
+            features_dictionary[aoi]['numevents']                  = 0
+            features_dictionary[aoi]['numleftclic']                = 0
+            features_dictionary[aoi]['numrightclic']               = 0
+            features_dictionary[aoi]['numdoubleclic']              = 0
+            features_dictionary[aoi]['numkeypressed']              = 0
+            features_dictionary[aoi]['leftclicrate']               = -1
+            features_dictionary[aoi]['rightclicrate']              = -1
+            features_dictionary[aoi]['doubleclicrate']             = -1
+            features_dictionary[aoi]['keypressedrate']             = -1
 
             for cur_aoi in self.AOIS.keys():
                 features_dictionary[aoi]['numtransfrom_%s'%(cur_aoi)] = 0
