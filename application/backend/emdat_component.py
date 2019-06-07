@@ -21,6 +21,7 @@ class EMDATComponent(DetectionComponent):
         self.dist_idx   = 0
         self.fix_idx    = 0
         self.x_y_idx    = 0
+        self.mouse_idx  = 0
         self.id = 1
         self.AOIS = self.application_state_controller.getEmdatAoiMapping()
         print(self.AOIS)
@@ -89,7 +90,7 @@ class EMDATComponent(DetectionComponent):
         all_aoi_time = time.time()
         """ calculate AOIs features """
 
-        self.calc_aoi_features()# rest_pupil_size, export_pupilinfo)
+        self.calc_aoi_features() rest_pupil_size, export_pupilinfo)
         all_merging_time = time.time()
         if (params.KEEP_TASK_FEATURES and params.KEEP_GLOBAL_FEATURES):
             self.merge_features(self.emdat_interval_features, self.emdat_task_features)
@@ -344,6 +345,57 @@ class EMDATComponent(DetectionComponent):
             self.emdat_interval_features['numfixdistances'] = numfixdistances
             self.emdat_interval_features['numabsangles'] = numabsangles
             self.emdat_interval_features['numrelangles'] = numrelangles
+
+    def calc_event_features(self, event_data):
+        """ Calculates event features such as
+                numevents:                number of events in the segment
+                numleftclic:              number of left clinks in the segment
+                numrightclic:             number of right clinks in the segment
+                numdoubleclic:            number of double clinks in the segment
+                numkeypressed:            number of times a key was pressed in the segment
+                leftclicrate:             the rate of left clicks (relative to all datapoints) in this segment
+                rightclicrate:            the rate of right clicks (relative to all datapoints) in this segment
+                doubleclicrate:           the rate of double clicks (relative to all datapoints) in this segment
+                keypressedrate:           the rate of key presses (relative to all datapoints) in this segment
+                timetofirstleftclic:      time until the first left click in this segment
+                timetofirstrightclic:     time until the first right click in this segment
+                timetofirstdoubleclic:    time until the first double click in this segment
+                timetofirstkeypressed:    time until the first key pressed in this segment
+            Args:
+                event_data: The list of events for this Segment
+        """
+        if event_data != None:
+            (leftc, rightc, doublec, keyp) = generate_event_lists(event_data)
+
+            self.numevents = len(leftc)+len(rightc)+len(doublec)+len(keyp)
+            self.features['numevents'] = self.numevents
+            self.features['numleftclic'] = len(leftc)
+            self.features['numrightclic'] = len(rightc)
+            self.features['numdoubleclic'] = len(doublec)
+            self.features['numkeypressed'] = len(keyp)
+            self.features['leftclicrate'] = float(len(leftc))/(self.length - self.length_invalid)
+            self.features['rightclicrate'] = float(len(rightc))/(self.length - self.length_invalid)
+            self.features['doubleclicrate'] = float(len(doublec))/(self.length - self.length_invalid)
+            self.features['keypressedrate'] = float(len(keyp))/(self.length - self.length_invalid)
+            self.features['timetofirstleftclic'] = leftc[0].timestamp if len(leftc) > 0 else -1
+            self.features['timetofirstrightclic'] = rightc[0].timestamp if len(rightc) > 0 else -1
+            self.features['timetofirstdoubleclic'] = doublec[0].timestamp if len(doublec) > 0 else -1
+            self.features['timetofirstkeypressed'] = keyp[0].timestamp if len(keyp) > 0 else -1
+        else:
+            self.features['numevents'] = 0
+            self.features['numleftclic'] = 0
+            self.features['numrightclic'] = 0
+            self.features['numdoubleclic'] = 0
+            self.features['numkeypressed'] = 0
+            self.features['leftclicrate'] = -1
+            self.features['rightclicrate'] = -1
+            self.features['doubleclicrate'] = -1
+            self.features['keypressedrate'] = -1
+            self.features['timetofirstleftclic'] = -1
+            self.features['timetofirstrightclic'] = -1
+            self.features['timetofirstdoubleclic'] = -1
+            self.features['timetofirstkeypressed'] = -1
+
 
     def calc_validity_gaps(self):
         """
