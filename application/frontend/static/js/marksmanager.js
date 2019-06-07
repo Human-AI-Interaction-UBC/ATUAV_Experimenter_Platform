@@ -298,12 +298,67 @@
         let marks = self.getSelectedMarks(tuple_ids);
         if (marks.selected_marks.length > 1) {
         	let curCluster = [];
-            let prevMarkRect = marks.selected_marks[0].getBoundingClientRect();
-            curCluster.push(prevMarkRect);
-        	for (let i = 1; i < marks.selected_marks.length; i++) {
-        		let curMarkRect = marks.selected_marks[i].getBoundingClientRect();
-        		let isShared = getSharedAxis(curCluster.concat(curMarkRect)).isShared;
-        		let sharedAxis = getSharedAxis(curCluster);
+            // let prevMarkRect = marks.selected_marks[0].getBoundingClientRect();
+            // curCluster.push(prevMarkRect);
+        	// for (let i = 1; i < marks.selected_marks.length; i++) {
+        	// 	let curMarkRect = marks.selected_marks[i].getBoundingClientRect();
+        	// 	let isShared = getSharedAxis(curCluster.concat(curMarkRect)).isShared;
+        	// 	let sharedAxis = getSharedAxis(curCluster);
+			//
+            //     if (sharedAxis.hasOwnProperty('coord')) {
+            //         if (sharedAxis.axis === 'x') {
+            //             relativeCoords.markx = sharedAxis.coord - refParentRect.left;
+            //             relativeCoords.marky = (sharedAxis.min + sharedAxis.max)/2 - refParentRect.top;
+            //         } else {
+            //             relativeCoords.markx = (sharedAxis.min + sharedAxis.max)/2 - refParentRect.left;
+            //             relativeCoords.marky = sharedAxis.coord - refParentRect.top;
+            //         }
+            //     }
+			//
+        	// 	if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !isShared) {
+            //         self.strokeWidth = 1;
+            //         if (curCluster.length === 1) {
+            //         	relativeCoords.markx = curMarkRect.left - refParentRect.left + curMarkRect.width/2;
+            //         	relativeCoords.marky = curMarkRect.top - refParentRect.top + curMarkRect.height;
+			// 		}
+			//
+            //         d3.select(self.textVisOverlay).append("line")
+			//
+            //             .attr("class", "line_" + id)
+            //             .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
+            //             .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height/2)
+            //             .style("stroke", "red")
+            //             .style("stroke-dasharray", ("3, 3"))
+            //             .style("opacity", 0)
+            //             .style("stroke-width", self.strokeWidth)
+            //             .transition()
+            //             .duration(transition_in)
+            //             .style("opacity", 1);
+            //         curCluster = [];
+			// 	}
+            //     curCluster.push(curMarkRect);
+            //     if (curCluster.length === marks.selected_marks.length) {
+            //         d3.select(self.textVisOverlay).append("line")
+			//
+            //             .attr("class", "line_" + id)
+            //             .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
+            //             .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height/2)
+            //             .style("stroke", "red")
+            //             .style("stroke-dasharray", ("3, 3"))
+            //             .style("opacity", 0)
+            //             .style("stroke-width", self.strokeWidth)
+            //             .transition()
+            //             .duration(transition_in)
+            //             .style("opacity", 1);
+            //     }
+        	// 	prevMarkRect = curMarkRect;
+			// }
+
+			let curMarkRect = marks.selected_marks[0].getBoundingClientRect();
+            for (let i = 0; i < marks.selected_marks.length - 1; i++) {
+                let nextMarkRect = marks.selected_marks[i].getBoundingClientRect();
+                let isShared = getSharedAxis(curCluster.concat(curMarkRect)).isShared;
+                let sharedAxis = getSharedAxis(curCluster);
 
                 if (sharedAxis.hasOwnProperty('coord')) {
                     if (sharedAxis.axis === 'x') {
@@ -315,12 +370,12 @@
                     }
                 }
 
-        		if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !isShared) {
+                if (!areMarksAdjacent(curMarkRect, nextMarkRect, 20) || !isShared) {
                     self.strokeWidth = 1;
                     if (curCluster.length === 1) {
-                    	relativeCoords.markx = curMarkRect.left - refParentRect.left + curMarkRect.width/2;
-                    	relativeCoords.marky = curMarkRect.top - refParentRect.top + curMarkRect.height;
-					}
+                        relativeCoords.markx = curMarkRect.left - refParentRect.left + curMarkRect.width/2;
+                        relativeCoords.marky = curMarkRect.top - refParentRect.top + curMarkRect.height;
+                    }
 
                     d3.select(self.textVisOverlay).append("line")
 
@@ -335,7 +390,7 @@
                         .duration(transition_in)
                         .style("opacity", 1);
                     curCluster = [];
-				}
+                }
                 curCluster.push(curMarkRect);
                 if (curCluster.length === marks.selected_marks.length) {
                     d3.select(self.textVisOverlay).append("line")
@@ -351,8 +406,8 @@
                         .duration(transition_in)
                         .style("opacity", 1);
                 }
-        		prevMarkRect = curMarkRect;
-			}
+                curMarkRect = nextMarkRect;
+            }
 
 		} else {
             let markRect = marks.selected_marks[0].getBoundingClientRect();
