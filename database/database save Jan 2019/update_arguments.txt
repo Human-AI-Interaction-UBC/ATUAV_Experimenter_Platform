@@ -1,0 +1,22 @@
+--UPDATE intervention
+--SET arguments = replace(arguments, 'red', 'black')
+
+--UPDATE intervention
+--SET arguments = replace(arguments, '"desat": true', '"desat": false')
+
+--UPDATE intervention
+--SET arguments = replace(arguments, 'bold_thickness": 1', 'bold_thickness": 2')
+
+--SELECT name, delivery_sql_condition, intervention_name, active_retrigger
+--                                        FROM rule, rule_task, rule_delivery_trigger, rule_intervention_payload
+--                                        WHERE  rule.name = rule_task.rule_name and rule_task.task = 3
+--                                        and rule.name = rule_intervention_payload.rule_name
+--                                        and rule.name = rule_delivery_trigger.rule_name
+
+--UPDATE intervention
+--SET transition_in = 1500;
+--UPDATE intervention
+--SET transition_out = 1500
+
+UPDATE rule_delivery_trigger
+SET trigger_other_removal = replace(trigger_other_removal, ', ', ',')

@@ -5,7 +5,6 @@
 *.ipynb_checkpoints
 /static/data_updated
 
-/database
 /log
 database.db
 tobii_binder
