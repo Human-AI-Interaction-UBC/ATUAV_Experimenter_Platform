@@ -68,12 +68,14 @@ class MouseKeyboardEventDetector(DetectionComponent):
         self.cur_doubleclick_event_id = 0
         self.keyboard_event_id = 0
         self.last_release = None
-        self.run_mouse_checks = True        
+        self.run_mouse_checks = True
         IOLoop.instance().add_callback(callback = self.notify_app_state_controller)
         self.AOIS = self.application_state_controller.getMouseAoiMapping()
         print("AOIS in mouse: ", self.AOIS)
         for listener in self.listeners:
             listener.start()
+        IOLoop.instance().add_callback(callback = self.notify_app_state_controller)
+
 
     def on_click(self, x, y, button, pressed):
         print('{0} at {1}'.format( 'Pressed' if pressed else 'Released', (x, y)))
