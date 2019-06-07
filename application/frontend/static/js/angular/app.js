@@ -613,6 +613,7 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     if (args.highlight) {
         sm.createSpans([refToHighlight], function(elem, _) {
             elem.setAttribute('class', 'text-highlight');
+            elem.setAttribute('id', 'refAOI');
         });
     }
 

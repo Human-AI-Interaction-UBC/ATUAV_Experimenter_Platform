@@ -296,7 +296,7 @@
         relativeCoords.refLeft = refRect.left - refParentRect.left;
 
         let marks = self.getSelectedMarks(tuple_ids);
-        if (marks.selected_marks.length > 1) {
+        // if (marks.selected_marks.length > 1) {
         	let curCluster = [];
             let prevMarkRect = marks.selected_marks[0].getBoundingClientRect();
             curCluster.push(prevMarkRect);
@@ -369,25 +369,25 @@
                     .style("opacity", 1);
             }
 
-		} else {
-            let markRect = marks.selected_marks[0].getBoundingClientRect();
-            relativeCoords.markLeft = markRect.left - refParentRect.left;
-            relativeCoords.markTop = markRect.top - refParentRect.top;
-            self.strokeWidth = 1;
-
-            d3.select(self.textVisOverlay).append("line")
-
-                .attr("class", "line_" + id)
-                .attr("x2", relativeCoords.markLeft + markRect.width/2).attr("y2", markRect.height + relativeCoords.markTop)
-                .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height/2)
-                .style("stroke", "red")
-                .style("stroke-dasharray", ("3, 3"))
-                .style("opacity", 0)
-                .style("stroke-width", self.strokeWidth)
-                .transition()
-                .duration(transition_in)
-                .style("opacity", 1);
-        }
+		// } else {
+        //     let markRect = marks.selected_marks[0].getBoundingClientRect();
+        //     relativeCoords.markLeft = markRect.left - refParentRect.left;
+        //     relativeCoords.markTop = markRect.top - refParentRect.top;
+        //     self.strokeWidth = 1;
+		//
+        //     d3.select(self.textVisOverlay).append("line")
+		//
+        //         .attr("class", "line_" + id)
+        //         .attr("x2", relativeCoords.markLeft + markRect.width/2).attr("y2", markRect.height + relativeCoords.markTop)
+        //         .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height/2)
+        //         .style("stroke", "red")
+        //         .style("stroke-dasharray", ("3, 3"))
+        //         .style("opacity", 0)
+        //         .style("stroke-width", self.strokeWidth)
+        //         .transition()
+        //         .duration(transition_in)
+        //         .style("opacity", 1);
+        // }
     };
 
     function areMarksAdjacent (prevMark, curMark, threshold) {
@@ -409,16 +409,16 @@
 
     		if (shared.hasOwnProperty('axis')) {
     			if (shared.axis === 'x') {
-                    shared.min = cur.top < shared.min ? cur.top : shared.min;
-                    shared.max = cur.bottom > shared.max ? cur.bottom : shared.max;
+                    shared.min = Math.min(cur.top, shared.min);
+                    shared.max = Math.max(cur.bottom, shared.max);
     				if (!(prev.left - cur.left === 0 || prev.right - cur.right === 0)) {
     					// NO shared axis
 						shared.isShared = false;
 						return shared;
 					}
 				} else if (shared.axis === 'y') {
-                    shared.min = cur.left < shared.min ? cur.left : shared.min;
-                    shared.max = cur.right > shared.max ? cur.right : shared.max;
+                    shared.min = Math.min(cur.left, shared.min);
+                    shared.max = Math.max(cur.right, shared.max);
                     if (!(prev.top - cur.top === 0 || prev.bottom - cur.bottom === 0)) {
                         // NO shared axis
                         shared.isShared = false;
@@ -429,23 +429,23 @@
                 if (cur.top - prev.top === 0) {
                     shared.coord = cur.top;
                     shared.axis = 'y';
-                    shared.min = cur.left < prev.left ? cur.left : prev.left;
-                    shared.max = cur.right > prev.right ? cur.right : prev.right;
+                    shared.min = Math.min(cur.left, prev.left);
+                    shared.max = Math.max(cur.right, prev.right);
                 } else if (cur.bottom - prev.bottom === 0) {
                     shared.coord = cur.bottom;
                     shared.axis = 'y';
-                    shared.min = cur.left < prev.left ? cur.left : prev.left;
-                    shared.max = cur.right > prev.right ? cur.right : prev.right;
+                    shared.min = Math.min(cur.left, prev.left);
+                    shared.max = Math.max(cur.right, prev.right);
                 } else if (cur.left - prev.left === 0) {
                     shared.coord = cur.left;
                     shared.axis = 'x';
-                    shared.min = cur.top < prev.top ? cur.top : prev.top;
-                    shared.max = cur.bottom > prev.bottom ? cur.bottom : prev.bottom;
+                    shared.min = Math.min(cur.top, prev.top);
+                    shared.max = Math.max(cur.bottom, prev.bottom);
                 } else if (cur.right - prev.right === 0) {
                     shared.coord = cur.right;
                     shared.axis = 'x';
-                    shared.min = cur.top < prev.top ? cur.top : prev.top;
-                    shared.max = cur.bottom > prev.bottom ? cur.bottom : prev.bottom;
+                    shared.min = Math.min(cur.top, prev.top);
+                    shared.max = Math.max(cur.bottom, prev.bottom);
                 } else {
                 	// NO shared axis
                     shared.isShared = false;
