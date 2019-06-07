@@ -411,7 +411,7 @@
     			if (shared.axis === 'x') {
                     shared.min = cur.top < shared.min ? cur.top : shared.min;
                     shared.max = cur.bottom > shared.max ? cur.bottom : shared.max;
-    				if (!(prev.left - cur.left === 0 && prev.right - cur.right === 0)) {
+    				if (!(prev.left - cur.left === 0 || prev.right - cur.right === 0)) {
     					// NO shared axis
 						shared.isShared = false;
 						return shared;
@@ -419,7 +419,7 @@
 				} else if (shared.axis === 'y') {
                     shared.min = cur.left < shared.min ? cur.left : shared.min;
                     shared.max = cur.right > shared.max ? cur.right : shared.max;
-                    if (!(prev.top - cur.top === 0 && prev.bottom - cur.bottom === 0)) {
+                    if (!(prev.top - cur.top === 0 || prev.bottom - cur.bottom === 0)) {
                         // NO shared axis
                         shared.isShared = false;
                         return shared;
@@ -429,23 +429,23 @@
                 if (cur.top - prev.top === 0) {
                     shared.coord = cur.top;
                     shared.axis = 'y';
-                    shared.min = cur.left;
-                    shared.max = cur.right;
+                    shared.min = cur.left < prev.left ? cur.left : prev.left;
+                    shared.max = cur.right > prev.right ? cur.right : prev.right;
                 } else if (cur.bottom - prev.bottom === 0) {
                     shared.coord = cur.bottom;
                     shared.axis = 'y';
-                    shared.min = cur.left;
-                    shared.max = cur.right;
+                    shared.min = cur.left < prev.left ? cur.left : prev.left;
+                    shared.max = cur.right > prev.right ? cur.right : prev.right;
                 } else if (cur.left - prev.left === 0) {
                     shared.coord = cur.left;
                     shared.axis = 'x';
-                    shared.min = cur.top;
-                    shared.max = cur.bottom;
+                    shared.min = cur.top < prev.top ? cur.top : prev.top;
+                    shared.max = cur.bottom > prev.bottom ? cur.bottom : prev.bottom;
                 } else if (cur.right - prev.right === 0) {
                     shared.coord = cur.right;
                     shared.axis = 'x';
-                    shared.min = cur.top;
-                    shared.max = cur.bottom;
+                    shared.min = cur.top < prev.top ? cur.top : prev.top;
+                    shared.max = cur.bottom > prev.bottom ? cur.bottom : prev.bottom;
                 } else {
                 	// NO shared axis
                     shared.isShared = false;
