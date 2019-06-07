@@ -318,8 +318,8 @@
         		if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !isShared) {
                     self.strokeWidth = 1;
                     if (curCluster.length === 1) {
-                    	relativeCoords.markx = curMarkRect.left - refParentRect.left + curMarkRect.width/2;
-                    	relativeCoords.marky = curMarkRect.top - refParentRect.top + curMarkRect.height;
+                    	relativeCoords.markx = prevMarkRect.left - refParentRect.left + prevMarkRect.width/2;
+                    	relativeCoords.marky = prevMarkRect.top - refParentRect.top + prevMarkRect.height;
 					}
 
                     d3.select(self.textVisOverlay).append("line")
