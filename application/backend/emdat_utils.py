@@ -100,6 +100,56 @@ def merge_distance_features(part_features, accumulator_features):
         if (part_features['enddistance'] != -1):
             accumulator_features['enddistance'] = part_features['enddistance']
 
+def merge_event_data(part_features, accumulator_features):
+    """ Merge event features such as
+            numevents:                number of events in the segment
+            numleftclic:              number of left clinks in the segment
+            numrightclic:             number of right clinks in the segment
+            numdoubleclic:            number of double clinks in the segment
+            numkeypressed:            number of times a key was pressed in the segment
+            leftclicrate:             the rate of left clicks (relative to all datapoints) in this segment
+            rightclicrate:            the rate of right clicks (relative to all datapoints) in this segment
+            doubleclicrate:           the rate of double clicks (relative to all datapoints) in this segment
+            keypressedrate:           the rate of key presses (relative to all datapoints) in this segment
+            timetofirstleftclic:      time until the first left click in this segment
+            timetofirstrightclic:     time until the first right click in this segment
+            timetofirstdoubleclic:    time until the first double click in this segment
+            timetofirstkeypressed:    time until the first key pressed in this segment
+        Args:
+            event_data: The list of events for this Scene
+            segments: The list of Segments for this Scene with pre-calculated features
+    """
+
+    if event_data != None:
+        self.features['numevents'] = sumfeat(segments,'numevents')
+        self.features['numleftclic'] = sumfeat(segments,"features['numleftclic']")
+        self.features['numrightclic'] = sumfeat(segments, "features['numrightclic']")
+        self.features['numdoubleclic'] = sumfeat(segments, "features['numdoubleclic']")
+        self.features['numkeypressed'] = sumfeat(segments, "features['numkeypressed']")
+        self.features['leftclicrate'] = float(self.features['numleftclic'])/(self.length - self.length_invalid)
+        self.features['rightclicrate'] = float(self.features['numrightclic'])/(self.length - self.length_invalid)
+        self.features['doubleclicrate'] = float(self.features['numdoubleclic'])/(self.length - self.length_invalid)
+        self.features['keypressedrate'] = float(self.features['numkeypressed'])/(self.length - self.length_invalid)
+        self.features['timetofirstleftclic'] = self.firstseg.features['timetofirstleftclic']
+        self.features['timetofirstrightclic'] = self.firstseg.features['timetofirstrightclic']
+        self.features['timetofirstdoubleclic'] = self.firstseg.features['timetofirstdoubleclic']
+        self.features['timetofirstkeypressed'] = self.firstseg.features['timetofirstkeypressed']
+    else:
+        self.features['numevents'] = 0
+        self.features['numleftclic'] = 0
+        self.features['numrightclic'] = 0
+        self.features['numdoubleclic'] = 0
+        self.features['numkeypressed'] = 0
+        self.features['leftclicrate'] = -1
+        self.features['rightclicrate'] = -1
+        self.features['doubleclicrate'] = -1
+        self.features['keypressedrate'] = -1
+        self.features['timetofirstleftclic'] = -1
+        self.features['timetofirstrightclic'] = -1
+        self.features['timetofirstdoubleclic'] = -1
+        self.features['timetofirstkeypressed'] = -1
+
+
 def merge_aoi_fixations(part_features, accumulator_features, length, total_numfixations_accumulator):
     """
 	   Merges fixation AOI features from part_features into accumulator_features
@@ -330,3 +380,29 @@ def sumfeat(part_features, accumulator_features, feat):
     if (eval('accumulator_features'+feat) != -1):
         sum += eval('accumulator_features'+feat)
     return sum
+
+def generate_event_lists(event_data):
+    """Returns separate list per type of events. Format:
+    Args:
+        event_data: a list of events
+    Returns:
+        lists of left clics, right clics, double clics and keys pressed
+    """
+    leftc = []
+    rightc = []
+    doublec = []
+    drag_drop = []
+    keyp = []
+    for e in event_data:
+        if instanceof(e, KeyboardEvent):
+            keyp.append(e)
+        elif instanceof(e, DragDropMouseEvent):
+            drag_drop.append(e)
+        elif instanceof(e, DoubleClickMouseEvent):
+            double_click.append(e)
+        elif instanceof(e, BasicMouseEvent) and e.left_click:
+            leftc.append(e)
+        else:
+            rightc.append(e)
+
+    return (leftc, rightc, doublec, drag_drop, keyp)

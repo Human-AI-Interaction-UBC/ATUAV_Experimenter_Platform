@@ -112,7 +112,7 @@ class EMDATComponent(DetectionComponent):
         features_dictionary['length_invalid'] = 0
 		# Pupil features
         features_dictionary['numpupilsizes']    	    = 0
-        features_dictionary['numpupilvelocity']		   = 0
+        features_dictionary['numpupilvelocity']		    = 0
         features_dictionary['meanpupilsize'] 			= -1
         features_dictionary['stddevpupilsize'] 		    = -1
         features_dictionary['maxpupilsize'] 			= -1
@@ -120,7 +120,7 @@ class EMDATComponent(DetectionComponent):
         features_dictionary['startpupilsize'] 			= -1
         features_dictionary['endpupilsize'] 			= -1
         features_dictionary['meanpupilvelocity'] 		= -1
-        features_dictionary['stddevpupilvelocity'] 	= -1
+        features_dictionary['stddevpupilvelocity'] 	    = -1
         features_dictionary['maxpupilvelocity'] 		= -1
         features_dictionary['minpupilvelocity'] 		= -1
         features_dictionary['startpupilvelocity'] 		= -1
@@ -130,8 +130,8 @@ class EMDATComponent(DetectionComponent):
         features_dictionary['numdistancedata']			= 0
         features_dictionary['meandistance'] 			= -1
         features_dictionary['stddevdistance'] 			= -1
-        features_dictionary['maxdistance'] 			= -1
-        features_dictionary['mindistance'] 			= -1
+        features_dictionary['maxdistance'] 		       	= -1
+        features_dictionary['mindistance'] 			    = -1
         features_dictionary['startdistance'] 			= -1
         features_dictionary['enddistance'] 				= -1
 		# Path features
@@ -149,23 +149,25 @@ class EMDATComponent(DetectionComponent):
         features_dictionary['sumrelpathangles'] 		= -1
         features_dictionary['relpathanglesrate'] 		= -1
         features_dictionary['meanrelpathangles']		= -1
-        features_dictionary['stddevrelpathangles']     = -1
+        features_dictionary['stddevrelpathangles']      = -1
 		# Fixation features
         features_dictionary['numfixations'] 			= 0
         features_dictionary['fixationrate'] 			= -1
         features_dictionary['meanfixationduration'] 	= -1
         features_dictionary['stddevfixationduration'] 	= -1
-        features_dictionary['sumfixationduration'] 	= -1
+        features_dictionary['sumfixationduration'] 	    = -1
         features_dictionary['fixationrate'] 			= -1
         # Event features
         features_dictionary['numevents']                      = 0
         features_dictionary['numleftclic']                    = 0
         features_dictionary['numrightclic']                   = 0
         features_dictionary['numdoubleclic']                  = 0
+        features_dictionary['numdragdrop']                  = 0
         features_dictionary['numkeypressed']                  = 0
         features_dictionary['leftclicrate']                   = -1
         features_dictionary['rightclicrate']                  = -1
         features_dictionary['doubleclicrate']                 = -1
+        features_dictionary['dragdroprate']                 = -1
         features_dictionary['keypressedrate']                 = -1
 #        features_dictionary['timetofirstleftclic']            = -1
 #        features_dictionary['timetofirstrightclic']           = -1
@@ -213,10 +215,12 @@ class EMDATComponent(DetectionComponent):
             features_dictionary[aoi]['numleftclic']                = 0
             features_dictionary[aoi]['numrightclic']               = 0
             features_dictionary[aoi]['numdoubleclic']              = 0
+            features_dictionary[aoi]['numdragdrop']                = 0
             features_dictionary[aoi]['numkeypressed']              = 0
             features_dictionary[aoi]['leftclicrate']               = -1
             features_dictionary[aoi]['rightclicrate']              = -1
             features_dictionary[aoi]['doubleclicrate']             = -1
+            features_dictionary[aoi]['dragdroprate']               = -1
             features_dictionary[aoi]['keypressedrate']             = -1
 
             for cur_aoi in self.AOIS.keys():
@@ -372,54 +376,46 @@ class EMDATComponent(DetectionComponent):
             self.emdat_interval_features['numrelangles'] = numrelangles
 
     def calc_event_features(self, event_data):
-        """ Calculates event features such as
-                numevents:                number of events in the segment
-                numleftclic:              number of left clinks in the segment
-                numrightclic:             number of right clinks in the segment
-                numdoubleclic:            number of double clinks in the segment
-                numkeypressed:            number of times a key was pressed in the segment
-                leftclicrate:             the rate of left clicks (relative to all datapoints) in this segment
-                rightclicrate:            the rate of right clicks (relative to all datapoints) in this segment
-                doubleclicrate:           the rate of double clicks (relative to all datapoints) in this segment
-                keypressedrate:           the rate of key presses (relative to all datapoints) in this segment
-                timetofirstleftclic:      time until the first left click in this segment
-                timetofirstrightclic:     time until the first right click in this segment
-                timetofirstdoubleclic:    time until the first double click in this segment
-                timetofirstkeypressed:    time until the first key pressed in this segment
-            Args:
-                event_data: The list of events for this Segment
+        """
+        Called from run(). Calculates event features for the whole screen with new raw
+        Tobii datapoints generated since the last call to run(). Features are stored in
+        emdat_interval_features.
         """
         if event_data != None:
             (leftc, rightc, doublec, keyp) = generate_event_lists(event_data)
 
             self.numevents = len(leftc)+len(rightc)+len(doublec)+len(keyp)
-            self.features['numevents'] = self.numevents
-            self.features['numleftclic'] = len(leftc)
-            self.features['numrightclic'] = len(rightc)
-            self.features['numdoubleclic'] = len(doublec)
-            self.features['numkeypressed'] = len(keyp)
-            self.features['leftclicrate'] = float(len(leftc))/(self.length - self.length_invalid)
-            self.features['rightclicrate'] = float(len(rightc))/(self.length - self.length_invalid)
-            self.features['doubleclicrate'] = float(len(doublec))/(self.length - self.length_invalid)
-            self.features['keypressedrate'] = float(len(keyp))/(self.length - self.length_invalid)
-            self.features['timetofirstleftclic'] = leftc[0].timestamp if len(leftc) > 0 else -1
-            self.features['timetofirstrightclic'] = rightc[0].timestamp if len(rightc) > 0 else -1
-            self.features['timetofirstdoubleclic'] = doublec[0].timestamp if len(doublec) > 0 else -1
-            self.features['timetofirstkeypressed'] = keyp[0].timestamp if len(keyp) > 0 else -1
+            self.emdat_interval_features['numevents'] = self.numevents
+            self.emdat_interval_features['numleftclic'] = len(leftc)
+            self.emdat_interval_features['numrightclic'] = len(rightc)
+            self.emdat_interval_features['numdoubleclic'] = len(doublec)
+            self.emdat_interval_features['numdragdrop'] = len(dragdrop)
+            self.emdat_interval_features['numkeypressed'] = len(keyp)
+            self.emdat_interval_features['leftclicrate'] = float(len(leftc))/(self.length - self.length_invalid)
+            self.emdat_interval_features['rightclicrate'] = float(len(rightc))/(self.length - self.length_invalid)
+            self.emdat_interval_features['doubleclicrate'] = float(len(doublec))/(self.length - self.length_invalid)
+            self.emdat_interval_features['dragdroprate'] = float(len(dragdrop))/(self.length - self.length_invalid)
+            self.emdat_interval_features['keypressedrate'] = float(len(keyp))/(self.length - self.length_invalid)
+#            self.emdat_interval_features['timetofirstleftclic'] = leftc[0].timestamp if len(leftc) > 0 else -1
+#            self.emdat_interval_features['timetofirstrightclic'] = rightc[0].timestamp if len(rightc) > 0 else -1
+#            self.emdat_interval_features['timetofirstdoubleclic'] = doublec[0].timestamp if len(doublec) > 0 else -1
+#            self.emdat_interval_features['timetofirstkeypressed'] = keyp[0].timestamp if len(keyp) > 0 else -1
         else:
-            self.features['numevents'] = 0
-            self.features['numleftclic'] = 0
-            self.features['numrightclic'] = 0
-            self.features['numdoubleclic'] = 0
-            self.features['numkeypressed'] = 0
-            self.features['leftclicrate'] = -1
-            self.features['rightclicrate'] = -1
-            self.features['doubleclicrate'] = -1
-            self.features['keypressedrate'] = -1
-            self.features['timetofirstleftclic'] = -1
-            self.features['timetofirstrightclic'] = -1
-            self.features['timetofirstdoubleclic'] = -1
-            self.features['timetofirstkeypressed'] = -1
+            self.emdat_interval_features['numevents'] = 0
+            self.emdat_interval_features['numleftclic'] = 0
+            self.emdat_interval_features['numrightclic'] = 0
+            self.emdat_interval_features['numdoubleclic'] = 0
+            self.emdat_interval_features['numkeypressed'] = 0
+            self.emdat_interval_features['numdragdrop'] = 0
+            self.emdat_interval_features['leftclicrate'] = -1
+            self.emdat_interval_features['rightclicrate'] = -1
+            self.emdat_interval_features['doubleclicrate'] = -1
+            self.emdat_interval_features['keypressedrate'] = -1
+            self.emdat_interval_features['dragdroprate'] = -1
+#            self.emdat_interval_features['timetofirstleftclic'] = -1
+#            self.emdat_interval_features['timetofirstrightclic'] = -1
+#            self.emdat_interval_features['timetofirstdoubleclic'] = -1
+#            self.emdat_interval_features['timetofirstkeypressed'] = -1
 
 
     def calc_validity_gaps(self):
