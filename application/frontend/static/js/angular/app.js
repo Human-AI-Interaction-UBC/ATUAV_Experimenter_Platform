@@ -526,8 +526,11 @@ function handleDelivery(obj) {
   }
 
   if (func == 'highlightVisAndRef_recency') {
-      console.log('old_activeA:', $scopeGlobal.old_active_interventions)
+      console.log('old_activeA:', $scopeGlobal.old_active_interventions);
       let tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
+      let new_tuple_ids =tuple_ids.filter(function(id) {
+        return !$scopeGlobal.old_active_interventions.includes(id);
+      });
 
       if ($scopeGlobal.old_active_interventions.length > 0){
           //args.color = 'grey'
@@ -537,6 +540,7 @@ function handleDelivery(obj) {
           for (let a_mark of $scopeGlobal.old_active_interventions) {
               //console.log('Attempting to grey:', a_mark)
               $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, args);
+              $scopeGlobal.curMarksManager.removeLines(a_mark);
           }
       }
 
@@ -545,7 +549,7 @@ function handleDelivery(obj) {
       $scopeGlobal.old_active_interventions = [...new Set($scopeGlobal.old_active_interventions)]
       console.log('old_activeB:', $scopeGlobal.old_active_interventions);
 
-      $scopeGlobal.curMarksManager.drawLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, tuple_ids);
+      $scopeGlobal.curMarksManager.drawLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
   }
 
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency
@@ -561,7 +565,6 @@ function handleDelivery(obj) {
       for (let a_mark of $scopeGlobal.old_active_interventions) {
         //console.log('Attempting to grey:', a_mark)
         $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, args);
-        $scopeGlobal.curMarksManager.removeLines(a_mark);
       }
     }
 
