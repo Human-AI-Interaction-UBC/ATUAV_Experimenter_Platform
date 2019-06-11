@@ -518,7 +518,7 @@ function handleDelivery(obj) {
     eval(func)($scopeGlobal.interventions[interventionName], transition_in, args);
 
     //4 lines of CODE ADDED HERE TO GENRATE highlightVisOnly_recency
-    if (func == 'highlightVisOnly_recency') {
+    if (func == 'highlightVisOnly_recency' || func == 'highlightVisAndRef_recency') {
       var index =  $scopeGlobal.old_active_interventions.indexOf(args.id);
       if (index !== -1) $scopeGlobal.old_active_interventions.splice(index, 1);
     }
@@ -526,9 +526,25 @@ function handleDelivery(obj) {
   }
 
   if (func == 'highlightVisAndRef_recency') {
-      let tuple_ids = Object.values($scopeGlobal.interventions).map(function (obj) {
-          return obj.tuple_id
-      });
+      console.log('old_activeA:', $scopeGlobal.old_active_interventions)
+      let tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
+
+      if ($scopeGlobal.old_active_interventions.length > 0){
+          //args.color = 'grey'
+          args.color = '#606060'
+          //args.dash = true
+          //args.bold_thickness = args.bold_thickness/2
+          for (let a_mark of $scopeGlobal.old_active_interventions) {
+              //console.log('Attempting to grey:', a_mark)
+              $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, args);
+          }
+      }
+
+
+      $scopeGlobal.old_active_interventions = $scopeGlobal.old_active_interventions.concat(tuple_ids);
+      $scopeGlobal.old_active_interventions = [...new Set($scopeGlobal.old_active_interventions)]
+      console.log('old_activeB:', $scopeGlobal.old_active_interventions);
+
       $scopeGlobal.curMarksManager.drawLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, tuple_ids);
   }
 
@@ -545,6 +561,7 @@ function handleDelivery(obj) {
       for (let a_mark of $scopeGlobal.old_active_interventions) {
         //console.log('Attempting to grey:', a_mark)
         $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, args);
+        $scopeGlobal.curMarksManager.removeLines(a_mark);
       }
     }
 
