@@ -124,7 +124,7 @@ class MMDWebSocket(ApplicationWebSocket):
                 noSpace = re.sub(r"\s", '', aoi)
                 tabSeparated = re.sub(r"\),\(", '\t', noSpace)
                 bracketsRemoved = re.sub(r"(\)\])|(\[\()", '', tabSeparated)
-                overall += '\t'+ bracketsRemoved
+                overall += '\t'+ bracketsRemoved + ';'
                 bracketsRemoved = ref_name+'\t'+ bracketsRemoved
                 to_write.append(bracketsRemoved)
 
