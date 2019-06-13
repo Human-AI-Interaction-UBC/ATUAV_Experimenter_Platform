@@ -1,6 +1,6 @@
 # Eyetracker type
-EYETRACKER_TYPE = "IS4_Large_Peripheral" # 4C eyetracker
-#EYETRACKER_TYPE = "Tobii T120" # Old eyetracker
+# EYETRACKER_TYPE = "IS4_Large_Peripheral" # 4C eyetracker
+EYETRACKER_TYPE = "Tobii T120" # Old eyetracker
 
 #Pilot condition
 PILOT_CONDITION_TEXT_INTERVENTION = True
@@ -18,7 +18,7 @@ PILOT_MMD_SUBSET = [5]
 USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight.db"
 # GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_and_text.db"
 if PILOT_CONDITION_TEXT_INTERVENTION:
-    GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_and_text_pilot_noremoval.db"
+    GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_text_link_pilot.db"
 else:
     if PILOT_CONDITION_NO_REMOVAL:
         GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_pilot_noremoval_test.db"
