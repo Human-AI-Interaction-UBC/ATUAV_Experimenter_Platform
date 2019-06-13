@@ -551,7 +551,7 @@ function handleDelivery(obj) {
 
       let text_intervention_args = $scopeGlobal.interventions[obj.deliver[0].name].args.text_intervention;
 
-      $scopeGlobal.curMarksManager.drawLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
+      $scopeGlobal.curMarksManager.clusterAndDrawLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
   }
 
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency
@@ -629,9 +629,11 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
 
     // if (args.underline) {
         sm.createSpans([refToHighlight], function(elem, _) {
-          elem.setAttribute('class', 'text-reference');
+          // elem.setAttribute('class', 'text-reference');
           elem.setAttribute('id', 'refAOI');
-          elem.style.border = text_link_args.line_type + " " + text_link_args.line_colour;
+          // elem.style.border = text_link_args.line_type + " " + text_link_args.line_colour;
+          // elem.style.borderBottomWidth = "1px";
+            elem.style.borderBottom = "1px " + text_link_args.line_type + " " + text_link_args.line_colour;
         });
     // }
 
@@ -646,7 +648,7 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
       if (!document.getElementById('textVisContainer')) {
         $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
       // }
-      // $scopeGlobal.curMarksManager.drawLine(transition_in, referenceID.tuple_id, tuple_ids);
+      // $scopeGlobal.curMarksManager.clusterAndDrawLine(transition_in, referenceID.tuple_id, tuple_ids);
     }
 
 }

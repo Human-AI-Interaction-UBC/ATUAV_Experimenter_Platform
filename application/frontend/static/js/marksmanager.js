@@ -286,7 +286,7 @@
         .style("opacity", 1);
   };
 
-    MarksManager.prototype.drawLine = function(transition_in, id, tuple_ids, text_intervention_args){
+    MarksManager.prototype.clusterAndDrawLine = function(transition_in, id, tuple_ids, text_intervention_args){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementById('refAOI');
@@ -322,7 +322,7 @@
                 }
 
                 d3.select(self.textVisOverlay).append("line")
-                    .attr("class", "line_" + id)
+                    .attr("class", "line_" + id + " " + text_intervention_args.link_type)
                     .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                     .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
                     .style("stroke", text_intervention_args.link_colour)
@@ -354,10 +354,9 @@
             }
             
             d3.select(self.textVisOverlay).append("line")
-                .attr("class", "line_" + id)
+                .attr("class", "line_" + id + " " + text_intervention_args.link_type)
                 .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                 .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
-				.attr("class", text_intervention_args.link_type)
                 .style("stroke", text_intervention_args.link_colour)
                 .style("opacity", 0)
                 .style("stroke-width", self.strokeWidth)
