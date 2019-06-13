@@ -549,7 +549,9 @@ function handleDelivery(obj) {
       $scopeGlobal.old_active_interventions = [...new Set($scopeGlobal.old_active_interventions)]
       console.log('old_activeB:', $scopeGlobal.old_active_interventions);
 
-      $scopeGlobal.curMarksManager.drawLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
+      let text_intervention_args = $scopeGlobal.interventions[obj.deliver[0].name].args.text_intervention;
+
+      $scopeGlobal.curMarksManager.drawLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
   }
 
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency
@@ -623,24 +625,27 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     // Create the spans in the text
     let sm = new SpanManager(paragraph);
 
-    if (args.underline) {
+    let text_link_args = args.text_intervention;
+
+    // if (args.underline) {
         sm.createSpans([refToHighlight], function(elem, _) {
           elem.setAttribute('class', 'text-reference');
           elem.setAttribute('id', 'refAOI');
+          elem.style.border = text_link_args.line_type + " " + text_link_args.line_colour;
         });
-    }
+    // }
 
-    if (args.highlight) {
-        sm.createSpans([refToHighlight], function(elem, _) {
-            elem.setAttribute('class', 'text-highlight');
-            elem.setAttribute('id', 'refAOI');
-        });
-    }
+    // if (args.highlight) {
+    //     sm.createSpans([refToHighlight], function(elem, _) {
+    //         elem.setAttribute('class', 'text-highlight');
+    //         elem.setAttribute('id', 'refAOI');
+    //     });
+    // }
 
-    if (args.link) {
+    // if (args.link) {
       if (!document.getElementById('textVisContainer')) {
         $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
-      }
+      // }
       // $scopeGlobal.curMarksManager.drawLine(transition_in, referenceID.tuple_id, tuple_ids);
     }
 

@@ -42,6 +42,13 @@ div {
   /*font-weight: bold;*/
 }
 
+.solid {
+  stroke: solid;
+}
+.dashed {
+  stroke-dasharray: 3,3;
+}
+
 .unselected {
   background-color: #fcfcfc;
   color: #dbdbdb;
