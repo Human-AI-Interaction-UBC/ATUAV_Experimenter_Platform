@@ -252,14 +252,17 @@ class QuestionnaireHandler(tornado.web.RequestHandler):
         self.redirect('/mmd')
 
     def loadMMDQuestions (self):
-        conn = sqlite3.connect('database_questions.db')
+        conn = sqlite3.connect('database_questions_pilot.db')
         query_results = conn.execute('select * from MMD_questions where mmd_id='+str(self.application.cur_mmd))
 
         # hard-coded two questions as they appear in all mmds
         questions = []
         questions.append([self.application.cur_mmd, "1", "The snippet I read was easy to understand.", "Likert", "Subjective"])
 
-        questions.append([self.application.cur_mmd, "2", "I would be interested in reading the full article.", "Likert", "Subjective"])
+        # questions.append([self.application.cur_mmd, "2", "I would be interested in reading the full article.", "Likert", "Subjective"])
+
+        # for pilot only
+        questions.append([self.application.cur_mmd, "2", "The underline and link intervention was helpful.", "Likert", "Subjective"])
 
         questions.extend(query_results.fetchall())
 
