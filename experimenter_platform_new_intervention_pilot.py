@@ -127,7 +127,7 @@ class MainHandler(tornado.web.RequestHandler):
         if(int(q1)==1):
             self.application.mmd_order = [31, 32, 33, 34, 35, 36,
                                           181, 182, 183, 184, 185, 186,
-                                          301, 302, 303, 304, 305, 306]
+                                          281, 282, 283, 284, 285, 286]
             # self.application.mmd_order = [60]
 
             #suffle MMD order
