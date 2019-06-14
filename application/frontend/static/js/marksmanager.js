@@ -296,6 +296,11 @@
         relativeCoords.refLeft = refRect.left - refParentRect.left;
 
         let marks = self.getSelectedMarks(tuple_ids);
+        marks.selected_marks.sort((prev, cur) => {
+        	let prevRect = prev.getBoundingClientRect();
+        	let curRect = cur.getBoundingClientRect();
+        	return prevRect.x === curRect.x ? prev.y - cur.y : prev.x - cur.x;
+		});
         let curCluster = [];
         let prevMarkRect = marks.selected_marks[0].getBoundingClientRect();
         curCluster.push(prevMarkRect);
@@ -317,8 +322,13 @@
             if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !isShared) {
                 self.strokeWidth = 1;
                 if (curCluster.length === 1) {
-                    relativeCoords.markx = prevMarkRect.left - refParentRect.left + prevMarkRect.width / 2;
-                    relativeCoords.marky = prevMarkRect.top - refParentRect.top + prevMarkRect.height;
+                	if (prevMarkRect.width > prevMarkRect.height) {
+                        relativeCoords.markx = prevMarkRect.left - refParentRect.left;
+                        relativeCoords.marky = prevMarkRect.top - refParentRect.top + prevMarkRect.height / 2;
+					} else {
+                        relativeCoords.markx = prevMarkRect.left - refParentRect.left + prevMarkRect.width / 2;
+                        relativeCoords.marky = prevMarkRect.top - refParentRect.top + prevMarkRect.height;
+					}
                 }
 
                 d3.select(self.textVisOverlay).append("line")
