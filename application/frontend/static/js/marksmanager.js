@@ -340,8 +340,15 @@
             let sharedAxis = getSharedAxis(curCluster);
 
             if (curCluster.length === 1) {
-                relativeCoords.markx = curCluster[0].left - refParentRect.left + curCluster[0].width / 2;
-                relativeCoords.marky = curCluster[0].top - refParentRect.top + curCluster[0].height;
+            	let curMark = curCluster[0];
+            	if (curMark.width > curMark.height) {
+                    relativeCoords.markx = curMark.left - refParentRect.left;
+                    relativeCoords.marky = curMark.top - refParentRect.top + curMark.height / 2;
+				} else {
+                    relativeCoords.markx = curMark.left - refParentRect.left + curMark.width / 2;
+                    relativeCoords.marky = curMark.top - refParentRect.top + curMark.height;
+				}
+
             } else if (sharedAxis.hasOwnProperty('coord')) {
                 if (sharedAxis.axis === 'x') {
                     relativeCoords.markx = sharedAxis.coord - refParentRect.left;
