@@ -306,8 +306,8 @@
         curCluster.push(prevMarkRect);
         for (let i = 1; i < marks.selected_marks.length; i++) {
             let curMarkRect = marks.selected_marks[i].getBoundingClientRect();
-            let isShared = getSharedAxis(curCluster.concat(curMarkRect)).isShared;
-            let sharedAxis = getSharedAxis(curCluster);
+            let isShared = getSharedAxis(curCluster.concat(curMarkRect), 10).isShared;
+            let sharedAxis = getSharedAxis(curCluster, 10);
 
             if (sharedAxis.hasOwnProperty('coord')) {
                 if (sharedAxis.axis === 'x') {
@@ -347,7 +347,7 @@
             prevMarkRect = curMarkRect;
         }
         if (curCluster.length > 0) {
-            let sharedAxis = getSharedAxis(curCluster);
+            let sharedAxis = getSharedAxis(curCluster, 10);
 
             if (curCluster.length === 1) {
             	let curMark = curCluster[0];
@@ -387,7 +387,7 @@
 			Math.abs(prevMark.left - curMark.right) < threshold || Math.abs(prevMark.right - curMark.left) < threshold;
 	}
 
-	function getSharedAxis(cluster) {
+	function getSharedAxis(cluster, threshold) {
     	let shared = {};
 
     	if (cluster.length < 2) {
@@ -403,7 +403,7 @@
     			if (shared.axis === 'x') {
                     shared.min = Math.min(cur.top, shared.min);
                     shared.max = Math.max(cur.bottom, shared.max);
-    				if (!(prev.left - cur.left === 0 || prev.right - cur.right === 0)) {
+    				if (!(Math.abs(prev.left - cur.left) < threshold || Math.abs(prev.right - cur.right) < threshold)) {
     					// NO shared axis
 						shared.isShared = false;
 						return shared;
@@ -411,29 +411,29 @@
 				} else if (shared.axis === 'y') {
                     shared.min = Math.min(cur.left, shared.min);
                     shared.max = Math.max(cur.right, shared.max);
-                    if (!(prev.top - cur.top === 0 || prev.bottom - cur.bottom === 0)) {
+                    if (!(Math.abs(prev.top - cur.top) < threshold || Math.abs(prev.bottom - cur.bottom) < threshold)) {
                         // NO shared axis
                         shared.isShared = false;
                         return shared;
                     }
 				}
 			} else {
-                if (cur.top - prev.top === 0) {
+                if (Math.abs(cur.top - prev.top) < threshold) {
                     shared.coord = cur.top;
                     shared.axis = 'y';
                     shared.min = Math.min(cur.left, prev.left);
                     shared.max = Math.max(cur.right, prev.right);
-                } else if (cur.bottom - prev.bottom === 0) {
+                } else if (Math.abs(cur.bottom - prev.bottom) < threshold) {
                     shared.coord = cur.bottom;
                     shared.axis = 'y';
                     shared.min = Math.min(cur.left, prev.left);
                     shared.max = Math.max(cur.right, prev.right);
-                } else if (cur.left - prev.left === 0) {
+                } else if (Math.abs(cur.left - prev.left) < threshold) {
                     shared.coord = cur.left;
                     shared.axis = 'x';
                     shared.min = Math.min(cur.top, prev.top);
                     shared.max = Math.max(cur.bottom, prev.bottom);
-                } else if (cur.right - prev.right === 0) {
+                } else if (Math.abs(cur.right - prev.right) < threshold) {
                     shared.coord = cur.right;
                     shared.axis = 'x';
                     shared.min = Math.min(cur.top, prev.top);
