@@ -68,7 +68,12 @@ class Application(tornado.web.Application):
             (r"/tobii", TobiiHandler),
             (r"/ready", ReadyHandler),
             (r"/done", DoneHandler),
-            (r"/final_question", FinalHandler), (r"/(post_question.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+            (r"/final_question", FinalHandler), (r"/(1.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+                                                (r"/(2.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+                                                (r"/(3.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+                                                (r"/(4.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+                                                (r"/(5.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+                                                (r"/(6.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/done2", DoneHandler2),
             (r"/websocket", MMDWebSocket, dict(websocket_dict = websocket_dict))
         ]
@@ -128,6 +133,7 @@ class MainHandler(tornado.web.RequestHandler):
             self.application.mmd_order = [31, 32, 33, 34, 35, 36,
                                           181, 182, 183, 184, 185, 186,
                                           281, 282, 283, 284, 285, 286]
+            
             # self.application.mmd_order = [60]
 
             #suffle MMD order
@@ -257,12 +263,13 @@ class QuestionnaireHandler(tornado.web.RequestHandler):
 
         # hard-coded two questions as they appear in all mmds
         questions = []
-        questions.append([self.application.cur_mmd, "1", "The snippet I read was easy to understand.", "Likert", "Subjective"])
-
-        # questions.append([self.application.cur_mmd, "2", "I would be interested in reading the full article.", "Likert", "Subjective"])
 
         # for pilot only
-        questions.append([self.application.cur_mmd, "2", "The underline and link intervention was helpful.", "Likert", "Subjective"])
+        questions.append([self.application.cur_mmd, "1", "The underline and link intervention was helpful.", "Likert", "Subjective"])
+
+        questions.append([self.application.cur_mmd, "2", "The snippet I read was easy to understand.", "Likert", "Subjective"])
+
+        # questions.append([self.application.cur_mmd, "2", "I would be interested in reading the full article.", "Likert", "Subjective"])
 
         questions.extend(query_results.fetchall())
 
