@@ -71,9 +71,6 @@ class Application(tornado.web.Application):
             (r"/final_question", FinalHandler), (r"/(1.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
                                                 (r"/(2.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
                                                 (r"/(3.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
-                                                (r"/(4.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
-                                                (r"/(5.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
-                                                (r"/(6.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/done2", DoneHandler2),
             (r"/websocket", MMDWebSocket, dict(websocket_dict = websocket_dict))
         ]
@@ -124,20 +121,24 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
 
         self.application.start_time = str(datetime.datetime.now().time())
-        self.render('index.html', mmd="31")
+        self.render('index.html', mmd="181")
 
     def post(self):
 
         q1 = self.get_argument('element_1')
         if(int(q1)==1):
-            self.application.mmd_order = [31, 32, 33, 34, 35, 36,
-                                          181, 182, 183, 184, 185, 186,
-                                          281, 282, 283, 284, 285, 286]
-            
+            # self.application.mmd_order = [31, 32, 33, 34, 35, 36,
+            #                               181, 182, 183, 184, 185, 186,
+            #                               281, 282, 283, 284, 285, 286]
+            # conditions = [181, 182, 183,
+            #               281, 282, 283]
+            conditions = [[181, 281], [182, 282], [183, 283]]
+            for intervention in conditions:
+                random.shuffle(intervention)
             # self.application.mmd_order = [60]
-
-            #suffle MMD order
-            random.shuffle(self.application.mmd_order)
+            # shuffle MMD order
+            random.shuffle(conditions)
+            self.application.mmd_order = [cond for intervention in conditions for cond in intervention]
             self.application.mmd_index = 0
             self.redirect('/userID')
         else:
@@ -210,9 +211,12 @@ class QuestionnaireHandler(tornado.web.RequestHandler):
         mmdQuestions = self.loadMMDQuestions()
         noofMMD = len(self.application.mmd_order)
         progress = str(self.application.mmd_index)+ ' of '+ str(noofMMD)
-        self.render('questionnaire.html', mmd=self.application.cur_mmd, progress = progress, questions = mmdQuestions)
-        print("finished rendering qustionnaire")
+        if (self.application.mmd_index % 2 == 0):
+            self.render('questionnaire.html', mmd=self.application.cur_mmd, progress = progress, questions = mmdQuestions)
+        else:
+            self.redirect('/mmd')
 
+        print("finished rendering qustionnaire")
 
     def post(self):
         print ('post')
@@ -267,7 +271,7 @@ class QuestionnaireHandler(tornado.web.RequestHandler):
         # for pilot only
         questions.append([self.application.cur_mmd, "1", "The underline and link intervention was helpful.", "Likert", "Subjective"])
 
-        questions.append([self.application.cur_mmd, "2", "The snippet I read was easy to understand.", "Likert", "Subjective"])
+        # questions.append([self.application.cur_mmd, "2", "The snippet I read was easy to understand.", "Likert", "Subjective"])
 
         # questions.append([self.application.cur_mmd, "2", "I would be interested in reading the full article.", "Likert", "Subjective"])
 

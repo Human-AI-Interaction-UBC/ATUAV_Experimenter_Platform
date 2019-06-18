@@ -296,16 +296,17 @@
         relativeCoords.refLeft = refRect.left - refParentRect.left;
 
         let marks = self.getSelectedMarks(tuple_ids);
+        marks.selected_marks.map((mark) => {
+        	return mark.getBoundingClientRect();
+		});
         marks.selected_marks.sort((prev, cur) => {
-        	let prevRect = prev.getBoundingClientRect();
-        	let curRect = cur.getBoundingClientRect();
-        	return prevRect.x === curRect.x ? prev.y - cur.y : prev.x - cur.x;
+        	return prev.x === cur.x ? prev.y - cur.y : prev.x - cur.x;
 		});
         let curCluster = [];
-        let prevMarkRect = marks.selected_marks[0].getBoundingClientRect();
+        let prevMarkRect = marks.selected_marks[0];
         curCluster.push(prevMarkRect);
         for (let i = 1; i < marks.selected_marks.length; i++) {
-            let curMarkRect = marks.selected_marks[i].getBoundingClientRect();
+            let curMarkRect = marks.selected_marks[i];
             let isShared = getSharedAxis(curCluster.concat(curMarkRect), 10).isShared;
             let sharedAxis = getSharedAxis(curCluster, 10);
 
