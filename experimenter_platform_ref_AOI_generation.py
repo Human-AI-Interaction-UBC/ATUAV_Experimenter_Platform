@@ -28,15 +28,15 @@ import params
 
 ##########################################
 """
-This script will write all the reference sentence AOI files for each MSNV, 
+This script will write all the reference sentence AOI files for each MSNV,
 with each aoi name being the name from the aoi table in the user state db
     - First an empty log folder in the 1st level of root folder will need to be created
-    - It will render each MSNV to get the coordinates, so just open up localhost:8888 once you have started up the 
+    - It will render each MSNV to get the coordinates, so just open up localhost:8888 once you have started up the
       script and the script will do everything else
-    - There is no notification for the script being done, but once it's done flashing it's usually done - (I can add 
+    - There is no notification for the script being done, but once it's done flashing it's usually done - (I can add
       some kind of notification if that is preferred)
     - You will know it is done when you see all the .aoi files have been generated
-      
+
 Everything related to connection to the eyetracker, ML and mouse keyboard events have been commented out, so that
 it works locally.
 """
@@ -124,7 +124,7 @@ class MMDWebSocket(ApplicationWebSocket):
                 noSpace = re.sub(r"\s", '', aoi)
                 tabSeparated = re.sub(r"\),\(", '\t', noSpace)
                 bracketsRemoved = re.sub(r"(\)\])|(\[\()", '', tabSeparated)
-                overall += '\t'+ bracketsRemoved + ';'
+                overall += '\t'+ bracketsRemoved + '\t;'
                 bracketsRemoved = ref_name+'\t'+ bracketsRemoved
                 to_write.append(bracketsRemoved)
 
