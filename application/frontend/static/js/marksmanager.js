@@ -299,9 +299,9 @@
         let markRects = marks.selected_marks.map((mark) => {
         	return mark.getBoundingClientRect();
 		});
-        markRects.sort((prev, cur) => {
-        	return prev.x === cur.x ? prev.y - cur.y : prev.x - cur.x;
-		});
+        // markRects.sort((prev, cur) => {
+        // 	return prev.x === cur.x ? prev.y - cur.y : prev.x - cur.x;
+		// });
         let curCluster = [];
         let prevMarkRect = markRects[0];
         curCluster.push(prevMarkRect);
