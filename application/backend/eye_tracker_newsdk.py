@@ -51,6 +51,7 @@ class TobiiControllerNewSdk:
 		self.head_distance = []
 		self.EndFixations = []
 		self.mouse_clicks = []
+		self.keyboard_clicks = []
 		#This contains the websocket to send data to be displayed on front end
 		self.runOnlineFix = True
 		# initialize communications
@@ -262,7 +263,7 @@ class TobiiControllerNewSdk:
 		'''
 		self.EndFixations.append((x, y, duration, start_time))
 
-	def add_mouse_click(self, mouse_click):
+	def add_mouse_key_click(self, mouse_click):
 		'''
 		Called by MouseKeyboardEventDetector when a new mouse click is detected.
 		Adds a new mouse click to data array to be used for EMDAT features calculation.
@@ -271,6 +272,14 @@ class TobiiControllerNewSdk:
 		'''
 		self.mouse_clicks.append(mouse_click)
 
+	def add_keyboard_click(self, keyboard_click):
+		'''
+		Called by MouseKeyboardEventDetector when a new keyboard click is detected.
+		Adds a new keyboard click to data array to be used for EMDAT features calculation.
+		Args:
+			keyboard_click - KeyboardEvent object
+		'''
+		self.keyboard_clicks.append(keyboard_click)
 
 	def get_pupil_size(self, pupilleft, pupilright):
 	    '''

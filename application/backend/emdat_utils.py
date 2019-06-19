@@ -369,13 +369,13 @@ def generate_event_lists(event_data):
     for e in event_data:
         if instanceof(e, KeyboardEvent):
             keyp.append(e)
-        elif instanceof(e, DragDropMouseEvent):
-            drag_drop.append(e)
-        elif instanceof(e, DoubleClickMouseEvent):
-            double_click.append(e)
+#        elif instanceof(e, DragDropMouseEvent):
+#            drag_drop.append(e)
+#        elif instanceof(e, DoubleClickMouseEvent):
+#            double_click.append(e)
         elif instanceof(e, BasicMouseEvent) and e.left_click:
             leftc.append(e)
         else:
             rightc.append(e)
 
-    return (leftc, rightc, doublec, drag_drop, keyp)
+    return (leftc, rightc, keyp)# doublec, drag_drop, keyp)

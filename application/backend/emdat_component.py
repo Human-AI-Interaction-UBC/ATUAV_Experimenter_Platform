@@ -22,6 +22,7 @@ class EMDATComponent(DetectionComponent):
         self.fix_idx    = 0
         self.x_y_idx    = 0
         self.mouse_idx  = 0
+        self.keyboard_idx  = 0
         self.id = 1
         self.AOIS = self.application_state_controller.getEmdatAoiMapping()
         print(self.AOIS)
@@ -86,6 +87,9 @@ class EMDATComponent(DetectionComponent):
         """ calculate fixations, angles and path features"""
         if (params.USE_FIXATION_PATH_FEATURES):
             self.calc_fix_ang_path_features()
+        """ calculate fixations, angles and path features"""
+        if (params.USE_MOUSE or params.USE_KEYBOARD):
+            self.calc_event_features()
 
         all_aoi_time = time.time()
         """ calculate AOIs features """
@@ -375,14 +379,16 @@ class EMDATComponent(DetectionComponent):
             self.emdat_interval_features['numabsangles'] = numabsangles
             self.emdat_interval_features['numrelangles'] = numrelangles
 
-    def calc_event_features(self, event_data):
+    def calc_event_features(self):
         """
         Called from run(). Calculates event features for the whole screen with new raw
         Tobii datapoints generated since the last call to run(). Features are stored in
         emdat_interval_features.
         """
+        mousep = self.tobii_controller.mouse_clicks[self.mouse_idx:]
+        keyp = self.tobii_controller.keyboard_clicks[self.keyboard_idx:]
         if event_data != None:
-            (leftc, rightc, doublec, keyp) = generate_event_lists(event_data)
+            (leftc, rightc, keyp) = generate_event_lists(event_data)
 
             self.numevents = len(leftc)+len(rightc)+len(doublec)+len(keyp)
             self.emdat_interval_features['numevents'] = self.numevents
@@ -458,7 +464,8 @@ class EMDATComponent(DetectionComponent):
         pup_vel_vals                    = np.array(self.tobii_controller.pupilvelocity[self.x_y_idx:])
         dist_vals                       = np.array(self.tobii_controller.head_distance[self.x_y_idx:])
         fixation_vals                   = np.asarray(self.tobii_controller.EndFixations[self.fix_idx:])
-        event_vals                      = np.asarray(self.tobii_controller.)
+        mouse_vals                      = np.asarray(self.tobii_controller.mouse_events[self.mouse_idx:])
+        keyb_vals                      = np.asarray(self.tobii_controller.mouse_events[self.keyboard_idx:])
 
         for aoi in self.AOIS:
             start_computing_features = time.time()
@@ -485,8 +492,8 @@ class EMDATComponent(DetectionComponent):
                 valid_dist_vals        = dist_vals[valid_indices]
                 self.generate_aoi_distance_features(aoi, valid_dist_vals)
             if (params.USE_MOUSE or params.USE_KEYBOARD):
-                self.generate_mouse_features(aoi, )
-
+                mouse_idx, keyboard_idx = self.valid_indices_mouse_keyboard()
+                self.generate_aoi_mouse_keyboard_features(aoi, mouse_vals, keyb_vals)
             if (len(fixation_vals) == 0):
                 continue
             if (params.USE_FIXATION_PATH_FEATURES or params.USE_TRANSITION_AOI_FEATURES):
@@ -565,6 +572,29 @@ class EMDATComponent(DetectionComponent):
             self.emdat_interval_features[aoi]['proportionnum']          = float(numfixations)/num_all_fixations
             self.emdat_interval_features[aoi]['fixationrate']           = numfixations / float(totaltimespent)
 
+    def generate_aoi_mouse_keyboard_features(self, aoi, mouse_data, keyboard_data):
+        """
+        TODO!
+        Generates mouse/keyboard features for given AOI
+        """
+        num_mouse_clicks                                                = len(mouse_data)
+        num_keyboard_clicks                                             = len(keyboard_data)
+        num_events                                                      = num_mouse_clicks + num_keyboard_clicks
+        self.emdat_interval_features[aoi]['numevents']                  = num_events
+        fixation_durations                                              = fixation_data[:, 2]
+        totaltimespent                                                  = np.sum(fixation_durations)
+        self.emdat_interval_features[aoi]['totaltimespent']             = totaltimespent
+        self.emdat_interval_features[aoi]['proportiontime']             = float(totaltimespent) / (self.length - self.length_invalid)
+        if numfixations > 0:
+            self.emdat_interval_features[aoi]['longestfixation']        = np.max(fixation_durations)
+            self.emdat_interval_features[aoi]['meanfixationduration']   = np.mean(fixation_durations)
+            self.emdat_interval_features[aoi]['stddevfixationduration'] = calc_aoi_std_feature(fixation_durations)
+            #self.emdat_interval_features[aoi]['timetofirstfixation']    = fixation_data[0][3] - self.starttime
+            #self.emdat_interval_features[aoi]['timetolastfixation']     = fixation_data[-1][3] - self.starttime
+            self.emdat_interval_features[aoi]['proportionnum']          = float(numfixations)/num_all_fixations
+            self.emdat_interval_features[aoi]['fixationrate']           = numfixations / float(totaltimespent)
+
+
     def generate_transition_features(self, cur_aoi, fixation_data, fixation_indices):
         """
         Generates distance features for given AOI
@@ -600,6 +630,10 @@ class EMDATComponent(DetectionComponent):
         else:
             length = time[-1] - time[self.pups_idx]
         return length
+
+    def valid_indices_mouse_keyboard(self):
+        # TODO:
+        return [], []
 
 def calc_aoi_std_feature(data):
     if (len(data) > 1):
