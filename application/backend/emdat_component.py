@@ -511,6 +511,8 @@ class EMDATComponent(DetectionComponent):
                 self.generate_transition_features(aoi, fixation_vals, valid_fixation_indices[0])
         self.x_y_idx = len(self.tobii_controller.x)
         self.fix_idx = len(self.tobii_controller.EndFixations)
+        self.mouse_idx = len(self.tobii_controller.mouse_clicks)
+        self.keyboard_idx = len(self.tobii_controller.keyboard_clicks)
 
     def generate_aoi_pupil_features(self, aoi, valid_pupil_data, valid_pupil_velocity):
         """
@@ -632,7 +634,7 @@ class EMDATComponent(DetectionComponent):
         else:
             length = time[-1] - time[self.pups_idx]
         return length
-        
+
 def calc_aoi_std_feature(data):
     if (len(data) > 1):
         return np.std(data, ddof = 1)
