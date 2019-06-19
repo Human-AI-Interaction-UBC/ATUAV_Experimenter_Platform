@@ -118,6 +118,8 @@ class TobiiControllerNewSdk:
 		self.pupilsize = []
 		self.pupilvelocity = []
 		self.head_distance = []
+		self.mouse_clicks = []
+		self.keyboard_clicks = []
 		#self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
 		print("=================== SLEEPING =========================")
 		time.sleep(1)
@@ -156,6 +158,8 @@ class TobiiControllerNewSdk:
 		self.pupilsize = []
 		self.pupilvelocity = []
 		self.head_distance = []
+		self.mouse_clicks = []
+		self.keyboard_clicks = []
 		self.aoi_ids = {}
 		self.dpt_id = 0
 
@@ -358,17 +362,17 @@ class TobiiControllerNewSdk:
 				self.emdat_global_features[event_name]['proportiontime']			= 0
 				self.emdat_global_features[event_name]['fixationrate']			   	= 0
 				self.emdat_global_features[event_name]['totaltimespent']			= 0
-				self.emdat_global_features[event_name]['meanpupilsize']		  	= -1
+				self.emdat_global_features[event_name]['meanpupilsize']		  		= -1
 				self.emdat_global_features[event_name]['stddevpupilsize']			= -1
-				self.emdat_global_features[event_name]['maxpupilsize']		   	= -1
-				self.emdat_global_features[event_name]['minpupilsize']		   	= -1
+				self.emdat_global_features[event_name]['maxpupilsize']		   		= -1
+				self.emdat_global_features[event_name]['minpupilsize']		   		= -1
 				self.emdat_global_features[event_name]['startpupilsize']		 	= -1
-				self.emdat_global_features[event_name]['endpupilsize']		   	= -1
+				self.emdat_global_features[event_name]['endpupilsize']		   		= -1
 				self.emdat_global_features[event_name]['meanpupilvelocity']      	= -1
 				self.emdat_global_features[event_name]['stddevpupilvelocity']    	= -1
 				self.emdat_global_features[event_name]['maxpupilvelocity']       	= -1
 				self.emdat_global_features[event_name]['minpupilvelocity']       	= -1
-				self.emdat_global_features[event_name]['numpupilsizes']		  	= 0
+				self.emdat_global_features[event_name]['numpupilsizes']		  		= 0
 				self.emdat_global_features[event_name]['numpupilvelocity']       	= 0
 				self.emdat_global_features[event_name]['numdistancedata']			= 0
 				self.emdat_global_features[event_name]['numdistancedata'] 			= 0
@@ -378,9 +382,26 @@ class TobiiControllerNewSdk:
 				self.emdat_global_features[event_name]['mindistance']				= -1
 				self.emdat_global_features[event_name]['startdistance']      		= -1
 				self.emdat_global_features[event_name]['enddistance']				= -1
-				self.emdat_global_features[event_name]['total_trans_from']			 = 0
+				self.emdat_global_features[event_name]['total_trans_from']			= 0
 				self.emdat_global_features[event_name]['startpupilvelocity']		= -1
 				self.emdat_global_features[event_name]['endpupilvelocity'] 			= 0
+
+				self.emdat_global_features[event_name]['numevents'] 				= 0
+        		self.emdat_global_features[event_name]['numleftclic'] 				= 0
+        		self.emdat_global_features[event_name]['numrightclic'] 				= 0
+#       		self.emdat_global_features[event_name]['numdoubleclic']			    = 0
+        		self.emdat_global_features[event_name]['numkeypressed'] 			= 0
+#       		self.emdat_global_features[event_name]['numdragdrop'] 				= 0
+    			self.emdat_global_features[event_name]['leftclicrate'] 				= -1
+        		self.emdat_global_features[event_name]['rightclicrate'] 			= -1
+#       		self.emdat_global_features[event_name]['doubleclicrate']		    = -1
+        		self.emdat_global_features[event_name]['keypressedrate'] 			= -1
+#       		self.emdat_global_features[event_name]['dragdroprate'] 				= -1
+#       		self.emdat_global_features[event_name]['timetofirstleftclic'] 		= -1
+#       		self.emdat_global_features[event_name]['timetofirstrightclic'] 		= -1
+#       		self.emdat_global_features[event_name]['timetofirstdoubleclic'] 	= -1
+#       		self.emdat_global_features[event_name]['timetofirstkeypressed'] 	= -1
+
 
 				for cur_aoi in AOIS.keys():
 				    self.emdat_global_features[event_name]['numtransfrom_%s'%(cur_aoi)] = 0
@@ -440,6 +461,22 @@ class TobiiControllerNewSdk:
 		self.emdat_global_features['stddevfixationduration'] 	= -1
 		self.emdat_global_features['sumfixationduration'] 		= -1
 		self.emdat_global_features['fixationrate'] 				= -1
+		# Event features
+        self.emdat_global_features['numevents'] 				= 0
+        self.emdat_global_features['numleftclic'] 				= 0
+        self.emdat_global_features['numrightclic'] 				= 0
+#       self.emdat_global_features['numdoubleclic']			    = 0
+        self.emdat_global_features['numkeypressed'] 			= 0
+#       self.emdat_global_features['numdragdrop'] 				= 0
+    	self.emdat_global_features['leftclicrate'] 				= -1
+        self.emdat_global_features['rightclicrate'] 			= -1
+#       self.emdat_global_features['doubleclicrate']		    = -1
+        self.emdat_global_features['keypressedrate'] 			= -1
+#       self.emdat_global_features['dragdroprate'] 				= -1
+#       self.emdat_global_features['timetofirstleftclic'] 		= -1
+#       self.emdat_global_features['timetofirstrightclic'] 		= -1
+#       self.emdat_global_features['timetofirstdoubleclic'] 	= -1
+#       self.emdat_global_features['timetofirstkeypressed'] 	= -1
 
 #Original code provided by Roberto showing how to start the the eyetracker
 """

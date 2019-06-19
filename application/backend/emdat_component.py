@@ -387,8 +387,8 @@ class EMDATComponent(DetectionComponent):
         """
         mousep = self.tobii_controller.mouse_clicks[self.mouse_idx:]
         keyp = self.tobii_controller.keyboard_clicks[self.keyboard_idx:]
-        if event_data != None:
-            (leftc, rightc, keyp) = generate_event_lists(event_data)
+        if mousep != None and keyp != None:
+            leftc, rightc = generate_event_lists(mousep)
 
             self.numevents = len(leftc)+len(rightc)+len(doublec)+len(keyp)
             self.emdat_interval_features['numevents'] = self.numevents
