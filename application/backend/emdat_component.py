@@ -580,7 +580,6 @@ class EMDATComponent(DetectionComponent):
 
     def generate_aoi_mouse_keyboard_features(self, aoi, mouse_data, keyboard_data):
         """
-        TODO!
         Generates mouse/keyboard features for given AOI
         """
         num_mouse_clicks                                                = len(mouse_data)
@@ -633,11 +632,7 @@ class EMDATComponent(DetectionComponent):
         else:
             length = time[-1] - time[self.pups_idx]
         return length
-
-    def valid_indices_mouse_keyboard(self):
-
-        return [], []
-
+        
 def calc_aoi_std_feature(data):
     if (len(data) > 1):
         return np.std(data, ddof = 1)
