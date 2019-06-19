@@ -93,8 +93,7 @@ class EMDATComponent(DetectionComponent):
 
         all_aoi_time = time.time()
         """ calculate AOIs features """
-
-        self.calc_aoi_features() rest_pupil_size, export_pupilinfo)
+        self.calc_aoi_features()# rest_pupil_size, export_pupilinfo)
         all_merging_time = time.time()
         if (params.KEEP_TASK_FEATURES and params.KEEP_GLOBAL_FEATURES):
             self.merge_features(self.emdat_interval_features, self.emdat_task_features)
