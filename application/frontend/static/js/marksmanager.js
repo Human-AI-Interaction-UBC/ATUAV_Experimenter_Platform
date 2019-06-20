@@ -756,7 +756,7 @@
 
     MarksManager.prototype.drawBox = function(tuple_ids, reference_id, transition_in, args) {
         let self = this,
-        selectedMarks = self.getSelectedMarks([reference_id]).selected_marks; //used for bolding
+        selectedMarks = self.getSelectedMarks(tuple_ids).selected_marks; //used for bolding
         let bold_thickness = args.bold_thickness || 1;
         let markRects = selectedMarks.map((mark) => {
             return mark.getBoundingClientRect();
