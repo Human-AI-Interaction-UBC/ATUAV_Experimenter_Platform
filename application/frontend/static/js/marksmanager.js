@@ -685,7 +685,12 @@
         let sharedAxis = getSharedAxis(markRects, 10);
         if (sharedAxis.hasOwnProperty('coord')) {
             if (sharedAxis.axis === 'x') {
-                relativeCoords.markx = sharedAxis.coord - refParentRect.left;
+            	// in case sharedAxis is on the right, get left so drawing the branches will not have to go backwards
+                let left = markRects[0].left;
+                markRects.forEach((mark) => {
+                    left = Math.min(left, mark.left);
+                });
+                relativeCoords.markx = left - refParentRect.left;
                 relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
             } else {
                 relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;

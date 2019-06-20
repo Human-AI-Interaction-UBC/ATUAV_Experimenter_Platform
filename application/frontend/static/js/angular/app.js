@@ -626,7 +626,8 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
         return obj.tuple_id
     });
 
-    $scopeGlobal.curMarksManager.highlight(tuple_ids, referenceID.tuple_id, transition_in, args);
+    // $scopeGlobal.curMarksManager.highlight(tuple_ids, referenceID.tuple_id, transition_in, args);
+    $scopeGlobal.curMarksManager.drawBox(tuple_ids, referenceID.tuple_id, transition_in, args);
 
     let refToHighlight = $scopeGlobal.startEndCoords.find(function (startEnd) {
       let refNumber = referenceID.ref_id.split("_")[1];
