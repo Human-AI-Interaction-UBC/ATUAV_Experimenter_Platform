@@ -459,10 +459,8 @@
         let ref = document.getElementById('refAOI');
         let refRect = ref.getBoundingClientRect();
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
-        relativeCoords.refTop = refRect.top - refParentRect.top;
-        relativeCoords.refLeft = refRect.left - refParentRect.left;
-        relativeCoords.refX = relativeCoords.refLeft + refRect.width;
-        relativeCoords.refY = relativeCoords.refTop + refRect.height / 2;
+        relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
+        relativeCoords.refY = refRect.top - refParentRect.top + refRect.height / 2;
 
         let marks = self.getSelectedMarks(tuple_ids);
         let markRects = marks.selected_marks.map((mark) => {
@@ -502,15 +500,15 @@
                 }
                 if (curCluster.length > 1) {
                 	let xDiff = relativeCoords.markx - relativeCoords.refX;
-                	relativeCoords.markx = relativeCoords.refX + 0.3 * xDiff;
+                	relativeCoords.markx = relativeCoords.refX + 0.8 * xDiff;
                     let yDiff = relativeCoords.marky - relativeCoords.refY;
-                    relativeCoords.marky = relativeCoords.refY + 0.3 * yDiff;
+                    relativeCoords.marky = relativeCoords.refY + 0.8 * yDiff;
 				}
 
                 d3.select(self.textVisOverlay).append("line")
                     .attr("class", "line_" + id + " " + text_intervention_args.link_type)
                     .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
-                    .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
+                    .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
                     .style("stroke", text_intervention_args.link_colour)
                     .style("opacity", 0)
                     .style("stroke-width", self.strokeWidth)
@@ -570,16 +568,16 @@
             }
 
             if (curCluster.length > 1) {
-                let xDiff = relativeCoords.markx - relativeCoords.refLeft;
-                relativeCoords.markx = relativeCoords.refLeft + 0.3 * xDiff;
-                let yDiff = relativeCoords.marky - relativeCoords.refTop;
-                relativeCoords.marky = relativeCoords.refTop + 0.3 * yDiff;
+                let xDiff = relativeCoords.markx - relativeCoords.refX;
+                relativeCoords.markx = relativeCoords.refX + 0.8 * xDiff;
+                let yDiff = relativeCoords.marky - relativeCoords.refY;
+                relativeCoords.marky = relativeCoords.refY + 0.8 * yDiff;
             }
 
             d3.select(self.textVisOverlay).append("line")
                 .attr("class", "line_" + id + " " + text_intervention_args.link_type)
                 .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
-                .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
+                .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
                 .style("stroke", text_intervention_args.link_colour)
                 .style("opacity", 0)
                 .style("stroke-width", self.strokeWidth)
@@ -710,9 +708,9 @@
 
         if (markRects.length > 1) {
             let xDiff = relativeCoords.markx - relativeCoords.refX;
-            relativeCoords.markx = relativeCoords.refX + 0.3 * xDiff;
+            relativeCoords.markx = relativeCoords.refX + 0.8 * xDiff;
             let yDiff = relativeCoords.marky - relativeCoords.refY;
-            relativeCoords.marky = relativeCoords.refY + 0.3 * yDiff;
+            relativeCoords.marky = relativeCoords.refY + 0.8 * yDiff;
         }
 
         d3.select(self.textVisOverlay).append("line")
