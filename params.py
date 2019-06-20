@@ -21,7 +21,7 @@ else:
     USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight.db"
 # GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_and_text.db"
 if PILOT_CONDITION_TEXT_INTERVENTION:
-    GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_text_link_pilot.db"
+    GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_text_cluster_branch_pilot.db"
 else:
     if PILOT_CONDITION_NO_REMOVAL:
         GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_pilot_noremoval_test.db"
