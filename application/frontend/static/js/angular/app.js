@@ -551,19 +551,19 @@ function handleDelivery(obj) {
 
       let text_intervention_args = $scopeGlobal.interventions[obj.deliver[0].name].args.text_intervention;
 
-      if (args.clustering) {
-        if (args.branching) {
+      // if (args.clustering) {
+      //   if (args.branching) {
             $scopeGlobal.curMarksManager.clusterBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
-        } else {
-            $scopeGlobal.curMarksManager.clusterLines(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
-        }
-      } else {
-        if (args.branching) {
-            $scopeGlobal.curMarksManager.midLineBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
-        } else {
-            $scopeGlobal.curMarksManager.drawMidLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
-        }
-      }
+        // } else {
+        //     $scopeGlobal.curMarksManager.clusterLines(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
+        // }
+      // } else {
+      //   if (args.branching) {
+      //       $scopeGlobal.curMarksManager.midLineBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
+      //   } else {
+      //       $scopeGlobal.curMarksManager.drawMidLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
+      //   }
+      // }
   }
 
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency

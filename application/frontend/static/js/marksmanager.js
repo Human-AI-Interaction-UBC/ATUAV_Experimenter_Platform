@@ -461,6 +461,8 @@
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
         relativeCoords.refTop = refRect.top - refParentRect.top;
         relativeCoords.refLeft = refRect.left - refParentRect.left;
+        relativeCoords.refX = relativeCoords.refLeft + refRect.width;
+        relativeCoords.refY = relativeCoords.refTop + refRect.height / 2;
 
         let marks = self.getSelectedMarks(tuple_ids);
         let markRects = marks.selected_marks.map((mark) => {
@@ -499,10 +501,10 @@
                     }
                 }
                 if (curCluster.length > 1) {
-                	let xDiff = relativeCoords.markx - relativeCoords.refLeft;
-                	relativeCoords.markx = relativeCoords.refLeft + 0.3 * xDiff;
-                    let yDiff = relativeCoords.marky - relativeCoords.refTop;
-                    relativeCoords.marky = relativeCoords.refTop + 0.3 * yDiff;
+                	let xDiff = relativeCoords.markx - relativeCoords.refX;
+                	relativeCoords.markx = relativeCoords.refX + 0.3 * xDiff;
+                    let yDiff = relativeCoords.marky - relativeCoords.refY;
+                    relativeCoords.marky = relativeCoords.refY + 0.3 * yDiff;
 				}
 
                 d3.select(self.textVisOverlay).append("line")
@@ -672,6 +674,8 @@
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
         relativeCoords.refTop = refRect.top - refParentRect.top;
         relativeCoords.refLeft = refRect.left - refParentRect.left;
+        relativeCoords.refX = relativeCoords.refLeft + refRect.width;
+        relativeCoords.refY = relativeCoords.refTop + refRect.height / 2;
 
         let marks = self.getSelectedMarks(tuple_ids);
         let markRects = marks.selected_marks.map((mark) => {
@@ -705,10 +709,10 @@
         }
 
         if (markRects.length > 1) {
-            let xDiff = relativeCoords.markx - relativeCoords.refLeft;
-            relativeCoords.markx = relativeCoords.refLeft + 0.3 * xDiff;
-            let yDiff = relativeCoords.marky - relativeCoords.refTop;
-            relativeCoords.marky = relativeCoords.refTop + 0.3 * yDiff;
+            let xDiff = relativeCoords.markx - relativeCoords.refX;
+            relativeCoords.markx = relativeCoords.refX + 0.3 * xDiff;
+            let yDiff = relativeCoords.marky - relativeCoords.refY;
+            relativeCoords.marky = relativeCoords.refY + 0.3 * yDiff;
         }
 
         d3.select(self.textVisOverlay).append("line")
