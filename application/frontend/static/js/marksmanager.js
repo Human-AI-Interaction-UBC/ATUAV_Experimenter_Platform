@@ -777,6 +777,7 @@
         });
 
         d3.select(this.overlay).append('rect')
+			.attr("class", "box_" + reference_id)
 			.attr("x", minX)
 			.attr("y", minY)
 			.attr("width", maxX - minX)
@@ -796,6 +797,7 @@
 
     MarksManager.prototype.removeLines = function(tuple_id) {
     	d3.selectAll('.line_' + tuple_id).remove();
+    	d3.selectAll('.box_' + tuple_id).remove();
 	};
 
     MarksManager.prototype.createTextVisOverlay = function(elem_id) {
