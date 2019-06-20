@@ -761,17 +761,19 @@
         let markRects = selectedMarks.map((mark) => {
             return mark.getBoundingClientRect();
         });
+        let parentRect = document.getElementById('overlayContainer').getBoundingClientRect();
 
-        let minY = markRects[0].top;
-        let maxY = markRects[0].bottom;
-        let minX = markRects[0].left;
-        let maxX = markRects[0].right;
+
+        let minY = markRects[0].top - parentRect.top;
+        let maxY = markRects[0].bottom - parentRect.bottom;
+        let minX = markRects[0].left - parentRect.left;
+        let maxX = markRects[0].right - parentRect.right;
 
         markRects.forEach((mark) => {
-            minY = Math.min(minY, mark.top);
-            maxY = Math.max(maxY, mark.bottom);
-            minX = Math.min(minX, mark.left);
-            maxX = Math.max(maxX, mark.right);
+            minY = Math.min(minY, mark.top - parentRect.top);
+            maxY = Math.max(maxY, mark.bottom - parentRect.bottom);
+            minX = Math.min(minX, mark.left - parentRect.left);
+            maxX = Math.max(maxX, mark.right - parentRect.right);
         });
 
         d3.select(this.overlay).append('rect')
