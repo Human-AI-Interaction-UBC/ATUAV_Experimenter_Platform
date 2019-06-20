@@ -517,15 +517,15 @@
                     .style("opacity", 1);
 
                 if (curCluster.length > 1) {
-                	for (let mark in curCluster) {
-                		let markX = mark.left;
-                		let markY = mark.top;
-                        if (mark.width > mark.height) {
-                            markX = mark.left - refParentRect.left;
-                            markY = mark.top - refParentRect.top + mark.height / 2;
+                	for (let i = 0; i < curCluster.length; i++) {
+                		let markX = curCluster[i].left;
+                		let markY = curCluster[i].top;
+                        if (curCluster[i].width > curCluster[i].height) {
+                            markX = curCluster[i].left - refParentRect.left;
+                            markY = curCluster[i].top - refParentRect.top + curCluster[i].height / 2;
                         } else {
-                            markX = mark.left - refParentRect.left + mark.width / 2;
-                            markY = mark.top - refParentRect.top + mark.height;
+                            markX = curCluster[i].left - refParentRect.left + curCluster[i].width / 2;
+                            markY = curCluster[i].top - refParentRect.top + curCluster[i].height;
                         }
                         d3.select(self.textVisOverlay).append("line")
                             .attr("class", "line_" + id + " " + text_intervention_args.link_type)
@@ -567,6 +567,13 @@
                 }
             }
 
+            if (curCluster.length > 1) {
+                let xDiff = relativeCoords.markx - relativeCoords.refLeft;
+                relativeCoords.markx = relativeCoords.refLeft + 0.3 * xDiff;
+                let yDiff = relativeCoords.marky - relativeCoords.refTop;
+                relativeCoords.marky = relativeCoords.refTop + 0.3 * yDiff;
+            }
+
             d3.select(self.textVisOverlay).append("line")
                 .attr("class", "line_" + id + " " + text_intervention_args.link_type)
                 .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
@@ -577,6 +584,30 @@
                 .transition()
                 .duration(transition_in)
                 .style("opacity", 1);
+
+            if (curCluster.length > 1) {
+                for (let i = 0; i < curCluster.length; i++) {
+                    let markX = curCluster[i].left;
+                    let markY = curCluster[i].top;
+                    if (curCluster[i].width > curCluster[i].height) {
+                        markX = curCluster[i].left - refParentRect.left;
+                        markY = curCluster[i].top - refParentRect.top + curCluster[i].height / 2;
+                    } else {
+                        markX = curCluster[i].left - refParentRect.left + curCluster[i].width / 2;
+                        markY = curCluster[i].top - refParentRect.top + curCluster[i].height;
+                    }
+                    d3.select(self.textVisOverlay).append("line")
+                        .attr("class", "line_" + id + " " + text_intervention_args.link_type)
+                        .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
+                        .attr("x1", markX).attr("y1", markY)
+                        .style("stroke", text_intervention_args.link_colour)
+                        .style("opacity", 0)
+                        .style("stroke-width", self.strokeWidth)
+                        .transition()
+                        .duration(transition_in)
+                        .style("opacity", 1);
+                }
+            }
         }
     };
 
@@ -633,7 +664,7 @@
                 .style("opacity", 1);
     };
 
-    MarksManager.prototype.midLineBranching = function(transition_in, id, tuple_ids, text_intervention_args){
+    MarksManager.prototype.midLineBranch = function(transition_in, id, tuple_ids, text_intervention_args){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementById('refAOI');
@@ -692,15 +723,15 @@
             .style("opacity", 1);
 
         if (markRects.length > 1) {
-            for (let mark in markRects) {
-                let markX = mark.left;
-                let markY = mark.top;
-                if (mark.width > mark.height) {
-                    markX = mark.left - refParentRect.left;
-                    markY = mark.top - refParentRect.top + mark.height / 2;
+            for (let i = 0; i < markRects.length; i++) {
+                let markX = markRects[i].left;
+                let markY = markRects[i].top;
+                if (markRects[i].width > markRects[i].height) {
+                    markX = markRects[i].left - refParentRect.left;
+                    markY = markRects[i].top - refParentRect.top + markRects[i].height / 2;
                 } else {
-                    markX = mark.left - refParentRect.left + mark.width / 2;
-                    markY = mark.top - refParentRect.top + mark.height;
+                    markX = markRects[i].left - refParentRect.left + markRects[i].width / 2;
+                    markY = markRects[i].top - refParentRect.top + markRects[i].height;
                 }
                 d3.select(self.textVisOverlay).append("line")
                     .attr("class", "line_" + id + " " + text_intervention_args.link_type)

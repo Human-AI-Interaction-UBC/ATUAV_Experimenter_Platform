@@ -559,7 +559,7 @@ function handleDelivery(obj) {
         }
       } else {
         if (args.branching) {
-            $scopeGlobal.curMarksManager.midLineBranching(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
+            $scopeGlobal.curMarksManager.midLineBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
         } else {
             $scopeGlobal.curMarksManager.drawMidLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
         }
