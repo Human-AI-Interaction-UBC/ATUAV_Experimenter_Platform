@@ -565,7 +565,7 @@ function handleDelivery(obj) {
       //   }
       // }
 
-      $scopeGlobal.curMarksManager.drawBox(new_tuple_ids, $scopeGlobal.interventions[obj.deliver[0].name].args.id, 500, args);
+      // $scopeGlobal.curMarksManager.drawBox(new_tuple_ids, $scopeGlobal.interventions[obj.deliver[0].name].args.id, 500, args);
 
   }
 
@@ -630,7 +630,6 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     });
 
     // $scopeGlobal.curMarksManager.highlight(tuple_ids, referenceID.tuple_id, transition_in, args);
-    // $scopeGlobal.curMarksManager.drawBox(tuple_ids, referenceID.tuple_id, transition_in, args);
 
     let refToHighlight = $scopeGlobal.startEndCoords.find(function (startEnd) {
       let refNumber = referenceID.ref_id.split("_")[1];
