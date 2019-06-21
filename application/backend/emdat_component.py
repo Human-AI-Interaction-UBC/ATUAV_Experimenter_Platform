@@ -93,7 +93,8 @@ class EMDATComponent(DetectionComponent):
 
         all_aoi_time = time.time()
         """ calculate AOIs features """
-        self.calc_aoi_features()# rest_pupil_size, export_pupilinfo)
+
+        self.calc_aoi_features()
         all_merging_time = time.time()
         if (params.KEEP_TASK_FEATURES and params.KEEP_GLOBAL_FEATURES):
             self.merge_features(self.emdat_interval_features, self.emdat_task_features)
@@ -463,8 +464,8 @@ class EMDATComponent(DetectionComponent):
         pup_vel_vals                    = np.array(self.tobii_controller.pupilvelocity[self.x_y_idx:])
         dist_vals                       = np.array(self.tobii_controller.head_distance[self.x_y_idx:])
         fixation_vals                   = np.asarray(self.tobii_controller.EndFixations[self.fix_idx:])
-        mouse_vals                      = np.asarray(self.tobii_controller.mouse_events[self.mouse_idx:])
-        keyb_vals                      = np.asarray(self.tobii_controller.mouse_events[self.keyboard_idx:])
+        mouse_vals                      = np.asarray(self.tobii_controller.mouse_clicks[self.mouse_idx:])
+        keyb_vals                      = np.asarray(self.tobii_controller.keyboard_clicks[self.keyboard_idx:])
 
         for aoi in self.AOIS:
             start_computing_features = time.time()
@@ -479,7 +480,6 @@ class EMDATComponent(DetectionComponent):
 
             if params.USE_PUPIL_FEATURES:
                 ## Select valid pupil sizes inside the AOI
-                print(valid_indices)
                 valid_pupil_sizes      = pup_size_vals[valid_indices]
                 valid_pupil_sizes      = valid_pupil_sizes[valid_pupil_sizes > 0]
                     ## Select valid velocities inside the AOI

@@ -38,7 +38,7 @@ FRONT_END_TEMPLATE_PATH = "./application/frontend/templates/"
 
 # Platform configuration:
 USE_FIXATION_ALGORITHM = True
-USE_EMDAT = False
+USE_EMDAT = True
 USE_ML = False
 USE_KEYBOARD = False
 USE_MOUSE = False
