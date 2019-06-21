@@ -93,12 +93,35 @@ def merge_distance_features(part_features, accumulator_features):
         accumulator_features['maxdistance']                     = maxfeat(part_features, accumulator_features, "['maxdistance']")
 
         accumulator_features['mindistance']                     = minfeat(part_features, accumulator_features, "['mindistance']", -1)
-        accumulator_features['meandistance']                   = mean_distance
+        accumulator_features['meandistance']                    = mean_distance
         accumulator_features['numdistancedata']                 = numdistancedata
         if (accumulator_features['startdistance'] == -1):
             accumulator_features['startdistance'] = part_features['startdistance']
         if (part_features['enddistance'] != -1):
             accumulator_features['enddistance'] = part_features['enddistance']
+
+def merge_event_data(part_features, accumulator_features):
+    """
+        Merges event features (for whole screen and AOIs) from part_features into accumulator_features
+    """
+    numevents = sumfeat(part_features, accumulator_features,"['numevents']")
+
+    if numevents > 0:
+        accumulator_features['numevents'] = numevents
+        accumulator_features['numleftclic'] = sumfeat(part_features, accumulator_features, "['numleftclic']")
+        accumulator_features['numrightclic'] = sumfeat(part_features, accumulator_features,  "['numrightclic']")
+#        accumulator_features['numdoubleclic'] = sumfeat(part_features, accumulator_features,  "['numdoubleclic']")
+#        accumulator_features['numdragdrop'] = sumfeat(part_features, accumulator_features,  "['numdragdrop']")
+        accumulator_features['numkeypressed'] = sumfeat(part_features, accumulator_features,  "['numkeypressed']")
+        accumulator_features['leftclicrate'] = float(accumulator_features['numleftclic'])/(accumulator_features['length'] - accumulator_features['length_invalid'])
+        accumulator_features['rightclicrate'] = float(accumulator_features['numrightclic'])/(accumulator_features['length'] - accumulator_features['length_invalid'])
+#        accumulator_features['doubleclicrate'] = float(accumulator_features['numdoubleclic'])/(self.accumulator_features['length'] - accumulator_features['length_invalid'])
+#        accumulator_features['dragdroprate'] = float(accumulator_features['numdragdrop'])/(accumulator_features['length'] - accumulator_features['length_invalid'])
+        accumulator_features['keypressedrate'] = float(accumulator_features['numkeypressed'])/(accumulator_features['length'] - accumulator_features['length_invalid'])
+#        accumulator_features['timetofirstleftclic'] = self.firstseg.features['timetofirstleftclic']
+#        accumulator_features['timetofirstrightclic'] = self.firstseg.features['timetofirstrightclic']
+#        accumulator_features['timetofirstdoubleclic'] = self.firstseg.features['timetofirstdoubleclic']
+#        accumulator_features['timetofirstkeypressed'] = self.firstseg.features['timetofirstkeypressed']
 
 def merge_aoi_fixations(part_features, accumulator_features, length, total_numfixations_accumulator):
     """
@@ -330,3 +353,29 @@ def sumfeat(part_features, accumulator_features, feat):
     if (eval('accumulator_features'+feat) != -1):
         sum += eval('accumulator_features'+feat)
     return sum
+
+def generate_event_lists(event_data):
+    """Returns separate list per type of events. Format:
+    Args:
+        event_data: a list of events
+    Returns:
+        lists of left clics, right clics, double clics and keys pressed
+    """
+    leftc = []
+    rightc = []
+    doublec = []
+    drag_drop = []
+    keyp = []
+    for e in event_data:
+        if instanceof(e, KeyboardEvent):
+            keyp.append(e)
+#        elif instanceof(e, DragDropMouseEvent):
+#            drag_drop.append(e)
+#        elif instanceof(e, DoubleClickMouseEvent):
+#            double_click.append(e)
+        elif instanceof(e, BasicMouseEvent) and e.left_click:
+            leftc.append(e)
+        else:
+            rightc.append(e)
+
+    return (leftc, rightc, keyp)# doublec, drag_drop, keyp)
