@@ -549,23 +549,23 @@ function handleDelivery(obj) {
       $scopeGlobal.old_active_interventions = [...new Set($scopeGlobal.old_active_interventions)]
       console.log('old_activeB:', $scopeGlobal.old_active_interventions);
 
-      let text_intervention_args = $scopeGlobal.interventions[obj.deliver[0].name].args.text_intervention;
+      let args = $scopeGlobal.interventions[obj.deliver[0].name].args;
 
       // if (args.clustering) {
       //   if (args.branching) {
-            $scopeGlobal.curMarksManager.clusterBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
+      //       $scopeGlobal.curMarksManager.clusterBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, args);
         // } else {
-        //     $scopeGlobal.curMarksManager.clusterLines(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
+            $scopeGlobal.curMarksManager.clusterLines(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, args);
         // }
       // } else {
       //   if (args.branching) {
-      //       $scopeGlobal.curMarksManager.midLineBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
+      //       $scopeGlobal.curMarksManager.midLineBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, args);
       //   } else {
-      //       $scopeGlobal.curMarksManager.drawMidLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
+      //       $scopeGlobal.curMarksManager.drawMidLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, args);
       //   }
       // }
 
-      $scopeGlobal.curMarksManager.drawBox(new_tuple_ids, $scopeGlobal.interventions[obj.deliver[0].name].args.id, 500, text_intervention_args);
+      $scopeGlobal.curMarksManager.drawBox(new_tuple_ids, $scopeGlobal.interventions[obj.deliver[0].name].args.id, 500, args);
 
   }
 

@@ -286,7 +286,7 @@
         .style("opacity", 1);
   };
 
-    MarksManager.prototype.clusterLines = function(transition_in, id, tuple_ids, text_intervention_args){
+    MarksManager.prototype.clusterLines = function(transition_in, id, tuple_ids, args){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementById('refAOI');
@@ -333,15 +333,19 @@
                 }
 
                 d3.select(self.textVisOverlay).append("line")
-                    .attr("class", "line_" + id + " " + text_intervention_args.link_type)
+                    .attr("class", "line_" + id + " " + args.text_intervention.link_type)
                     .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                     .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
-                    .style("stroke", text_intervention_args.link_colour)
+                    .style("stroke", args.text_intervention.link_colour)
                     .style("opacity", 0)
                     .style("stroke-width", self.strokeWidth)
                     .transition()
                     .duration(transition_in)
                     .style("opacity", 1);
+
+                // if (args.box) {
+                    self.drawBox(curCluster,id, transition_in, args);
+                // }
                 curCluster = [];
             }
             curCluster.push(curMarkRect);
@@ -371,15 +375,21 @@
             }
             
             d3.select(self.textVisOverlay).append("line")
-                .attr("class", "line_" + id + " " + text_intervention_args.link_type)
+                .attr("class", "line_" + id + " " + args.text_intervention.link_type)
                 .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                 .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
-                .style("stroke", text_intervention_args.link_colour)
+                .style("stroke", args.text_intervention.link_colour)
                 .style("opacity", 0)
                 .style("stroke-width", self.strokeWidth)
                 .transition()
                 .duration(transition_in)
                 .style("opacity", 1);
+
+            console.log(curCluster);
+
+            // if (args.box) {
+                self.drawBox(curCluster,id, transition_in, args);
+            // }
         }
     };
 
@@ -453,7 +463,7 @@
 	}
 
 
-    MarksManager.prototype.clusterBranch = function(transition_in, id, tuple_ids, text_intervention_args){
+    MarksManager.prototype.clusterBranch = function(transition_in, id, tuple_ids, args){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementById('refAOI');
@@ -506,10 +516,10 @@
 				}
 
                 d3.select(self.textVisOverlay).append("line")
-                    .attr("class", "line_" + id + " " + text_intervention_args.link_type)
+                    .attr("class", "line_" + id + " " + args.text_intervention.link_type)
                     .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                     .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
-                    .style("stroke", text_intervention_args.link_colour)
+                    .style("stroke", args.text_intervention.link_colour)
                     .style("opacity", 0)
                     .style("stroke-width", self.strokeWidth)
                     .transition()
@@ -528,10 +538,10 @@
                             markY = curCluster[i].top - refParentRect.top + curCluster[i].height;
                         }
                         d3.select(self.textVisOverlay).append("line")
-                            .attr("class", "line_" + id + " " + text_intervention_args.link_type)
+                            .attr("class", "line_" + id + " " + args.text_intervention.link_type)
                             .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                             .attr("x1", markX).attr("y1", markY)
-                            .style("stroke", text_intervention_args.link_colour)
+                            .style("stroke", args.text_intervention.link_colour)
                             .style("opacity", 0)
                             .style("stroke-width", self.strokeWidth)
                             .transition()
@@ -575,10 +585,10 @@
             }
 
             d3.select(self.textVisOverlay).append("line")
-                .attr("class", "line_" + id + " " + text_intervention_args.link_type)
+                .attr("class", "line_" + id + " " + args.text_intervention.link_type)
                 .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                 .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
-                .style("stroke", text_intervention_args.link_colour)
+                .style("stroke", args.text_intervention.link_colour)
                 .style("opacity", 0)
                 .style("stroke-width", self.strokeWidth)
                 .transition()
@@ -597,10 +607,10 @@
                         markY = curCluster[i].top - refParentRect.top + curCluster[i].height;
                     }
                     d3.select(self.textVisOverlay).append("line")
-                        .attr("class", "line_" + id + " " + text_intervention_args.link_type)
+                        .attr("class", "line_" + id + " " + args.text_intervention.link_type)
                         .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                         .attr("x1", markX).attr("y1", markY)
-                        .style("stroke", text_intervention_args.link_colour)
+                        .style("stroke", args.text_intervention.link_colour)
                         .style("opacity", 0)
                         .style("stroke-width", self.strokeWidth)
                         .transition()
@@ -612,7 +622,7 @@
     };
 
 
-    MarksManager.prototype.drawMidLine = function(transition_in, id, tuple_ids, text_intervention_args){
+    MarksManager.prototype.drawMidLine = function(transition_in, id, tuple_ids, args){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementById('refAOI');
@@ -653,18 +663,22 @@
 			}
 
             d3.select(self.textVisOverlay).append("line")
-                .attr("class", "line_" + id + " " + text_intervention_args.link_type)
+                .attr("class", "line_" + id + " " + args.text_intervention.link_type)
                 .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                 .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
-                .style("stroke", text_intervention_args.link_colour)
+                .style("stroke", args.text_intervention.link_colour)
                 .style("opacity", 0)
                 .style("stroke-width", self.strokeWidth)
                 .transition()
                 .duration(transition_in)
                 .style("opacity", 1);
+
+            // if (args.box) {
+            	self.drawBox(markRects,id, transition_in, args);
+			// }
     };
 
-    MarksManager.prototype.midLineBranch = function(transition_in, id, tuple_ids, text_intervention_args){
+    MarksManager.prototype.midLineBranch = function(transition_in, id, tuple_ids, args){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementById('refAOI');
@@ -719,10 +733,10 @@
         }
 
         d3.select(self.textVisOverlay).append("line")
-            .attr("class", "line_" + id + " " + text_intervention_args.link_type)
+            .attr("class", "line_" + id + " " + args.text_intervention.link_type)
             .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
             .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
-            .style("stroke", text_intervention_args.link_colour)
+            .style("stroke", args.text_intervention.link_colour)
             .style("opacity", 0)
             .style("stroke-width", self.strokeWidth)
             .transition()
@@ -741,10 +755,10 @@
                     markY = markRects[i].top - refParentRect.top + markRects[i].height;
                 }
                 d3.select(self.textVisOverlay).append("line")
-                    .attr("class", "line_" + id + " " + text_intervention_args.link_type)
+                    .attr("class", "line_" + id + " " + args.text_intervention.link_type)
                     .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                     .attr("x1", markX).attr("y1", markY)
-                    .style("stroke", text_intervention_args.link_colour)
+                    .style("stroke", args.text_intervention.link_colour)
                     .style("opacity", 0)
                     .style("stroke-width", self.strokeWidth)
                     .transition()
@@ -754,13 +768,13 @@
         }
     };
 
-    MarksManager.prototype.drawBox = function(tuple_ids, reference_id, transition_in, args) {
-        let self = this,
-        selectedMarks = self.getSelectedMarks(tuple_ids).selected_marks; //used for bolding
+    MarksManager.prototype.drawBox = function(markRects, reference_id, transition_in, args) {
+        let self = this;
+        // let selectedMarks = self.getSelectedMarks(tuple_ids).selected_marks; //used for bolding
         let bold_thickness = args.bold_thickness || 1;
-        let markRects = selectedMarks.map((mark) => {
-            return mark.getBoundingClientRect();
-        });
+        // let markRects = selectedMarks.map((mark) => {
+        //     return mark.getBoundingClientRect();
+        // });
         let parentRect = document.getElementsByClassName('overlayContainer')[0].getBoundingClientRect();
 
 
@@ -777,19 +791,19 @@
         });
 
         d3.select(this.overlay).append('rect')
-			.attr("class", "box_" + reference_id)
-			.attr("x", minX)
-			.attr("y", minY)
-			.attr("width", maxX - minX)
-			.attr("height", maxY - minY)
-			.attr("stroke-width", bold_thickness)
-			.attr("stroke", "black")
-			.attr("fill-opacity", 0)
-			.style("opacity", 0)
+            .attr("class", "box_" + reference_id)
+            .attr("x", minX)
+            .attr("y", minY)
+            .attr("width", maxX - minX)
+            .attr("height", maxY - minY)
+            .attr("stroke-width", bold_thickness)
+            .attr("stroke", "black")
+            .attr("fill-opacity", 0)
+            .style("opacity", 0)
             .transition()
             .duration(transition_in)
-			.style("opacity", 1)
-            .each('end', function() {
+            .style("opacity", 1)
+            .each('end', function () {
                 d3.select(this).attr('id', 'reference_' + reference_id);
                 d3.select(this).classed('selected', true);
             });
