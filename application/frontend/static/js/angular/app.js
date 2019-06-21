@@ -549,19 +549,19 @@ function handleDelivery(obj) {
       $scopeGlobal.old_active_interventions = [...new Set($scopeGlobal.old_active_interventions)]
       console.log('old_activeB:', $scopeGlobal.old_active_interventions);
 
-      let args = $scopeGlobal.interventions[obj.deliver[0].name].args;
+      let arguments = $scopeGlobal.interventions[obj.deliver[0].name].args;
 
-      // if (args.clustering) {
-      //   if (args.branching) {
-      //       $scopeGlobal.curMarksManager.clusterBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, args);
+      // if (arguments.clustering) {
+      //   if (arguments.branching) {
+      //       $scopeGlobal.curMarksManager.clusterBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
         // } else {
-            $scopeGlobal.curMarksManager.clusterLines(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, args);
+            $scopeGlobal.curMarksManager.clusterLines(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
         // }
       // } else {
-      //   if (args.branching) {
-      //       $scopeGlobal.curMarksManager.midLineBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, args);
+      //   if (arguments.branching) {
+      //       $scopeGlobal.curMarksManager.midLineBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
       //   } else {
-      //       $scopeGlobal.curMarksManager.drawMidLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, args);
+      //       $scopeGlobal.curMarksManager.drawMidLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
       //   }
       // }
 
@@ -576,12 +576,12 @@ function handleDelivery(obj) {
 
     if ($scopeGlobal.old_active_interventions.length > 0){
       //args.color = 'grey'
-      args.color = '#606060'
+      arguments.color = '#606060'
       //args.dash = true
       //args.bold_thickness = args.bold_thickness/2
       for (let a_mark of $scopeGlobal.old_active_interventions) {
         //console.log('Attempting to grey:', a_mark)
-        $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, args);
+        $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, arguments);
       }
     }
 
