@@ -21,6 +21,8 @@ class EMDATComponent(DetectionComponent):
         self.dist_idx   = 0
         self.fix_idx    = 0
         self.x_y_idx    = 0
+        self.mouse_idx  = 0
+        self.keyboard_idx  = 0
         self.id = 1
         self.AOIS = self.application_state_controller.getEmdatAoiMapping()
         print(self.AOIS)
@@ -85,11 +87,14 @@ class EMDATComponent(DetectionComponent):
         """ calculate fixations, angles and path features"""
         if (params.USE_FIXATION_PATH_FEATURES):
             self.calc_fix_ang_path_features()
+        """ calculate fixations, angles and path features"""
+        if (params.USE_MOUSE or params.USE_KEYBOARD):
+            self.calc_event_features()
 
         all_aoi_time = time.time()
         """ calculate AOIs features """
 
-        self.calc_aoi_features()# rest_pupil_size, export_pupilinfo)
+        self.calc_aoi_features()
         all_merging_time = time.time()
         if (params.KEEP_TASK_FEATURES and params.KEEP_GLOBAL_FEATURES):
             self.merge_features(self.emdat_interval_features, self.emdat_task_features)
@@ -111,15 +116,15 @@ class EMDATComponent(DetectionComponent):
         features_dictionary['length_invalid'] = 0
 		# Pupil features
         features_dictionary['numpupilsizes']    	    = 0
-        features_dictionary['numpupilvelocity']		= 0
+        features_dictionary['numpupilvelocity']		    = 0
         features_dictionary['meanpupilsize'] 			= -1
-        features_dictionary['stddevpupilsize'] 		= -1
+        features_dictionary['stddevpupilsize'] 		    = -1
         features_dictionary['maxpupilsize'] 			= -1
         features_dictionary['minpupilsize'] 			= -1
         features_dictionary['startpupilsize'] 			= -1
         features_dictionary['endpupilsize'] 			= -1
         features_dictionary['meanpupilvelocity'] 		= -1
-        features_dictionary['stddevpupilvelocity'] 	= -1
+        features_dictionary['stddevpupilvelocity'] 	    = -1
         features_dictionary['maxpupilvelocity'] 		= -1
         features_dictionary['minpupilvelocity'] 		= -1
         features_dictionary['startpupilvelocity'] 		= -1
@@ -129,18 +134,18 @@ class EMDATComponent(DetectionComponent):
         features_dictionary['numdistancedata']			= 0
         features_dictionary['meandistance'] 			= -1
         features_dictionary['stddevdistance'] 			= -1
-        features_dictionary['maxdistance'] 			= -1
-        features_dictionary['mindistance'] 			= -1
+        features_dictionary['maxdistance'] 		       	= -1
+        features_dictionary['mindistance'] 			    = -1
         features_dictionary['startdistance'] 			= -1
         features_dictionary['enddistance'] 				= -1
 		# Path features
-        features_dictionary['numfixdistances'] 		= 0
+        features_dictionary['numfixdistances'] 		    = 0
         features_dictionary['numabsangles'] 			= 0
         features_dictionary['numrelangles'] 			= 0
         features_dictionary['meanpathdistance'] 		= -1
-        features_dictionary['sumpathdistance'] 		= -1
+        features_dictionary['sumpathdistance'] 		    = -1
         features_dictionary['stddevpathdistance'] 		= -1
-        features_dictionary['eyemovementvelocity'] 	= -1
+        features_dictionary['eyemovementvelocity']  	= -1
         features_dictionary['sumabspathangles'] 		= -1
         features_dictionary['abspathanglesrate'] 		= -1
         features_dictionary['meanabspathangles']		= -1
@@ -148,14 +153,31 @@ class EMDATComponent(DetectionComponent):
         features_dictionary['sumrelpathangles'] 		= -1
         features_dictionary['relpathanglesrate'] 		= -1
         features_dictionary['meanrelpathangles']		= -1
-        features_dictionary['stddevrelpathangles']     = -1
+        features_dictionary['stddevrelpathangles']      = -1
 		# Fixation features
         features_dictionary['numfixations'] 			= 0
         features_dictionary['fixationrate'] 			= -1
         features_dictionary['meanfixationduration'] 	= -1
         features_dictionary['stddevfixationduration'] 	= -1
-        features_dictionary['sumfixationduration'] 	= -1
+        features_dictionary['sumfixationduration'] 	    = -1
         features_dictionary['fixationrate'] 			= -1
+        # Event features
+        features_dictionary['numevents']                = 0
+        features_dictionary['numleftclic']              = 0
+        features_dictionary['numrightclic']                   = 0
+#        features_dictionary['numdoubleclic']                  = 0
+#        features_dictionary['numdragdrop']                    = 0
+        features_dictionary['numkeypressed']                  = 0
+        features_dictionary['leftclicrate']                   = -1
+        features_dictionary['rightclicrate']                  = -1
+#        features_dictionary['doubleclicrate']                 = -1
+#        features_dictionary['dragdroprate']                   = -1
+        features_dictionary['keypressedrate']                 = -1
+#        features_dictionary['timetofirstleftclic']            = -1
+#        features_dictionary['timetofirstrightclic']           = -1
+#        features_dictionary['timetofirstdoubleclic'] = doublec[0].timestamp if len(doublec) > 0 else -1
+#        features_dictionary['timetofirstkeypressed'] = keyp[0].timestamp if len(keyp) > 0 else -1
+
         for aoi in self.AOIS.keys():
             features_dictionary[aoi] = {}
             features_dictionary[aoi]['numfixations'] 			    = 0
@@ -174,8 +196,8 @@ class EMDATComponent(DetectionComponent):
             features_dictionary[aoi]['minpupilsize']               = -1
             features_dictionary[aoi]['startpupilsize']             = -1
             features_dictionary[aoi]['endpupilsize']               = -1
-            features_dictionary[aoi]['startpupilvelocity']             = -1
-            features_dictionary[aoi]['endpupilvelocity']               = -1
+            features_dictionary[aoi]['startpupilvelocity']         = -1
+            features_dictionary[aoi]['endpupilvelocity']           = -1
 
             features_dictionary[aoi]['meanpupilvelocity']          = -1
             features_dictionary[aoi]['stddevpupilvelocity']        = -1
@@ -192,6 +214,18 @@ class EMDATComponent(DetectionComponent):
             features_dictionary[aoi]['startdistance']              = -1
             features_dictionary[aoi]['enddistance']                = -1
             features_dictionary[aoi]['total_trans_from']           = 0
+
+            features_dictionary[aoi]['numevents']                  = 0
+            features_dictionary[aoi]['numleftclic']                = 0
+            features_dictionary[aoi]['numrightclic']               = 0
+#            features_dictionary[aoi]['numdoubleclic']              = 0
+#            features_dictionary[aoi]['numdragdrop']                = 0
+            features_dictionary[aoi]['numkeypressed']              = 0
+            features_dictionary[aoi]['leftclicrate']               = -1
+            features_dictionary[aoi]['rightclicrate']              = -1
+#            features_dictionary[aoi]['doubleclicrate']             = -1
+#            features_dictionary[aoi]['dragdroprate']               = -1
+            features_dictionary[aoi]['keypressedrate']             = -1
 
             for cur_aoi in self.AOIS.keys():
                 features_dictionary[aoi]['numtransfrom_%s'%(cur_aoi)] = 0
@@ -345,6 +379,51 @@ class EMDATComponent(DetectionComponent):
             self.emdat_interval_features['numabsangles'] = numabsangles
             self.emdat_interval_features['numrelangles'] = numrelangles
 
+    def calc_event_features(self):
+        """
+        Called from run(). Calculates event features for the whole screen with new raw
+        Tobii datapoints generated since the last call to run(). Features are stored in
+        emdat_interval_features.
+        """
+        mousep = self.tobii_controller.mouse_clicks[self.mouse_idx:]
+        keyp = self.tobii_controller.keyboard_clicks[self.keyboard_idx:]
+        if mousep != None and keyp != None:
+            leftc, rightc, _ = generate_event_lists(mousep)
+
+            self.numevents = len(leftc)+len(rightc)+len(doublec)+len(keyp)
+            self.emdat_interval_features['numevents'] = self.numevents
+            self.emdat_interval_features['numleftclic'] = len(leftc)
+            self.emdat_interval_features['numrightclic'] = len(rightc)
+#            self.emdat_interval_features['numdoubleclic'] = len(doublec)
+#            self.emdat_interval_features['numdragdrop'] = len(dragdrop)
+            self.emdat_interval_features['numkeypressed'] = len(keyp)
+            self.emdat_interval_features['leftclicrate'] = float(len(leftc))/(self.length - self.length_invalid)
+            self.emdat_interval_features['rightclicrate'] = float(len(rightc))/(self.length - self.length_invalid)
+#            self.emdat_interval_features['doubleclicrate'] = float(len(doublec))/(self.length - self.length_invalid)
+#            self.emdat_interval_features['dragdroprate'] = float(len(dragdrop))/(self.length - self.length_invalid)
+            self.emdat_interval_features['keypressedrate'] = float(len(keyp))/(self.length - self.length_invalid)
+#            self.emdat_interval_features['timetofirstleftclic'] = leftc[0].timestamp if len(leftc) > 0 else -1
+#            self.emdat_interval_features['timetofirstrightclic'] = rightc[0].timestamp if len(rightc) > 0 else -1
+#            self.emdat_interval_features['timetofirstdoubleclic'] = doublec[0].timestamp if len(doublec) > 0 else -1
+#            self.emdat_interval_features['timetofirstkeypressed'] = keyp[0].timestamp if len(keyp) > 0 else -1
+        else:
+            self.emdat_interval_features['numevents'] = 0
+            self.emdat_interval_features['numleftclic'] = 0
+            self.emdat_interval_features['numrightclic'] = 0
+#            self.emdat_interval_features['numdoubleclic'] = 0
+            self.emdat_interval_features['numkeypressed'] = 0
+#            self.emdat_interval_features['numdragdrop'] = 0
+            self.emdat_interval_features['leftclicrate'] = -1
+            self.emdat_interval_features['rightclicrate'] = -1
+#            self.emdat_interval_features['doubleclicrate'] = -1
+            self.emdat_interval_features['keypressedrate'] = -1
+#            self.emdat_interval_features['dragdroprate'] = -1
+#            self.emdat_interval_features['timetofirstleftclic'] = -1
+#            self.emdat_interval_features['timetofirstrightclic'] = -1
+#            self.emdat_interval_features['timetofirstdoubleclic'] = -1
+#            self.emdat_interval_features['timetofirstkeypressed'] = -1
+
+
     def calc_validity_gaps(self):
         """
         Calculates the validity gaps in new raw Tobii data, i.e. segments
@@ -385,6 +464,8 @@ class EMDATComponent(DetectionComponent):
         pup_vel_vals                    = np.array(self.tobii_controller.pupilvelocity[self.x_y_idx:])
         dist_vals                       = np.array(self.tobii_controller.head_distance[self.x_y_idx:])
         fixation_vals                   = np.asarray(self.tobii_controller.EndFixations[self.fix_idx:])
+        mouse_vals                      = np.asarray(self.tobii_controller.mouse_clicks[self.mouse_idx:])
+        keyb_vals                      = np.asarray(self.tobii_controller.keyboard_clicks[self.keyboard_idx:])
 
         for aoi in self.AOIS:
             start_computing_features = time.time()
@@ -399,7 +480,6 @@ class EMDATComponent(DetectionComponent):
 
             if params.USE_PUPIL_FEATURES:
                 ## Select valid pupil sizes inside the AOI
-                print(valid_indices)
                 valid_pupil_sizes      = pup_size_vals[valid_indices]
                 valid_pupil_sizes      = valid_pupil_sizes[valid_pupil_sizes > 0]
                     ## Select valid velocities inside the AOI
@@ -410,6 +490,15 @@ class EMDATComponent(DetectionComponent):
                 ## Select valid head distances inside the AOI
                 valid_dist_vals        = dist_vals[valid_indices]
                 self.generate_aoi_distance_features(aoi, valid_dist_vals)
+            if (params.USE_MOUSE or params.USE_KEYBOARD):
+                # Only 1 AOI can generate keyboard features
+                if (aoi is not "ref_keyboard"):
+                    keyb_vals = []
+                mouse_vals_aoi = []
+                for mouse_event in mouse_events:
+                    if mouse_event.aoi == aoi:
+                        mouse_vals_aoi.append(mouse_event)
+                self.generate_aoi_mouse_keyboard_features(aoi, mouse_vals_aoi, keyb_vals)
             if (len(fixation_vals) == 0):
                 continue
             if (params.USE_FIXATION_PATH_FEATURES or params.USE_TRANSITION_AOI_FEATURES):
@@ -421,6 +510,8 @@ class EMDATComponent(DetectionComponent):
                 self.generate_transition_features(aoi, fixation_vals, valid_fixation_indices[0])
         self.x_y_idx = len(self.tobii_controller.x)
         self.fix_idx = len(self.tobii_controller.EndFixations)
+        self.mouse_idx = len(self.tobii_controller.mouse_clicks)
+        self.keyboard_idx = len(self.tobii_controller.keyboard_clicks)
 
     def generate_aoi_pupil_features(self, aoi, valid_pupil_data, valid_pupil_velocity):
         """
@@ -487,6 +578,25 @@ class EMDATComponent(DetectionComponent):
             #self.emdat_interval_features[aoi]['timetolastfixation']     = fixation_data[-1][3] - self.starttime
             self.emdat_interval_features[aoi]['proportionnum']          = float(numfixations)/num_all_fixations
             self.emdat_interval_features[aoi]['fixationrate']           = numfixations / float(totaltimespent)
+
+    def generate_aoi_mouse_keyboard_features(self, aoi, mouse_data, keyboard_data):
+        """
+        Generates mouse/keyboard features for given AOI
+        """
+        num_mouse_clicks                                                = len(mouse_data)
+        num_keyboard_clicks                                             = len(keyboard_data)
+        num_events                                                      = num_mouse_clicks + num_keyboard_clicks
+        left_clicks, right_clicks, _                                    = generate_event_lists(mouse_data)
+        self.emdat_interval_features[aoi]['numevents']                  = num_events
+        self.emdat_interval_features[aoi]['numleftclic']                = len(left_clicks)
+        self.emdat_interval_features[aoi]['numrightclic']               = len(right_clicks)
+        self.emdat_interval_features[aoi]['numkeypressed']              = len(num_keyboard_clicks)
+        self.emdat_interval_features[aoi]['leftclicrate']               = float(len(left_clicks))/(self.length - self.length_invalid)
+        self.emdat_interval_features[aoi]['rightclicrate']              = float(len(right_clicks))/(self.length - self.length_invalid)
+#       self.emdat_interval_features[aoi]['doubleclicrate']             = float(len(doublec))/(self.length - self.length_invalid)
+#       self.emdat_interval_features[aoi]['dragdroprate']               = float(len(dragdrop))/(self.length - self.length_invalid)
+        self.emdat_interval_features[aoi]['keypressedrate']             = float(keyboard_clicks)/(self.length - self.length_invalid)
+
 
     def generate_transition_features(self, cur_aoi, fixation_data, fixation_indices):
         """

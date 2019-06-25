@@ -21,7 +21,7 @@ div {
 }
 
 .text-reference {
-  border: solid rgba(255,0,0,0.5);
+  border: dashed grey;
   border-top-width: 0px;
   border-right-width: 0px;
   border-left-width: 0px;

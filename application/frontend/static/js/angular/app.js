@@ -640,30 +640,24 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     // Create the spans in the text
     let sm = new SpanManager(paragraph);
 
-    let text_link_args = args.text_intervention;
-
-    // if (args.underline) {
+    if (args.underline) {
         sm.createSpans([refToHighlight], function(elem, _) {
-          // elem.setAttribute('class', 'text-reference');
+          elem.setAttribute('class', 'text-reference');
           elem.setAttribute('id', 'refAOI');
-          // elem.style.border = text_link_args.line_type + " " + text_link_args.line_colour;
-          // elem.style.borderBottomWidth = "1px";
-            elem.style.borderBottom = "1px " + text_link_args.line_type + " " + text_link_args.line_colour;
         });
-    // }
+    }
 
-    // if (args.highlight) {
-    //     sm.createSpans([refToHighlight], function(elem, _) {
-    //         elem.setAttribute('class', 'text-highlight');
-    //         elem.setAttribute('id', 'refAOI');
-    //     });
-    // }
+    if (args.highlight) {
+        sm.createSpans([refToHighlight], function(elem, _) {
+            elem.setAttribute('class', 'text-highlight');
+            elem.setAttribute('id', 'refAOI');
+        });
+    }
 
-    // if (args.link) {
+    if (args.link) {
       if (!document.getElementById('textVisContainer')) {
         $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
-      // }
-      // $scopeGlobal.curMarksManager.clusterLines(transition_in, referenceID.tuple_id, tuple_ids);
+      }
     }
 
 }
