@@ -2,18 +2,19 @@ class MouseEvent(object):
 	"""
 		Prototype
 	"""
-	def __init__(self, x, y, time_stamp, aoi):
+	def __init__(self, x, y, time_stamp, left_click, aoi):
 		self.x = x
 		self.y = y
 		self.time_stamp = time_stamp
+		self.left_click = left_click
 		self.aoi = aoi
 
 class BasicMouseEvent(MouseEvent):
 	"""
 		Mouse event for normal click
 	"""
- 	def __init__(self, x, y, time_stamp, aoi, is_press):
-		super(BasicMouseEvent, self).__init__(x, y, time_stamp, aoi)
+ 	def __init__(self, x, y, time_stamp, aoi, left_click, is_press):
+		super(BasicMouseEvent, self).__init__(x, y, time_stamp, left_click, aoi)
 		self.is_press = is_press
 
 class DragDropMouseEvent(MouseEvent):
@@ -30,7 +31,7 @@ class DoubleClickMouseEvent(MouseEvent):
 		super(DoubleClickMouseEvent, self).__init__(x, y, time_stamp, aoi)
 		self.is_first_click = is_first_click
 
-class KeyboardEvent():
+class KeyboardEvent(object):
     def __init__(self, key, time_stamp):
 		self.key = key
 		self.time_stamp = time_stamp
