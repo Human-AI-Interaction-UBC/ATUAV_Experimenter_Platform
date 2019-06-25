@@ -518,10 +518,11 @@
 				}
 
                 d3.select(self.textVisOverlay).append("line")
-                    .attr("class", "line_" + id + " " + args.text_intervention.link_type)
+                    .attr("class", "line_" + id)
                     .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                     .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
-                    .style("stroke", args.text_intervention.link_colour)
+                    .style("stroke-dasharray", (3, 3))
+                    .style("stroke", "black")
                     .style("opacity", 0)
                     .style("stroke-width", self.strokeWidth)
                     .transition()
@@ -540,10 +541,11 @@
                             markY = curCluster[i].top - refParentRect.top + curCluster[i].height;
                         }
                         d3.select(self.textVisOverlay).append("line")
-                            .attr("class", "line_" + id + " " + args.text_intervention.link_type)
+                            .attr("class", "line_" + id)
                             .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                             .attr("x1", markX).attr("y1", markY)
-                            .style("stroke", args.text_intervention.link_colour)
+							.style("stroke-dasharray", (3, 3))
+                            .style("stroke", "black")
                             .style("opacity", 0)
                             .style("stroke-width", self.strokeWidth)
                             .transition()
@@ -587,10 +589,11 @@
             }
 
             d3.select(self.textVisOverlay).append("line")
-                .attr("class", "line_" + id + " " + args.text_intervention.link_type)
+                .attr("class", "line_" + id)
                 .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                 .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
-                .style("stroke", args.text_intervention.link_colour)
+                .style("stroke-dasharray", (3, 3))
+                .style("stroke", "black")
                 .style("opacity", 0)
                 .style("stroke-width", self.strokeWidth)
                 .transition()
@@ -609,10 +612,11 @@
                         markY = curCluster[i].top - refParentRect.top + curCluster[i].height;
                     }
                     d3.select(self.textVisOverlay).append("line")
-                        .attr("class", "line_" + id + " " + args.text_intervention.link_type)
+                        .attr("class", "line_" + id)
                         .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                         .attr("x1", markX).attr("y1", markY)
-                        .style("stroke", args.text_intervention.link_colour)
+                        .style("stroke-dasharray", (3, 3))
+                        .style("stroke", "black")
                         .style("opacity", 0)
                         .style("stroke-width", self.strokeWidth)
                         .transition()
@@ -665,10 +669,11 @@
 			}
 
             d3.select(self.textVisOverlay).append("line")
-                .attr("class", "line_" + id + " " + args.text_intervention.link_type)
+                .attr("class", "line_" + id)
                 .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                 .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
-                .style("stroke", args.text_intervention.link_colour)
+                .style("stroke-dasharray", (3, 3))
+                .style("stroke", "black")
                 .style("opacity", 0)
                 .style("stroke-width", self.strokeWidth)
                 .transition()
@@ -735,10 +740,11 @@
         }
 
         d3.select(self.textVisOverlay).append("line")
-            .attr("class", "line_" + id + " " + args.text_intervention.link_type)
+            .attr("class", "line_" + id)
             .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
             .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
-            .style("stroke", args.text_intervention.link_colour)
+            .style("stroke-dasharray", (3, 3))
+            .style("stroke", "black")
             .style("opacity", 0)
             .style("stroke-width", self.strokeWidth)
             .transition()
@@ -757,10 +763,11 @@
                     markY = markRects[i].top - refParentRect.top + markRects[i].height;
                 }
                 d3.select(self.textVisOverlay).append("line")
-                    .attr("class", "line_" + id + " " + args.text_intervention.link_type)
+                    .attr("class", "line_" + id)
                     .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                     .attr("x1", markX).attr("y1", markY)
-                    .style("stroke", args.text_intervention.link_colour)
+                    .style("stroke-dasharray", (3, 3))
+                    .style("stroke", "black")
                     .style("opacity", 0)
                     .style("stroke-width", self.strokeWidth)
                     .transition()
