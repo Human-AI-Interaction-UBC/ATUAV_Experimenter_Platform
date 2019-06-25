@@ -549,9 +549,7 @@ function handleDelivery(obj) {
       $scopeGlobal.old_active_interventions = [...new Set($scopeGlobal.old_active_interventions)]
       console.log('old_activeB:', $scopeGlobal.old_active_interventions);
 
-      let text_intervention_args = $scopeGlobal.interventions[obj.deliver[0].name].args.text_intervention;
-
-      $scopeGlobal.curMarksManager.clusterAndDrawLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, text_intervention_args);
+      $scopeGlobal.curMarksManager.clusterAndDrawLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
   }
 
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency
@@ -625,30 +623,24 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     // Create the spans in the text
     let sm = new SpanManager(paragraph);
 
-    let text_link_args = args.text_intervention;
-
-    // if (args.underline) {
+    if (args.underline) {
         sm.createSpans([refToHighlight], function(elem, _) {
-          // elem.setAttribute('class', 'text-reference');
+          elem.setAttribute('class', 'text-reference');
           elem.setAttribute('id', 'refAOI');
-          // elem.style.border = text_link_args.line_type + " " + text_link_args.line_colour;
-          // elem.style.borderBottomWidth = "1px";
-            elem.style.borderBottom = "1px " + text_link_args.line_type + " " + text_link_args.line_colour;
         });
-    // }
+    }
 
-    // if (args.highlight) {
-    //     sm.createSpans([refToHighlight], function(elem, _) {
-    //         elem.setAttribute('class', 'text-highlight');
-    //         elem.setAttribute('id', 'refAOI');
-    //     });
-    // }
+    if (args.highlight) {
+        sm.createSpans([refToHighlight], function(elem, _) {
+            elem.setAttribute('class', 'text-highlight');
+            elem.setAttribute('id', 'refAOI');
+        });
+    }
 
-    // if (args.link) {
+    if (args.link) {
       if (!document.getElementById('textVisContainer')) {
         $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
-      // }
-      // $scopeGlobal.curMarksManager.clusterAndDrawLine(transition_in, referenceID.tuple_id, tuple_ids);
+      }
     }
 
 }

@@ -286,7 +286,7 @@
         .style("opacity", 1);
   };
 
-    MarksManager.prototype.clusterAndDrawLine = function(transition_in, id, tuple_ids, text_intervention_args){
+    MarksManager.prototype.clusterAndDrawLine = function(transition_in, id, tuple_ids){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementById('refAOI');
