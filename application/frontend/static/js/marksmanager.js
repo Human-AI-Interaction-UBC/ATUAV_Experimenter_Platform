@@ -333,10 +333,11 @@
                 }
 
                 d3.select(self.textVisOverlay).append("line")
-                    .attr("class", "line_" + id + " " + text_intervention_args.link_type)
+                    .attr("class", "line_" + id)
                     .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                     .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
-                    .style("stroke", text_intervention_args.link_colour)
+					.style("stroke-dasharray", (3, 3))
+                    .style("stroke", "black")
                     .style("opacity", 0)
                     .style("stroke-width", self.strokeWidth)
                     .transition()
@@ -371,10 +372,11 @@
             }
             
             d3.select(self.textVisOverlay).append("line")
-                .attr("class", "line_" + id + " " + text_intervention_args.link_type)
+                .attr("class", "line_" + id)
                 .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                 .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
-                .style("stroke", text_intervention_args.link_colour)
+                .style("stroke-dasharray", (3, 3))
+                .style("stroke", "black")
                 .style("opacity", 0)
                 .style("stroke-width", self.strokeWidth)
                 .transition()
