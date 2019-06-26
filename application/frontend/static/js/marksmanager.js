@@ -760,11 +760,11 @@
 						.enter()
 						.append('g')
                         .classed('links', true)
-                        .append('path')
+                        .attr("class", "line_" + id)
+						.append('path')
                         .attr('d', function(d) {
                             return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
                         })
-                        .attr("class", "line_" + id)
 						.style("stroke", "black")
 						.style("stroke-dasharray", (3, 3))
 						.style("stroke-width", self.strokeWidth)
