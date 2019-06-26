@@ -678,6 +678,18 @@
                         relativeCoords.marky = curMark.top - refParentRect.top + curMark.height;
                     }
 
+                    d3.select(self.textVisOverlay).append("line")
+                        .attr("class", "line_" + id)
+                        .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
+                        .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
+                        .style("stroke-dasharray", (3, 3))
+                        .style("stroke", "black")
+                        .style("opacity", 0)
+                        .style("stroke-width", self.strokeWidth)
+                        .transition()
+                        .duration(transition_in)
+                        .style("opacity", 1);
+
                 } else if (sharedAxis.hasOwnProperty('coord')) {
                     if (sharedAxis.axis === 'x') {
                         relativeCoords.markx = sharedAxis.coord - refParentRect.left;
@@ -689,25 +701,8 @@
                 }
 
                 if (cur.length > 1) {
-                    let xDiff = relativeCoords.markx - relativeCoords.refX;
-                    relativeCoords.markx = relativeCoords.refX + 0.8 * xDiff;
-                    let yDiff = relativeCoords.marky - relativeCoords.refY;
-                    relativeCoords.marky = relativeCoords.refY + 0.8 * yDiff;
-                }
-
-                d3.select(self.textVisOverlay).append("line")
-                    .attr("class", "line_" + id)
-                    .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
-                    .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
-                    .style("stroke-dasharray", (3, 3))
-                    .style("stroke", "black")
-                    .style("opacity", 0)
-                    .style("stroke-width", self.strokeWidth)
-                    .transition()
-                    .duration(transition_in)
-                    .style("opacity", 1);
-
-                if (cur.length > 1) {
+                    relativeCoords.markx = relativeCoords.refX + 0.8 * (relativeCoords.markx - relativeCoords.refX);
+                    relativeCoords.marky = relativeCoords.refY + 0.8 * (relativeCoords.marky - relativeCoords.refY);
                 	let nodes = [];
                 	let connectors = [];
                     for (let i = 0; i < cur.length; i++) {
@@ -769,6 +764,7 @@
                         .attr('d', function(d) {
                             return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
                         })
+                        .attr("class", "line_" + id)
 						.style("stroke", "black")
 						.style("stroke-dasharray", (3, 3))
 						.style("stroke-width", self.strokeWidth)
