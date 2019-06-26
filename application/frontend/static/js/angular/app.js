@@ -555,7 +555,7 @@ function handleDelivery(obj) {
       //   if (arguments.branching) {
       //       $scopeGlobal.curMarksManager.clusterBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
         // } else {
-            $scopeGlobal.curMarksManager.clusterLines(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
+        //     $scopeGlobal.curMarksManager.clusterLines(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
         // }
       // } else {
       //   if (arguments.branching) {
@@ -564,6 +564,9 @@ function handleDelivery(obj) {
       //       $scopeGlobal.curMarksManager.drawMidLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
       //   }
       // }
+
+      $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
+
 
       // $scopeGlobal.curMarksManager.drawBox(new_tuple_ids, $scopeGlobal.interventions[obj.deliver[0].name].args.id, 500, args);
 
@@ -640,25 +643,25 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     // Create the spans in the text
     let sm = new SpanManager(paragraph);
 
-    if (args.underline) {
+    // if (args.underline) {
         sm.createSpans([refToHighlight], function(elem, _) {
           elem.setAttribute('class', 'text-reference');
           elem.setAttribute('id', 'refAOI');
         });
-    }
+    // }
 
-    if (args.highlight) {
-        sm.createSpans([refToHighlight], function(elem, _) {
-            elem.setAttribute('class', 'text-highlight');
-            elem.setAttribute('id', 'refAOI');
-        });
-    }
+    // if (args.highlight) {
+    //     sm.createSpans([refToHighlight], function(elem, _) {
+    //         elem.setAttribute('class', 'text-highlight');
+    //         elem.setAttribute('id', 'refAOI');
+    //     });
+    // }
 
-    if (args.link) {
+    // if (args.link) {
       if (!document.getElementById('textVisContainer')) {
         $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
       }
-    }
+    // }
 
 }
 

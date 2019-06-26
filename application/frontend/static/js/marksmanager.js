@@ -627,6 +627,156 @@
         }
     };
 
+    MarksManager.prototype.clusterTreeBranch = function(transition_in, id, tuple_ids){
+        let self = this;
+        let relativeCoords = {};
+        let ref = document.getElementById('refAOI');
+        let refRect = ref.getBoundingClientRect();
+        let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
+        relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
+        relativeCoords.refY = refRect.top - refParentRect.top + refRect.height / 2;
+
+        let marks = self.getSelectedMarks(tuple_ids);
+        let markRects = marks.selected_marks.map((mark) => {
+            return mark.getBoundingClientRect();
+        });
+        // markRects.sort((prev, cur) => {
+        // 	return prev.x === cur.x ? prev.y - cur.y : prev.x - cur.x;
+        // });
+        let curCluster = [];
+        let clusters = [];
+        let prevMarkRect = markRects[0];
+        curCluster.push(prevMarkRect);
+        for (let i = 1; i < markRects.length; i++) {
+            let curMarkRect = markRects[i];
+            let isShared = getSharedAxis(curCluster.concat(curMarkRect), 10).isShared;
+
+            if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !isShared) {
+                clusters.push(curCluster);
+                curCluster = [];
+            }
+            curCluster.push(curMarkRect);
+            prevMarkRect = curMarkRect;
+        }
+
+        for (let i = 0; i < clusters.length; i++) {
+        	let cur = clusters[i];
+            if (cur.length > 0) {
+                let sharedAxis = getSharedAxis(cur, 10);
+
+                if (cur.length === 1) {
+                    let curMark = cur[0];
+                    if (curMark.width > curMark.height) {
+                        relativeCoords.markx = curMark.left - refParentRect.left;
+                        relativeCoords.marky = curMark.top - refParentRect.top + curMark.height / 2;
+                    } else {
+                        relativeCoords.markx = curMark.left - refParentRect.left + curMark.width / 2;
+                        relativeCoords.marky = curMark.top - refParentRect.top + curMark.height;
+                    }
+
+                } else if (sharedAxis.hasOwnProperty('coord')) {
+                    if (sharedAxis.axis === 'x') {
+                        relativeCoords.markx = sharedAxis.coord - refParentRect.left;
+                        relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
+                    } else {
+                        relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
+                        relativeCoords.marky = sharedAxis.coord - refParentRect.top;
+                    }
+                }
+
+                if (cur.length > 1) {
+                    let xDiff = relativeCoords.markx - relativeCoords.refX;
+                    relativeCoords.markx = relativeCoords.refX + 0.8 * xDiff;
+                    let yDiff = relativeCoords.marky - relativeCoords.refY;
+                    relativeCoords.marky = relativeCoords.refY + 0.8 * yDiff;
+                }
+
+                d3.select(self.textVisOverlay).append("line")
+                    .attr("class", "line_" + id)
+                    .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
+                    .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
+                    .style("stroke-dasharray", (3, 3))
+                    .style("stroke", "black")
+                    .style("opacity", 0)
+                    .style("stroke-width", self.strokeWidth)
+                    .transition()
+                    .duration(transition_in)
+                    .style("opacity", 1);
+
+                if (cur.length > 1) {
+                	let nodes = [];
+                	let connectors = [];
+                    for (let i = 0; i < cur.length; i++) {
+                        let nodeXY = {};
+                        let treeConnectorXY = {};
+
+                        if (cur[i].width > cur[i].height) {
+                            nodeXY.x = cur[i].left - refParentRect.left;
+                            nodeXY.y = cur[i].top - refParentRect.top + cur[i].height / 2;
+                            treeConnectorXY.x = nodeXY.x - 10;
+                            treeConnectorXY.y = nodeXY.y;
+                        } else {
+                            nodeXY.x = cur[i].left - refParentRect.left + cur[i].width / 2;
+                            nodeXY.y = cur[i].top - refParentRect.top + cur[i].height;
+                            treeConnectorXY.x = nodeXY.x;
+                            treeConnectorXY.y = nodeXY.y + 10;
+                        }
+
+                        nodes.push(nodeXY);
+                        connectors.push(treeConnectorXY);
+                    }
+                    let textRef = {};
+                    textRef.x = relativeCoords.refX;
+                    textRef.y = relativeCoords.refY;
+
+                    function getDist(coords) {
+                    	return Math.sqrt(Math.pow(coords.x, 2) + Math.pow(coords.y, 2))
+					}
+                    let closestPoint = connectors.reduce((acc, cur) => {
+                        let dist = getDist({x: textRef.x - cur.x, y: textRef.y - cur.y});
+                        return dist < getDist(acc) ? cur : acc;
+                    });
+
+                    let links = [];
+                    let firstLine = {};
+                    // making the first line from the text to the nearest point to link to
+                    firstLine.source = textRef;
+                    firstLine.target = closestPoint;
+                    links.push(firstLine);
+                    // making a link for each bar out to the main line
+                    for (let i = 0; i < nodes.length; i++) {
+                    	links.push({
+							source: nodes[i],
+							target: connectors[i]
+						});
+					}
+					// making a line at the end of the links to connect them
+					links.push({
+						source: connectors[0],
+						target: connectors[connectors.length - 1]
+					});
+
+                    d3.select(self.textVisOverlay).selectAll(".links")
+						.data(links)
+						.enter()
+						.append('g')
+                        .classed('links', true)
+                        .append('path')
+                        .attr('d', function(d) {
+                            return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
+                        })
+						.style("stroke", "black")
+						.style("stroke-dasharray", (3, 3))
+						.style("stroke-width", self.strokeWidth)
+						.style("opacity", 0)
+                        .transition()
+                        .duration(transition_in)
+                        .style("opacity", 1);
+                }
+            }
+		}
+    };
+
 
     MarksManager.prototype.drawMidLine = function(transition_in, id, tuple_ids, args){
         let self = this;
