@@ -659,6 +659,10 @@
             prevMarkRect = curMarkRect;
         }
 
+        if (curCluster.length > 0) {
+        	clusters.push(curCluster);
+		}
+
         for (let i = 0; i < clusters.length; i++) {
         	let cur = clusters[i];
             if (cur.length > 0) {
