@@ -708,17 +708,19 @@
                     for (let i = 0; i < cur.length; i++) {
                         let nodeXY = {};
                         let treeConnectorXY = {};
+                        let minX = cur[i].left - 10;
+                        let maxY = cur[i].top + cur[i].height + 10;
 
                         if (cur[i].width > cur[i].height) {
                             nodeXY.x = cur[i].left - refParentRect.left;
                             nodeXY.y = cur[i].top - refParentRect.top + cur[i].height / 2;
-                            treeConnectorXY.x = nodeXY.x - 10;
+                            treeConnectorXY.x = Math.min(minX, nodeXY.x - 10);
                             treeConnectorXY.y = nodeXY.y;
                         } else {
                             nodeXY.x = cur[i].left - refParentRect.left + cur[i].width / 2;
                             nodeXY.y = cur[i].top - refParentRect.top + cur[i].height;
                             treeConnectorXY.x = nodeXY.x;
-                            treeConnectorXY.y = nodeXY.y + 10;
+                            treeConnectorXY.y = Math.max(maxY, nodeXY.y + 10);
                         }
 
                         nodes.push(nodeXY);
