@@ -714,13 +714,15 @@
                         if (cur[i].width > cur[i].height) {
                             nodeXY.x = cur[i].left - refParentRect.left;
                             nodeXY.y = cur[i].top - refParentRect.top + cur[i].height / 2;
-                            treeConnectorXY.x = Math.min(minX, nodeXY.x - 10);
+                            minX = Math.min(minX, nodeXY.x - 10);
+                            treeConnectorXY.x = minX;
                             treeConnectorXY.y = nodeXY.y;
                         } else {
                             nodeXY.x = cur[i].left - refParentRect.left + cur[i].width / 2;
                             nodeXY.y = cur[i].top - refParentRect.top + cur[i].height;
+                            maxY = Math.max(maxY, nodeXY.y + 10);
                             treeConnectorXY.x = nodeXY.x;
-                            treeConnectorXY.y = Math.max(maxY, nodeXY.y + 10);
+                            treeConnectorXY.y = maxY;
                         }
 
                         nodes.push(nodeXY);
