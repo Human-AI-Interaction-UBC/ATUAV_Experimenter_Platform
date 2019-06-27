@@ -568,9 +568,6 @@ function handleDelivery(obj) {
       // $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
 
       $scopeGlobal.curMarksManager.midlineBranchToCluster(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
-
-      $scopeGlobal.curMarksManager.drawBox(new_tuple_ids, $scopeGlobal.interventions[obj.deliver[0].name].args.id, 500, args);
-
   }
 
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency

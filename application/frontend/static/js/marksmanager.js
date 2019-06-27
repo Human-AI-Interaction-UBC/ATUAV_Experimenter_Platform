@@ -666,11 +666,11 @@
         let sharedAxis = getSharedAxis(markRects, 10);
         if (sharedAxis.hasOwnProperty('coord')) {
             if (sharedAxis.axis === 'x') {
-                relativeCoords.markx = sharedAxis.coord - refParentRect.left;
-                relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
+                relativeCoords.branchx = sharedAxis.coord - refParentRect.left;
+                relativeCoords.branchy = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
             } else {
-                relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
-                relativeCoords.marky = sharedAxis.coord - refParentRect.top;
+                relativeCoords.branchx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
+                relativeCoords.branchy = sharedAxis.coord - refParentRect.top;
             }
         } else {
             // assuming that any marks with no shared axis are probably horizontal bars
@@ -740,6 +740,9 @@
                         .duration(transition_in)
                         .style("opacity", 1);
                 }
+                // if (args.box) {
+                self.drawBox(curCluster,id, transition_in, args);
+                // }
             }
         }
     };
