@@ -464,16 +464,8 @@
 		return shared;
 	}
 
-
-    MarksManager.prototype.clusterBranch = function(transition_in, id, tuple_ids, args){
-        let self = this;
-        let relativeCoords = {};
-        let ref = document.getElementById('refAOI');
-        let refRect = ref.getBoundingClientRect();
-        let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
-        relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
-        relativeCoords.refY = refRect.top - refParentRect.top + refRect.height / 2;
-
+	function getClusters(tuple_ids) {
+    	let self = this;
         let marks = self.getSelectedMarks(tuple_ids);
         let markRects = marks.selected_marks.map((mark) => {
             return mark.getBoundingClientRect();
@@ -488,17 +480,6 @@
         for (let i = 1; i < markRects.length; i++) {
             let curMarkRect = markRects[i];
             let isShared = getSharedAxis(curCluster.concat(curMarkRect), 10).isShared;
-            let sharedAxis = getSharedAxis(curCluster, 10);
-
-            if (sharedAxis.hasOwnProperty('coord')) {
-                if (sharedAxis.axis === 'x') {
-                    relativeCoords.markx = sharedAxis.coord - refParentRect.left;
-                    relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
-                } else {
-                    relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
-                    relativeCoords.marky = sharedAxis.coord - refParentRect.top;
-                }
-            }
 
             if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !isShared) {
                 clusters.push(curCluster);
@@ -508,63 +489,69 @@
             prevMarkRect = curMarkRect;
         }
         if (curCluster.length > 0) {
-            clusters.push(curCluster);
-            let sharedAxis = getSharedAxis(curCluster, 10);
+        	clusters.push(curCluster);
+		}
+        return clusters;
+	}
 
-            if (curCluster.length === 1) {
-                let curMark = curCluster[0];
-                if (curMark.width > curMark.height) {
-                    relativeCoords.markx = curMark.left - refParentRect.left;
-                    relativeCoords.marky = curMark.top - refParentRect.top + curMark.height / 2;
-                } else {
-                    relativeCoords.markx = curMark.left - refParentRect.left + curMark.width / 2;
-                    relativeCoords.marky = curMark.top - refParentRect.top + curMark.height;
-                }
+    MarksManager.prototype.clusterBranch = function(transition_in, id, tuple_ids, args){
+        let self = this;
+        let relativeCoords = {};
+        let ref = document.getElementById('refAOI');
+        let refRect = ref.getBoundingClientRect();
+        let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
+        relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
+        relativeCoords.refY = refRect.top - refParentRect.top + refRect.height / 2;
 
-            } else if (sharedAxis.hasOwnProperty('coord')) {
-                if (sharedAxis.axis === 'x') {
-                    relativeCoords.markx = sharedAxis.coord - refParentRect.left;
-                    relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
-                } else {
-                    relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
-                    relativeCoords.marky = sharedAxis.coord - refParentRect.top;
-                }
-            }
+        let clusters = getClusters(tuple_ids);
 
-            if (curCluster.length > 1) {
-                let xDiff = relativeCoords.markx - relativeCoords.refX;
-                relativeCoords.markx = relativeCoords.refX + 0.8 * xDiff;
-                let yDiff = relativeCoords.marky - relativeCoords.refY;
-                relativeCoords.marky = relativeCoords.refY + 0.8 * yDiff;
-            }
+        for (let i = 0; i < clusters.length; i++) {
+            let curCluster = clusters[i];
+            if (curCluster.length > 0) {
+                let sharedAxis = getSharedAxis(curCluster, 10);
 
-            d3.select(self.textVisOverlay).append("line")
-                .attr("class", "line_" + id)
-                .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
-                .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
-                .style("stroke-dasharray", (3, 3))
-                .style("stroke", "black")
-                .style("opacity", 0)
-                .style("stroke-width", self.strokeWidth)
-                .transition()
-                .duration(transition_in)
-                .style("opacity", 1);
-
-            if (curCluster.length > 1) {
-                for (let i = 0; i < curCluster.length; i++) {
-                    let markX = curCluster[i].left;
-                    let markY = curCluster[i].top;
-                    if (curCluster[i].width > curCluster[i].height) {
-                        markX = curCluster[i].left - refParentRect.left;
-                        markY = curCluster[i].top - refParentRect.top + curCluster[i].height / 2;
+                if (curCluster.length === 1) {
+                    let curMark = curCluster[0];
+                    if (curMark.width > curMark.height) {
+                        relativeCoords.markx = curMark.left - refParentRect.left;
+                        relativeCoords.marky = curMark.top - refParentRect.top + curMark.height / 2;
                     } else {
-                        markX = curCluster[i].left - refParentRect.left + curCluster[i].width / 2;
-                        markY = curCluster[i].top - refParentRect.top + curCluster[i].height;
+                        relativeCoords.markx = curMark.left - refParentRect.left + curMark.width / 2;
+                        relativeCoords.marky = curMark.top - refParentRect.top + curMark.height;
                     }
+
+                } else {
+                    if (sharedAxis.hasOwnProperty('coord')) {
+                        if (sharedAxis.axis === 'x') {
+                            relativeCoords.markx = sharedAxis.coord - refParentRect.left;
+                            relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
+                        } else {
+                            relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
+                            relativeCoords.marky = sharedAxis.coord - refParentRect.top;
+                        }
+                    }
+                    let xDiff = relativeCoords.markx - relativeCoords.refX;
+                    relativeCoords.markx = relativeCoords.refX + 0.8 * xDiff;
+                    let yDiff = relativeCoords.marky - relativeCoords.refY;
+                    relativeCoords.marky = relativeCoords.refY + 0.8 * yDiff;
+
+                    let xySum = curCluster.reduce((acc, cur) => {
+                        let markX = cur.left;
+                        let markY = cur.top;
+                        if (cur.width > cur.height) {
+                            markX = cur.left - refParentRect.left;
+                            markY = cur.top - refParentRect.top + cur.height / 2;
+                        } else {
+                            markX = cur.left - refParentRect.left + cur.width / 2;
+                            markY = cur.top - refParentRect.top + cur.height;
+                        }
+                        return [acc[0] + markX, acc[1] + markY];
+                    }, [0, 0]);
+
                     d3.select(self.textVisOverlay).append("line")
                         .attr("class", "line_" + id)
                         .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
-                        .attr("x1", markX).attr("y1", markY)
+                        .attr("x1", xySum[0]/curCluster.length).attr("y1", xySum[1]/curCluster.length)
                         .style("stroke-dasharray", (3, 3))
                         .style("stroke", "black")
                         .style("opacity", 0)
@@ -573,6 +560,18 @@
                         .duration(transition_in)
                         .style("opacity", 1);
                 }
+
+                d3.select(self.textVisOverlay).append("line")
+                    .attr("class", "line_" + id)
+                    .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
+                    .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
+                    .style("stroke-dasharray", (3, 3))
+                    .style("stroke", "black")
+                    .style("opacity", 0)
+                    .style("stroke-width", self.strokeWidth)
+                    .transition()
+                    .duration(transition_in)
+                    .style("opacity", 1);
             }
         }
     };
@@ -586,33 +585,7 @@
         relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
         relativeCoords.refY = refRect.top - refParentRect.top + refRect.height / 2;
 
-        let marks = self.getSelectedMarks(tuple_ids);
-        let markRects = marks.selected_marks.map((mark) => {
-            return mark.getBoundingClientRect();
-        });
-        // markRects.sort((prev, cur) => {
-        // 	return prev.x === cur.x ? prev.y - cur.y : prev.x - cur.x;
-        // });
-        let curCluster = [];
-        let clusters = [];
-        let prevMarkRect = markRects[0];
-        curCluster.push(prevMarkRect);
-        for (let i = 1; i < markRects.length; i++) {
-            let curMarkRect = markRects[i];
-            let isShared = getSharedAxis(curCluster.concat(curMarkRect), 10).isShared;
-
-            if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !isShared) {
-                clusters.push(curCluster);
-                curCluster = [];
-            }
-            curCluster.push(curMarkRect);
-            prevMarkRect = curMarkRect;
-        }
-
-        if (curCluster.length > 0) {
-        	clusters.push(curCluster);
-		}
-
+        let clusters = getClusters(tuple_ids);
         for (let i = 0; i < clusters.length; i++) {
         	let cur = clusters[i];
             if (cur.length > 0) {
@@ -729,6 +702,102 @@
                 }
             }
 		}
+    };
+
+    MarksManager.prototype.midlineBranchToCluster = function(transition_in, id, tuple_ids, args){
+        let self = this;
+        let relativeCoords = {};
+        let ref = document.getElementById('refAOI');
+        let refRect = ref.getBoundingClientRect();
+        let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
+        relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
+        relativeCoords.refY = refRect.top - refParentRect.top + refRect.height / 2;
+
+        let clusters = getClusters(tuple_ids);
+
+        let marks = self.getSelectedMarks(tuple_ids);
+        let markRects = marks.selected_marks.map((mark) => {
+            return mark.getBoundingClientRect();
+        });
+        let sharedAxis = getSharedAxis(markRects, 10);
+        if (sharedAxis.hasOwnProperty('coord')) {
+            if (sharedAxis.axis === 'x') {
+                relativeCoords.markx = sharedAxis.coord - refParentRect.left;
+                relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
+            } else {
+                relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
+                relativeCoords.marky = sharedAxis.coord - refParentRect.top;
+            }
+        } else {
+            // assuming that any marks with no shared axis are probably horizontal bars
+            let minY = markRects[0].top;
+            let maxY = markRects[0].bottom;
+            let left = markRects[0].left;
+
+            markRects.forEach((mark) => {
+                minY = Math.min(minY, mark.top);
+                maxY = Math.max(maxY, mark.bottom);
+                left = Math.min(left, mark.left);
+            });
+            relativeCoords.branchx = left - refParentRect.left;
+            relativeCoords.branchy = (minY + maxY) / 2 - refParentRect.top;
+        }
+
+        let branchX = relativeCoords.refX + 0.8 * (relativeCoords.branchx - relativeCoords.refX);
+        let branchY = relativeCoords.refY + 0.8 * (relativeCoords.branchy - relativeCoords.refY);
+
+        d3.select(self.textVisOverlay).append("line")
+            .attr("class", "line_" + id)
+            .attr("x2", branchX).attr("y2", branchY)
+            .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
+            .style("stroke-dasharray", (3, 3))
+            .style("stroke", "black")
+            .style("opacity", 0)
+            .style("stroke-width", self.strokeWidth)
+            .transition()
+            .duration(transition_in)
+            .style("opacity", 1);
+
+        for (let i = 0; i < clusters.length; i++) {
+            let curCluster = clusters[i];
+            if (curCluster.length > 0) {
+                let sharedAxis = getSharedAxis(curCluster, 10);
+
+                if (curCluster.length === 1) {
+                    let curMark = curCluster[0];
+                    if (curMark.width > curMark.height) {
+                        relativeCoords.markx = curMark.left - refParentRect.left;
+                        relativeCoords.marky = curMark.top - refParentRect.top + curMark.height / 2;
+                    } else {
+                        relativeCoords.markx = curMark.left - refParentRect.left + curMark.width / 2;
+                        relativeCoords.marky = curMark.top - refParentRect.top + curMark.height;
+                    }
+
+                } else {
+                    if (sharedAxis.hasOwnProperty('coord')) {
+                        if (sharedAxis.axis === 'x') {
+                            relativeCoords.markx = sharedAxis.coord - refParentRect.left;
+                            relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
+                        } else {
+                            relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
+                            relativeCoords.marky = sharedAxis.coord - refParentRect.top;
+                        }
+                    }
+
+                    d3.select(self.textVisOverlay).append("line")
+                        .attr("class", "line_" + id)
+                        .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
+                        .attr("x1", branchX).attr("y1", branchY)
+                        .style("stroke-dasharray", (3, 3))
+                        .style("stroke", "black")
+                        .style("opacity", 0)
+                        .style("stroke-width", self.strokeWidth)
+                        .transition()
+                        .duration(transition_in)
+                        .style("opacity", 1);
+                }
+            }
+        }
     };
 
 
