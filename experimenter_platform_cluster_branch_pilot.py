@@ -127,7 +127,7 @@ class MainHandler(tornado.web.RequestHandler):
 
         q1 = self.get_argument('element_1')
         if(int(q1)==1):
-            conditions = [[31, 761], [32, 762], [33, 763], [34, 764]]
+            conditions = [[31, 761, 181, 281], [32, 762, 182, 282], [33, 763, 183, 283], [34, 764, 184, 284]]
             for intervention in conditions:
                 random.shuffle(intervention)
             # self.application.mmd_order = [60]

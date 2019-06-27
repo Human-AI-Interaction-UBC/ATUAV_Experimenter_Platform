@@ -705,11 +705,11 @@
                     relativeCoords.marky = relativeCoords.refY + 0.8 * (relativeCoords.marky - relativeCoords.refY);
                 	let nodes = [];
                 	let connectors = [];
+                    let minX = cur[0].left - 10;
+                    let maxY = cur[0].top + cur[0].height + 10;
                     for (let i = 0; i < cur.length; i++) {
                         let nodeXY = {};
                         let treeConnectorXY = {};
-                        let minX = cur[i].left - 10;
-                        let maxY = cur[i].top + cur[i].height + 10;
 
                         if (cur[i].width > cur[i].height) {
                             nodeXY.x = cur[i].left - refParentRect.left;
