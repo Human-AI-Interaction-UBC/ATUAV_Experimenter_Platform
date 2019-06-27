@@ -374,7 +374,7 @@
                     relativeCoords.marky = sharedAxis.coord - refParentRect.top;
                 }
             }
-            
+
             d3.select(self.textVisOverlay).append("line")
                 .attr("class", "line_" + id)
                 .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
@@ -705,8 +705,10 @@
                     relativeCoords.marky = relativeCoords.refY + 0.8 * (relativeCoords.marky - relativeCoords.refY);
                 	let nodes = [];
                 	let connectors = [];
-                    let minX = cur.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 10));
-                    let maxY = cur.reduce((acc, xy) => Math.max(acc, xy.top - refParentRect.top + xy.height + 10));
+                    let minX = cur.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 10),
+									cur[0].left);
+                    let maxY = cur.reduce((acc, xy) => Math.max(acc, xy.top - refParentRect.top + xy.height + 10),
+									0);
                     for (let i = 0; i < cur.length; i++) {
                         let nodeXY = {};
                         let treeConnectorXY = {};
@@ -735,7 +737,7 @@
 					}
                     let closestPoint = connectors.reduce((acc, cur) => {
                         let dist = getDist({x: textRef.x - cur.x, y: textRef.y - cur.y});
-                        return dist < getDist(acc) ? cur : acc;
+                        return dist < getDist({x: textRef.x - acc.x, y: textRef.y - acc.y}) ? cur : acc;
                     });
 
                     let links = [];
