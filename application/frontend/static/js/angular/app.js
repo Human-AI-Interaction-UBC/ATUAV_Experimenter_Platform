@@ -559,16 +559,16 @@ function handleDelivery(obj) {
         // }
       // } else {
       //   if (arguments.branching) {
-      //       $scopeGlobal.curMarksManager.midLineBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
+            $scopeGlobal.curMarksManager.midLineBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
       //   } else {
       //       $scopeGlobal.curMarksManager.drawMidLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
       //   }
       // }
 
-      $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
+      // $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
 
 
-      // $scopeGlobal.curMarksManager.drawBox(new_tuple_ids, $scopeGlobal.interventions[obj.deliver[0].name].args.id, 500, args);
+      $scopeGlobal.curMarksManager.drawBox(new_tuple_ids, $scopeGlobal.interventions[obj.deliver[0].name].args.id, 500, args);
 
   }
 
@@ -632,7 +632,7 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
         return obj.tuple_id
     });
 
-    $scopeGlobal.curMarksManager.highlight(tuple_ids, referenceID.tuple_id, transition_in, args);
+    // $scopeGlobal.curMarksManager.highlight(tuple_ids, referenceID.tuple_id, transition_in, args);
 
     let refToHighlight = $scopeGlobal.startEndCoords.find(function (startEnd) {
       let refNumber = referenceID.ref_id.split("_")[1];
