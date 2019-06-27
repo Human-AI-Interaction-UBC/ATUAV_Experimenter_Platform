@@ -464,7 +464,7 @@
 		return shared;
 	}
 
-	function getClusters(tuple_ids) {
+	MarksManager.prototype.getClusters = function (tuple_ids) {
     	let self = this;
         let marks = self.getSelectedMarks(tuple_ids);
         let markRects = marks.selected_marks.map((mark) => {
@@ -585,7 +585,7 @@
         relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
         relativeCoords.refY = refRect.top - refParentRect.top + refRect.height / 2;
 
-        let clusters = getClusters(tuple_ids);
+        let clusters = self.getClusters(tuple_ids);
         for (let i = 0; i < clusters.length; i++) {
         	let cur = clusters[i];
             if (cur.length > 0) {
