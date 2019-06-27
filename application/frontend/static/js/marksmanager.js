@@ -705,8 +705,8 @@
                     relativeCoords.marky = relativeCoords.refY + 0.8 * (relativeCoords.marky - relativeCoords.refY);
                 	let nodes = [];
                 	let connectors = [];
-                    let minX = cur.reduce((acc, xy) => Math.min(acc, xy.left - 10));
-                    let maxY = cur.reduce((acc, xy) => Math.max(acc, xy.top + xy.height + 10));
+                    let minX = cur.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 10));
+                    let maxY = cur.reduce((acc, xy) => Math.max(acc, xy.top - refParentRect.top + xy.height + 10));
                     for (let i = 0; i < cur.length; i++) {
                         let nodeXY = {};
                         let treeConnectorXY = {};
