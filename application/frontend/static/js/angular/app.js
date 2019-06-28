@@ -432,25 +432,6 @@ function initReferences($scope) {
                 },
             });
         };
-        // elem.addEventListener('mouseover', () => {
-        //     $.ajax({
-        //         url: '/triggerIntervention',
-        //
-        //         data: "ref_" + span.refId + "_fix",
-        //         dataType: "JSON",
-        //         type: "POST",
-        //         success: function ( data , status_text, jqXHR) {
-        //             if (isLast) {
-        //                 console.log('is last');
-        //                 $scopeGlobal.ws.send("done_generating");
-        //             }
-        //             console.log('ajax success')
-        //         },
-        //         error: function ( data , status_text, jqXHR ) {
-        //             console.log('ajax fail')
-        //         },
-        //     });
-        // })
     });
 
   // Add the marks that have associated text
@@ -682,6 +663,11 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
         return startEnd.refId === refNumber;
     });
     document.getElementById('refAOI').removeAttribute('id');
+    let oldRefs = document.getElementsByClassName('text-reference');
+    oldRefs.forEach((ref) => {
+      let split = ref.className.split(" ");
+      ref.className = split[0];
+    });
     let paragraph = document.getElementById('theTextParagraph');
     // Create the spans in the text
 
