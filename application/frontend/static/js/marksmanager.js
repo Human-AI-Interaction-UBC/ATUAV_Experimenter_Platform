@@ -727,19 +727,18 @@
                             relativeCoords.marky = sharedAxis.coord - refParentRect.top;
                         }
                     }
-
-                    d3.select(self.textVisOverlay).append("line")
-                        .attr("class", "line_" + id)
-                        .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
-                        .attr("x1", branchX).attr("y1", branchY)
-                        .style("stroke-dasharray", (3, 3))
-                        .style("stroke", "black")
-                        .style("opacity", 0)
-                        .style("stroke-width", self.strokeWidth)
-                        .transition()
-                        .duration(transition_in)
-                        .style("opacity", 1);
                 }
+                d3.select(self.textVisOverlay).append("line")
+                    .attr("class", "line_" + id)
+                    .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
+                    .attr("x1", branchX).attr("y1", branchY)
+                    .style("stroke-dasharray", (3, 3))
+                    .style("stroke", "black")
+                    .style("opacity", 0)
+                    .style("stroke-width", self.strokeWidth)
+                    .transition()
+                    .duration(transition_in)
+                    .style("opacity", 1);
                 // if (args.box) {
                 self.drawBox(curCluster,id, transition_in, args);
                 // }
