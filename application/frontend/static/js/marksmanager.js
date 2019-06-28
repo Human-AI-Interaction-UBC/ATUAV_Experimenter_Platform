@@ -377,23 +377,13 @@
                     }
 				}
 			} else {
-                if (Math.abs(cur.top - prev.top) < threshold) {
-                    shared.coord = cur.top;
-                    shared.axis = 'y';
-                    shared.min = Math.min(cur.left, prev.left);
-                    shared.max = Math.max(cur.right, prev.right);
-                } else if (Math.abs(cur.bottom - prev.bottom) < threshold) {
+                if ((Math.abs(cur.top - prev.top) < threshold) || (Math.abs(cur.bottom - prev.bottom) < threshold)) {
                     shared.coord = cur.bottom;
                     shared.axis = 'y';
                     shared.min = Math.min(cur.left, prev.left);
                     shared.max = Math.max(cur.right, prev.right);
-                } else if (Math.abs(cur.left - prev.left) < threshold) {
+                } else if ((Math.abs(cur.left - prev.left) < threshold) || (Math.abs(cur.right - prev.right) < threshold)) {
                     shared.coord = cur.left;
-                    shared.axis = 'x';
-                    shared.min = Math.min(cur.top, prev.top);
-                    shared.max = Math.max(cur.bottom, prev.bottom);
-                } else if (Math.abs(cur.right - prev.right) < threshold) {
-                    shared.coord = cur.right;
                     shared.axis = 'x';
                     shared.min = Math.min(cur.top, prev.top);
                     shared.max = Math.max(cur.bottom, prev.bottom);
