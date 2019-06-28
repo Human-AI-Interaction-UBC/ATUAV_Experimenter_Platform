@@ -406,6 +406,35 @@ function initReferences($scope) {
         }
       }
     }
+
+      let paragraph = document.getElementById('theTextParagraph');
+      // Create the spans in the text
+      let sm = new SpanManager(paragraph);
+
+      sm.createSpans($scope.startEndCoords, (elem, span) => {
+          elem.setAttribute('class', 'text-reference');
+          elem.setAttribute('class', 'aoi_' + span.refId);
+
+          elem.addEventListener('mouseover', () => {
+              $.ajax({
+                  url: '/triggerIntervention',
+
+                  data: "ref_" + span.refId + "_fix",
+                  dataType: "JSON",
+                  type: "POST",
+                  success: function ( data , status_text, jqXHR) {
+                      if (isLast) {
+                          console.log('is last');
+                          $scopeGlobal.ws.send("done_generating");
+                      }
+                      console.log('ajax success')
+                  },
+                  error: function ( data , status_text, jqXHR ) {
+                      console.log('ajax fail')
+                  },
+              });
+          })
+      });
   }
 
   // Add the marks that have associated text
@@ -559,7 +588,7 @@ function handleDelivery(obj) {
         // }
       // } else {
       //   if (arguments.branching) {
-            $scopeGlobal.curMarksManager.midLineBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
+      //       $scopeGlobal.curMarksManager.midLineBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
       //   } else {
       //       $scopeGlobal.curMarksManager.drawMidLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
       //   }
@@ -639,6 +668,10 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
 
     let paragraph = document.getElementById('theTextParagraph');
     // Create the spans in the text
+
+    let refAOI = document.getElementsByClassName('aoi_' + refToHighlight.refId);
+    refAOI.setAttribute('id', 'refAOI');
+
     let sm = new SpanManager(paragraph);
 
     // if (args.underline) {
@@ -675,4 +708,5 @@ function removeAllInterventions(referenceID) {
   //if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
     $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
     $scopeGlobal.curMarksManager.removeLines(referenceID.tuple_id);
+    document.getElementById('refAOI').removeAttribute('id');
 }

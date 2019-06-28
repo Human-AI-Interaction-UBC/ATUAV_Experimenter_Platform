@@ -885,14 +885,8 @@
     };
 
     MarksManager.prototype.drawBox = function(markRects, reference_id, transition_in, args) {
-        let self = this;
-        // let selectedMarks = self.getSelectedMarks(tuple_ids).selected_marks; //used for bolding
-        let bold_thickness = args.bold_thickness || 1;
-        // let markRects = selectedMarks.map((mark) => {
-        //     return mark.getBoundingClientRect();
-        // });
+        let bold_thickness = 1;
         let parentRect = document.getElementsByClassName('overlayContainer')[0].getBoundingClientRect();
-
 
         let minY = markRects[0].top - parentRect.top;
         let maxY = markRects[0].bottom - parentRect.top;
@@ -908,10 +902,10 @@
 
         d3.select(this.overlay).append('rect')
             .attr("class", "box_" + reference_id)
-            .attr("x", minX - 5)
-            .attr("y", minY - 5)
-            .attr("width", maxX - minX + 10)
-            .attr("height", maxY - minY + 10)
+            .attr("x", minX - 2)
+            .attr("y", minY - 2)
+            .attr("width", maxX - minX + 4)
+            .attr("height", maxY - minY + 4)
             .attr("stroke-width", bold_thickness)
             .attr("stroke", "black")
             .attr("fill-opacity", 0)
