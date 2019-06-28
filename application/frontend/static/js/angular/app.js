@@ -425,10 +425,6 @@ function initReferences($scope) {
                 dataType: "JSON",
                 type: "POST",
                 success: function ( data , status_text, jqXHR) {
-                    if (isLast) {
-                        console.log('is last');
-                        $scopeGlobal.ws.send("done_generating");
-                    }
                     console.log('ajax success')
                 },
                 error: function ( data , status_text, jqXHR ) {
@@ -685,12 +681,13 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
       let refNumber = referenceID.ref_id.split("_")[1];
         return startEnd.refId === refNumber;
     });
-
+    document.getElementById('refAOI').removeAttribute('id');
     let paragraph = document.getElementById('theTextParagraph');
     // Create the spans in the text
 
     let refAOI = document.getElementsByClassName('aoi_' + refToHighlight.refId);
     refAOI[0].setAttribute('id', 'refAOI');
+    refAOI[0].setAttribute('class', 'aoi_' + refToHighlight.refId + " text-reference");
 
     // let sm = new SpanManager(paragraph);
     //
