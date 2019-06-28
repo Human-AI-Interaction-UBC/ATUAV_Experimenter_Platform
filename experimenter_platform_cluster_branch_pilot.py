@@ -361,7 +361,8 @@ class TriggerInterventionHandler(tornado.web.RequestHandler):
     def post(self):
         # gets polygon coordinates and refIds from frontend coordinateRefSentences
         event_name = self.request.body
-        self.adaptation_loop.evaluateRules(self, event_name, datetime.time())
+        print(event_name)
+        self.application.adaptation_loop.evaluateRules(event_name, datetime.time())
 
 class SampleHandler(tornado.web.RequestHandler):
     def get(self):
