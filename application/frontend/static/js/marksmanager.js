@@ -289,7 +289,7 @@
     MarksManager.prototype.clusterLines = function(transition_in, id, tuple_ids, args){
         let self = this;
         let relativeCoords = {};
-        let ref = document.getElementById('refAOI');
+        let ref = document.getElementsByClassName('refAOI')[0];
         let refRect = ref.getBoundingClientRect();
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
         relativeCoords.refTop = refRect.top - refParentRect.top;
@@ -432,7 +432,7 @@
     MarksManager.prototype.clusterBranch = function(transition_in, id, tuple_ids, args){
         let self = this;
         let relativeCoords = {};
-        let ref = document.getElementById('refAOI');
+        let ref = document.getElementsByClassName('refAOI')[0];
         let refRect = ref.getBoundingClientRect();
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
         relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
@@ -513,7 +513,7 @@
     MarksManager.prototype.clusterTreeBranch = function(transition_in, id, tuple_ids){
         let self = this;
         let relativeCoords = {};
-        let ref = document.getElementById('refAOI');
+        let ref = document.getElementsByClassName('refAOI')[0];
         let refRect = ref.getBoundingClientRect();
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
         relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
@@ -641,7 +641,7 @@
     MarksManager.prototype.midlineBranchToCluster = function(transition_in, id, tuple_ids, args){
         let self = this;
         let relativeCoords = {};
-        let ref = document.getElementById('refAOI');
+        let ref = document.getElementsByClassName('refAOI')[0];
         let refRect = ref.getBoundingClientRect();
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
         relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
@@ -740,7 +740,7 @@
     MarksManager.prototype.drawMidLine = function(transition_in, id, tuple_ids, args){
         let self = this;
         let relativeCoords = {};
-        let ref = document.getElementById('refAOI');
+        let ref = document.getElementsByClassName('refAOI')[0];
         let refRect = ref.getBoundingClientRect();
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
         relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
@@ -797,7 +797,7 @@
     MarksManager.prototype.midLineBranch = function(transition_in, id, tuple_ids, args){
         let self = this;
         let relativeCoords = {};
-        let ref = document.getElementById('refAOI');
+        let ref = document.getElementsByClassName('refAOI')[0];
         let refRect = ref.getBoundingClientRect();
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
         relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;

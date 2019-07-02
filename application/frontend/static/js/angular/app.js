@@ -414,7 +414,7 @@ function initReferences($scope) {
 
     let spans = sm.createSpans($scope.startEndCoords, (elem, span) => {
       console.log("creating spans");
-        elem.setAttribute('class', 'aoi_' + span.refId);
+        elem.setAttribute('id', 'aoi_' + span.refId);
 
         elem.addEventListener('mouseover', (event) => {
             console.log(event);
@@ -701,21 +701,16 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
         return startEnd.refId === refNumber;
     });
 
-    let oldRefAOI = document.getElementById('refAOI');
+    let oldRefAOI = document.getElementsByClassName('refAOI')[0];
     if (oldRefAOI) {
-    oldRefAOI.removeAttribute('id');
+    oldRefAOI.removeAttribute('class');
     }
-    let oldRefs = document.querySelectorAll('.text-reference');
-    oldRefs.forEach((ref) => {
-      let split = ref.className.split(" ");
-      ref.className = split[0];
-    });
+
     let paragraph = document.getElementById('theTextParagraph');
     // Create the spans in the text
 
-    let refAOI = document.getElementsByClassName('aoi_' + refToHighlight.refId);
-    refAOI[0].setAttribute('id', 'refAOI');
-    refAOI[0].setAttribute('class', 'aoi_' + refToHighlight.refId + " text-reference");
+    let refAOI = document.getElementById('aoi_' + refToHighlight.refId);
+    refAOI.setAttribute('class', "refAOI text-reference");
 
     // let sm = new SpanManager(paragraph);
     //
@@ -753,5 +748,5 @@ function removeAllInterventions(referenceID) {
   //if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
     $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
     $scopeGlobal.curMarksManager.removeLines(referenceID.tuple_id);
-    document.getElementById('refAOI').removeAttribute('id');
+    document.getElementsByClassName('refAOI')[0].removeAttribute('class');
 }
