@@ -142,11 +142,9 @@ class ApplicationStateController():
         None
         """
 
-        print('updating events in application_state_controller')
         self.currTask = task
         query_results = self.conn.execute("SELECT user_state.event_name, type FROM user_state, user_state_task WHERE user_state.event_name = user_state_task.event_name and task = ?", (str(self.currTask),))
         self.userStates = query_results.fetchall()
-        print(self.userStates)
         self.eventNames = []
         for user in self.userStates:
             self.eventNames.append(user['event_name'])

@@ -662,8 +662,12 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
       let refNumber = referenceID.ref_id.split("_")[1];
         return startEnd.refId === refNumber;
     });
-    document.getElementById('refAOI').removeAttribute('id');
-    let oldRefs = document.getElementsByClassName('text-reference');
+
+    let oldRefAOI = document.getElementById('refAOI');
+    if (oldRefAOI) {
+    oldRefAOI.removeAttribute('id');
+    }
+    let oldRefs = document.querySelectorAll('.text-reference');
     oldRefs.forEach((ref) => {
       let split = ref.className.split(" ");
       ref.className = split[0];

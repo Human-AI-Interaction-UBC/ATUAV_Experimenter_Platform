@@ -173,7 +173,7 @@ class AdaptationLoop():
         occurences = self.app_state_controller.getInterventionOccurences(intervention_name)
         return occurences < max_repeat['max_repeat']
 
-    def __deliverNewInterventions__(self, event_name, task, time_stamp, bypass_fixations = False):
+    def __deliverNewInterventions__(self, event_name, task, time_stamp, bypass_fixations=False):
 
         """Dispacthes new interventions which are triggered
             - gets all the rules which have this event as a delivery trigger
