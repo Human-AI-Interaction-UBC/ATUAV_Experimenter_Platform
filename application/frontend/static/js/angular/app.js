@@ -417,7 +417,7 @@ function initReferences($scope) {
         elem.setAttribute('class', 'text-reference');
         elem.setAttribute('class', 'aoi_' + span.refId);
 
-        elem.onmouseover = (event) => {
+        elem.addEventListener((event) => {
             console.log(event);
             $.ajax({
                 url: '/triggerIntervention',
@@ -432,7 +432,23 @@ function initReferences($scope) {
                     console.log('ajax fail')
                 },
             });
-        };
+        });
+        // elem.onmouseover = (event) => {
+        //     console.log(event);
+        //     $.ajax({
+        //         url: '/triggerIntervention',
+        //
+        //         data: "ref_" + span.refId + "_fix",
+        //         dataType: "JSON",
+        //         type: "POST",
+        //         success: function (data, status_text, jqXHR) {
+        //             console.log('ajax success')
+        //         },
+        //         error: function (data, status_text, jqXHR) {
+        //             console.log('ajax fail')
+        //         },
+        //     });
+        // };
     });
 
     spans.forEach((span) => {
