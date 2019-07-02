@@ -432,6 +432,10 @@ function initReferences($scope) {
                 },
             });
         });
+
+        elem.addEventListener('mouseout', () => {
+          removeAllInterventions(span.refId);
+        })
         // elem.onmouseover = (event) => {
         //     console.log(event);
         //     $.ajax({
@@ -450,23 +454,23 @@ function initReferences($scope) {
         // };
     });
 
-    spans.forEach((span) => {
-      span.addEventListener('mouseover', () => {
-          $.ajax({
-              url: '/triggerIntervention',
-
-              data: "ref_" + span.refId + "_fix",
-              dataType: "JSON",
-              type: "POST",
-              success: function (data, status_text, jqXHR) {
-                  console.log('ajax success')
-              },
-              error: function (data, status_text, jqXHR) {
-                  console.log('ajax fail')
-              },
-          });
-      });
-    });
+    // spans.forEach((span) => {
+    //   span.addEventListener('mouseover', () => {
+    //       $.ajax({
+    //           url: '/triggerIntervention',
+    //
+    //           data: "ref_" + span.refId + "_fix",
+    //           dataType: "JSON",
+    //           type: "POST",
+    //           success: function (data, status_text, jqXHR) {
+    //               console.log('ajax success')
+    //           },
+    //           error: function (data, status_text, jqXHR) {
+    //               console.log('ajax fail')
+    //           },
+    //       });
+    //   });
+    // });
 
   // Add the marks that have associated text
 
