@@ -414,10 +414,9 @@ function initReferences($scope) {
 
     let spans = sm.createSpans($scope.startEndCoords, (elem, span) => {
       console.log("creating spans");
-        elem.setAttribute('class', 'text-reference');
         elem.setAttribute('class', 'aoi_' + span.refId);
 
-        elem.addEventListener((event) => {
+        elem.addEventListener('mouseover', (event) => {
             console.log(event);
             $.ajax({
                 url: '/triggerIntervention',
