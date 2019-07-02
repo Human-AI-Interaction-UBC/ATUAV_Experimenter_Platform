@@ -413,21 +413,22 @@ function initReferences($scope) {
     let sm = new SpanManager(paragraph);
 
     let spans = sm.createSpans($scope.startEndCoords, (elem, span) => {
+      console.log("creating spans");
         elem.setAttribute('class', 'text-reference');
         elem.setAttribute('class', 'aoi_' + span.refId);
 
         elem.onmouseover = (event) => {
-          console.log(event);
+            console.log(event);
             $.ajax({
                 url: '/triggerIntervention',
 
                 data: "ref_" + span.refId + "_fix",
                 dataType: "JSON",
                 type: "POST",
-                success: function ( data , status_text, jqXHR) {
+                success: function (data, status_text, jqXHR) {
                     console.log('ajax success')
                 },
-                error: function ( data , status_text, jqXHR ) {
+                error: function (data, status_text, jqXHR) {
                     console.log('ajax fail')
                 },
             });

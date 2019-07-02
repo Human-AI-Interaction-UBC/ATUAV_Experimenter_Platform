@@ -212,7 +212,6 @@ class AdaptationLoop():
                 #if both the rule and intervention has not exceeded max repeats
                 if self.__ruleRepeatsAllowed__(rule_name) and self.__interventionRepeatsAllowed__(intervention_name):
                     #check the delivery conditional
-                    print (rule['delivery_sql_condition'])
                     if self.app_state_controller.evaluateConditional(rule['delivery_sql_condition']) or bypass_fixations:
                         results = self.conn.execute("SELECT * FROM intervention WHERE intervention.name = ?", (intervention_name,))
                         intervention_params = results.fetchone()
