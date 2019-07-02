@@ -435,6 +435,24 @@ function initReferences($scope) {
         };
     });
 
+    spans.forEach((span) => {
+      span.addEventListener('mouseover', () => {
+          $.ajax({
+              url: '/triggerIntervention',
+
+              data: "ref_" + span.refId + "_fix",
+              dataType: "JSON",
+              type: "POST",
+              success: function (data, status_text, jqXHR) {
+                  console.log('ajax success')
+              },
+              error: function (data, status_text, jqXHR) {
+                  console.log('ajax fail')
+              },
+          });
+      });
+    });
+
   // Add the marks that have associated text
 
   referenced_tuples.forEach(function(tuple) {
