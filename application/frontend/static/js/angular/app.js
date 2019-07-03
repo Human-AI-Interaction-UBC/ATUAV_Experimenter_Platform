@@ -417,6 +417,7 @@ function initReferences($scope) {
         elem.setAttribute('id', 'aoi_' + span.refId);
 
         elem.addEventListener('mouseover', (event) => {
+          alert("mouse over");
             console.log(event);
             $.ajax({
                 url: '/triggerIntervention',
@@ -434,6 +435,7 @@ function initReferences($scope) {
         });
 
         elem.addEventListener('mouseout', () => {
+          alert("mouse out");
           removeAllInterventions(span.refId);
         })
         // elem.onmouseover = (event) => {
