@@ -933,6 +933,8 @@
         containingDiv.style.position = 'absolute';
         containingDiv.style.width = Math.ceil(textVisCoords.width)+'px';
         containingDiv.style.height = Math.ceil(textVisCoords.height)+'px';
+        containingDiv.style.overflow = 'visible';
+        containingDiv.style['pointer-events'] = 'none';
 
         this.textVisOverlay = document.createElementNS("http://www.w3.org/2000/svg", 'svg:svg');
         d3.select(this.textVisOverlay).attr({
@@ -940,9 +942,7 @@
             'height': Math.ceil(textVisCoords.height),
             "width": Math.ceil(textVisCoords.width)
         }).style({
-            'position': 'absolute',
-            'overflow': 'visible',
-            'pointer-events': 'none'
+            'position': 'absolute'
         });
 
         containingDiv.appendChild(this.textVisOverlay);

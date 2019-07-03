@@ -412,7 +412,7 @@ function initReferences($scope) {
     // Create the spans in the text
     $scope.curSpanManager = new SpanManager(paragraph);
 
-    let spans = $scope.curSpanManager.createSpans($scope.startEndCoords, (elem, span) => {
+    $scope.curSpanManager.createSpans($scope.startEndCoords, (elem, span) => {
       console.log("creating spans");
         elem.setAttribute('id', 'aoi_' + span.refId);
 
@@ -433,46 +433,7 @@ function initReferences($scope) {
                 },
             });
         });
-
-        elem.addEventListener('mouseout', () => {
-          console.log("mouse out");
-          removeAllInterventions(span.refId);
-        })
-        // elem.onmouseover = (event) => {
-        //     console.log(event);
-        //     $.ajax({
-        //         url: '/triggerIntervention',
-        //
-        //         data: "ref_" + span.refId + "_fix",
-        //         dataType: "JSON",
-        //         type: "POST",
-        //         success: function (data, status_text, jqXHR) {
-        //             console.log('ajax success')
-        //         },
-        //         error: function (data, status_text, jqXHR) {
-        //             console.log('ajax fail')
-        //         },
-        //     });
-        // };
     });
-
-    // spans.forEach((span) => {
-    //   span.addEventListener('mouseover', () => {
-    //       $.ajax({
-    //           url: '/triggerIntervention',
-    //
-    //           data: "ref_" + span.refId + "_fix",
-    //           dataType: "JSON",
-    //           type: "POST",
-    //           success: function (data, status_text, jqXHR) {
-    //               console.log('ajax success')
-    //           },
-    //           error: function (data, status_text, jqXHR) {
-    //               console.log('ajax fail')
-    //           },
-    //       });
-    //   });
-    // });
 
   // Add the marks that have associated text
 
