@@ -938,9 +938,11 @@
         d3.select(this.textVisOverlay).attr({
             "class": "textVisOverlay",
             'height': Math.ceil(textVisCoords.height),
-            "width": Math.ceil(textVisCoords.width)
+            "width": Math.ceil(textVisCoords.width),
+            'overflow': 'visible',
+			'pointer-events': 'none',
         }).style({
-            'position': 'absolute'
+            'position': 'absolute',
         });
 
         containingDiv.appendChild(this.textVisOverlay);
