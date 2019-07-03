@@ -286,7 +286,13 @@
         .style("opacity", 1);
   };
 
-    MarksManager.prototype.clusterLines = function(transition_in, id, tuple_ids, args){
+    /**
+     * Draws one line to each mark
+     * @param {int} transition_in - time in ms for transition of drawing lines
+     * @param {string} id - reference id to label lines with
+     * @param {Array.<string>} tuple_ids - tuples to draw links to
+     */
+    MarksManager.prototype.clusterLines = function (transition_in, id, tuple_ids) {
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementsByClassName('refAOI')[0];
@@ -298,7 +304,7 @@
         let clusters = self.getClusters(tuple_ids);
 
         for (let i = 0; i < clusters.length; i++) {
-        	let curCluster = clusters[i];
+            let curCluster = clusters[i];
             if (curCluster.length > 0) {
                 let sharedAxis = getSharedAxis(curCluster, 10);
 
@@ -333,68 +339,42 @@
                     .transition()
                     .duration(transition_in)
                     .style("opacity", 1);
-
-                // if (args.box) {
-                self.drawBox(curCluster,id, transition_in, args);
-                // }
             }
-		}
+        }
     };
 
-    function areMarksAdjacent (prevMark, curMark, threshold) {
-    	return Math.abs(prevMark.top - curMark.bottom) < threshold || Math.abs(prevMark.bottom - curMark.top) < threshold ||
-			Math.abs(prevMark.left - curMark.right) < threshold || Math.abs(prevMark.right - curMark.left) < threshold;
-	}
+    function areMarksAdjacent(prevMark, curMark, threshold) {
+        return Math.abs(prevMark.top - curMark.bottom) < threshold || Math.abs(prevMark.bottom - curMark.top) < threshold ||
+            Math.abs(prevMark.left - curMark.right) < threshold || Math.abs(prevMark.right - curMark.left) < threshold;
+    }
 
-	function getSharedAxis(cluster, threshold) {
-    	let shared = {};
+    function getSharedAxis(cluster, threshold) {
+        let shared = {};
+        if (cluster.length < 2) {
+            shared.isShared = true;
+            return shared;
+        }
 
-    	if (cluster.length < 2) {
-    		shared.isShared = true;
-    		return shared;
-		}
-
-    	let prev = cluster[0];
-    	for (let i = 1; i < cluster.length; i++) {
-    		let cur = cluster[i];
-
-    		if (shared.hasOwnProperty('axis')) {
-    			if (shared.axis === 'x') {
-                    shared.min = Math.min(cur.top, shared.min);
-                    shared.max = Math.max(cur.bottom, shared.max);
-    				if (!(Math.abs(prev.left - cur.left) < threshold || Math.abs(prev.right - cur.right) < threshold)) {
-    					// NO shared axis
-						shared.isShared = false;
-						return shared;
-					}
-				} else if (shared.axis === 'y') {
-                    shared.min = Math.min(cur.left, shared.min);
-                    shared.max = Math.max(cur.right, shared.max);
-                    if (!(Math.abs(prev.top - cur.top) < threshold || Math.abs(prev.bottom - cur.bottom) < threshold)) {
-                        // NO shared axis
-                        shared.isShared = false;
-                        return shared;
-                    }
-				}
-			} else {
-                if ((Math.abs(cur.top - prev.top) < threshold) || (Math.abs(cur.bottom - prev.bottom) < threshold)) {
-                    shared.coord = cur.bottom;
-                    shared.axis = 'y';
-                    shared.min = Math.min(cur.left, prev.left);
-                    shared.max = Math.max(cur.right, prev.right);
-                } else if ((Math.abs(cur.left - prev.left) < threshold) || (Math.abs(cur.right - prev.right) < threshold)) {
-                    shared.coord = cur.left;
-                    shared.axis = 'x';
-                    shared.min = Math.min(cur.top, prev.top);
-                    shared.max = Math.max(cur.bottom, prev.bottom);
-                } else {
-                	// NO shared axis
-                    shared.isShared = false;
-                    return shared;
-				}
-			}
-			prev = cur;
-		}
+        let prev = cluster[0];
+        for (let i = 1; i < cluster.length; i++) {
+            let cur = cluster[i];
+            if ((Math.abs(cur.top - prev.top) < threshold) || (Math.abs(cur.bottom - prev.bottom) < threshold)) {
+                shared.coord = cur.bottom;
+                shared.axis = 'y';
+                shared.min = Math.min(cur.left, shared.hasOwnProperty('min') ? shared.min : prev.left);
+                shared.max = Math.max(cur.right, shared.hasOwnProperty('max') ? shared.max : prev.right);
+            } else if ((Math.abs(cur.left - prev.left) < threshold) || (Math.abs(cur.right - prev.right) < threshold)) {
+                shared.coord = cur.left;
+                shared.axis = 'x';
+                shared.min = Math.min(cur.top, shared.hasOwnProperty('min') ? shared.min : prev.top);
+                shared.max = Math.max(cur.bottom, shared.hasOwnProperty('max') ? shared.max : prev.bottom);
+            } else {
+                // NO shared axis
+                shared.isShared = false;
+                return shared;
+            }
+            prev = cur;
+        }
 		shared.isShared = true;
 		return shared;
 	}
@@ -429,7 +409,14 @@
         return clusters;
 	};
 
-    MarksManager.prototype.clusterBranch = function(transition_in, id, tuple_ids, args){
+    /**
+	 * Draws a line to the centre of each cluster from the text AOI
+	 * centre bottom for vertical bars, centre left for horizontal
+     * @param {int} transition_in - time in ms for transition of drawing lines
+     * @param {string} id - reference id to label lines with
+     * @param {Array.<string>} tuple_ids - tuples to draw links to
+     */
+    MarksManager.prototype.clusterBranch = function(transition_in, id, tuple_ids){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementsByClassName('refAOI')[0];
@@ -510,6 +497,15 @@
         }
     };
 
+    /**
+	 * Draws a line from text AOI to each cluster, branching off 10px before the leftmost/bottom-most (depending on bar orientation) bar
+	 * to connect into a phylogenetic tree branching
+     * connecting link from text to the tree branching will draw the link to the closest point on the branch
+     * tree branching will always be on the left for horizontal bars, and on the bottom for vertical bars
+     * @param {int} transition_in - time in ms for transition of drawing lines
+     * @param {string} id - reference id to label lines with
+     * @param {Array.<string>} tuple_ids - tuples to draw links to
+     */
     MarksManager.prototype.clusterTreeBranch = function(transition_in, id, tuple_ids){
         let self = this;
         let relativeCoords = {};
@@ -638,7 +634,13 @@
 		}
     };
 
-    MarksManager.prototype.midlineBranchToCluster = function(transition_in, id, tuple_ids, args){
+    /**
+	 * Draws one line from the text AOI that branches (tree branching) off to one line per cluster
+     * @param {int} transition_in - time in ms for transition of drawing lines
+     * @param {string} id - reference id to label lines with
+     * @param {Array.<string>} tuple_ids - tuples to draw links to
+     */
+    MarksManager.prototype.midlineBranchToCluster = function(transition_in, id, tuple_ids){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementsByClassName('refAOI')[0];
@@ -729,15 +731,17 @@
                     .transition()
                     .duration(transition_in)
                     .style("opacity", 1);
-                // if (args.box) {
-                self.drawBox(curCluster,id, transition_in, args);
-                // }
             }
         }
     };
 
-
-    MarksManager.prototype.drawMidLine = function(transition_in, id, tuple_ids, args){
+    /**
+	 *
+     * @param {int} transition_in - time in ms for transition of drawing lines
+     * @param {string} id - reference id to label lines with
+     * @param {Array.<string>} tuple_ids - tuples to draw links to
+     */
+    MarksManager.prototype.drawMidLine = function(transition_in, id, tuple_ids){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementsByClassName('refAOI')[0];
@@ -788,13 +792,15 @@
                 .transition()
                 .duration(transition_in)
                 .style("opacity", 1);
-
-            // if (args.box) {
-            	self.drawBox(markRects,id, transition_in, args);
-			// }
     };
 
-    MarksManager.prototype.midLineBranch = function(transition_in, id, tuple_ids, args){
+    /**
+     * Draws one line from the text AOI that branches off to one line per mark
+     * @param {int} transition_in - time in ms for transition of drawing lines
+     * @param {string} id - reference id to label lines with
+     * @param {Array.<string>} tuple_ids - tuples to draw links to
+     */
+    MarksManager.prototype.midLineBranch = function(transition_in, id, tuple_ids){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementsByClassName('refAOI')[0];
@@ -884,7 +890,13 @@
         }
     };
 
-    MarksManager.prototype.drawBox = function(markRects, reference_id, transition_in, args) {
+    /**
+	 * NOT CURRENTLY USED - draws a box around all clusters
+	 * @param: {Array.<DOMRect>} markRects - the clusters to draw a box over
+	 * @param: {string} reference_id - the reference id to tag the box with
+	 * @param: {int} transition_in - time in ms for the transition in duration of drawing the box
+     */
+    MarksManager.prototype.drawBox = function(markRects, reference_id, transition_in) {
         let bold_thickness = 1;
         let parentRect = document.getElementsByClassName('overlayContainer')[0].getBoundingClientRect();
 

@@ -553,21 +553,21 @@ function handleDelivery(obj) {
 
       // if (arguments.clustering) {
       //   if (arguments.branching) {
-      //       $scopeGlobal.curMarksManager.clusterBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
+      //       $scopeGlobal.curMarksManager.clusterBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
         // } else {
-        //     $scopeGlobal.curMarksManager.clusterLines(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
+        //     $scopeGlobal.curMarksManager.clusterLines(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
         // }
       // } else {
       //   if (arguments.branching) {
-      //       $scopeGlobal.curMarksManager.midLineBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
+      //       $scopeGlobal.curMarksManager.midLineBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
       //   } else {
-      //       $scopeGlobal.curMarksManager.drawMidLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
+      //       $scopeGlobal.curMarksManager.drawMidLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
       //   }
       // }
 
       // $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
 
-      $scopeGlobal.curMarksManager.midlineBranchToCluster(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids, arguments);
+      $scopeGlobal.curMarksManager.midlineBranchToCluster(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
   }
 
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency
