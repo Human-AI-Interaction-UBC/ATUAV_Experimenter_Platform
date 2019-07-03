@@ -410,14 +410,14 @@ function initReferences($scope) {
 
     let paragraph = document.getElementById('theTextParagraph');
     // Create the spans in the text
-    let sm = new SpanManager(paragraph);
+    $scope.curSpanManager = new SpanManager(paragraph);
 
-    let spans = sm.createSpans($scope.startEndCoords, (elem, span) => {
+    let spans = $scope.curSpanManager.createSpans($scope.startEndCoords, (elem, span) => {
       console.log("creating spans");
         elem.setAttribute('id', 'aoi_' + span.refId);
 
         elem.addEventListener('mouseover', (event) => {
-          alert("mouse over");
+          console.log("mouse over");
             console.log(event);
             $.ajax({
                 url: '/triggerIntervention',
@@ -435,7 +435,7 @@ function initReferences($scope) {
         });
 
         elem.addEventListener('mouseout', () => {
-          alert("mouse out");
+          console.log("mouse out");
           removeAllInterventions(span.refId);
         })
         // elem.onmouseover = (event) => {
