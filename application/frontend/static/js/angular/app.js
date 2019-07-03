@@ -565,9 +565,9 @@ function handleDelivery(obj) {
       //   }
       // }
 
-      // $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
+      $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
 
-      $scopeGlobal.curMarksManager.midlineBranchToCluster(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
+      // $scopeGlobal.curMarksManager.midlineBranchToCluster(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
   }
 
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency
@@ -630,7 +630,7 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
         return obj.tuple_id
     });
 
-    // $scopeGlobal.curMarksManager.highlight(tuple_ids, referenceID.tuple_id, transition_in, args);
+    $scopeGlobal.curMarksManager.highlight(tuple_ids, referenceID.tuple_id, transition_in, args);
 
     let refToHighlight = $scopeGlobal.startEndCoords.find(function (startEnd) {
       let refNumber = referenceID.ref_id.split("_")[1];

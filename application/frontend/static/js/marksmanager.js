@@ -558,7 +558,7 @@
                 }
 
                 if (cur.length > 1) {
-                    drawPhylogeneticTreeBranching(cur, transition_in, id, isHorizontal, relativeCoords);
+                    self.drawPhylogeneticTreeBranching(cur, transition_in, id, isHorizontal, relativeCoords);
                 	// let nodes = [];
                 	// let connectors = [];
                     // let minX = cur.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 10), cur[0].left);
@@ -690,7 +690,7 @@
             .duration(transition_in)
             .style("opacity", 1);
 
-        drawPhylogeneticTreeBranching(markRects, transition_in, id, isHorizontal, relativeCoords);
+        self.drawPhylogeneticTreeBranching(markRects, transition_in, id, isHorizontal, relativeCoords);
         // let nodes = [];
         // let connectors = [];
         // let minX = markRects.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 10), markRects[0].left);
@@ -765,7 +765,7 @@
         //     .style("opacity", 1);
     };
 
-    function drawPhylogeneticTreeBranching(markRects, transition_in, id, isHorizontal, textRefCoords) {
+    MarksManager.prototype.drawPhylogeneticTreeBranching = function (markRects, transition_in, id, isHorizontal, textRefCoords) {
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
         let nodes = [];
         let connectors = [];
