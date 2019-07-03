@@ -408,70 +408,6 @@ function initReferences($scope) {
     }
   }
 
-    let paragraph = document.getElementById('theTextParagraph');
-    // Create the spans in the text
-    let sm = new SpanManager(paragraph);
-
-    let spans = sm.createSpans($scope.startEndCoords, (elem, span) => {
-      console.log("creating spans");
-        elem.setAttribute('id', 'aoi_' + span.refId);
-
-        elem.addEventListener('mouseover', (event) => {
-            console.log(event);
-            $.ajax({
-                url: '/triggerIntervention',
-
-                data: "ref_" + span.refId + "_fix",
-                dataType: "JSON",
-                type: "POST",
-                success: function (data, status_text, jqXHR) {
-                    console.log('ajax success')
-                },
-                error: function (data, status_text, jqXHR) {
-                    console.log('ajax fail')
-                },
-            });
-        });
-
-        elem.addEventListener('mouseout', () => {
-          removeAllInterventions(span.refId);
-        })
-        // elem.onmouseover = (event) => {
-        //     console.log(event);
-        //     $.ajax({
-        //         url: '/triggerIntervention',
-        //
-        //         data: "ref_" + span.refId + "_fix",
-        //         dataType: "JSON",
-        //         type: "POST",
-        //         success: function (data, status_text, jqXHR) {
-        //             console.log('ajax success')
-        //         },
-        //         error: function (data, status_text, jqXHR) {
-        //             console.log('ajax fail')
-        //         },
-        //     });
-        // };
-    });
-
-    // spans.forEach((span) => {
-    //   span.addEventListener('mouseover', () => {
-    //       $.ajax({
-    //           url: '/triggerIntervention',
-    //
-    //           data: "ref_" + span.refId + "_fix",
-    //           dataType: "JSON",
-    //           type: "POST",
-    //           success: function (data, status_text, jqXHR) {
-    //               console.log('ajax success')
-    //           },
-    //           error: function (data, status_text, jqXHR) {
-    //               console.log('ajax fail')
-    //           },
-    //       });
-    //   });
-    // });
-
   // Add the marks that have associated text
 
   referenced_tuples.forEach(function(tuple) {
@@ -701,24 +637,18 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
         return startEnd.refId === refNumber;
     });
 
-    let oldRefAOI = document.getElementsByClassName('refAOI')[0];
-    if (oldRefAOI) {
-    oldRefAOI.removeAttribute('class');
-    }
-
     let paragraph = document.getElementById('theTextParagraph');
     // Create the spans in the text
 
-    let refAOI = document.getElementById('aoi_' + refToHighlight.refId);
-    refAOI.setAttribute('class', "refAOI text-reference");
+    // let refAOI = document.getElementById('aoi_' + refToHighlight.refId);
+    // refAOI.setAttribute('class', "refAOI text-reference");
 
-    // let sm = new SpanManager(paragraph);
+    let sm = new SpanManager(paragraph);
     //
     // // if (args.underline) {
-    //     sm.createSpans([refToHighlight], function(elem, _) {
-    //       elem.setAttribute('class', 'text-reference');
-    //       elem.setAttribute('id', 'refAOI');
-    //     });
+        sm.createSpans([refToHighlight], function(elem, _) {
+          elem.setAttribute('class', 'text-reference refAOI');
+        });
     // }
 
     // if (args.highlight) {

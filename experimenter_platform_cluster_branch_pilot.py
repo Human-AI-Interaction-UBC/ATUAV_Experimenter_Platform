@@ -67,7 +67,6 @@ class Application(tornado.web.Application):
             (r"/calibration", CalibrationHandler), (r"/(blank_cross.jpg)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/tobii", TobiiHandler),
             (r"/ready", ReadyHandler),
-            (r"/triggerIntervention", TriggerInterventionHandler),
             (r"/done", DoneHandler),
             (r"/final_question", FinalHandler), (r"/(1.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
                                                 (r"/(2.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
@@ -356,13 +355,6 @@ class PreStudyHandler(tornado.web.RequestHandler):
 
         self.redirect('/sample_MMD')
 
-
-class TriggerInterventionHandler(tornado.web.RequestHandler):
-    def post(self):
-        # gets polygon coordinates and refIds from frontend coordinateRefSentences
-        event_name = self.request.body
-        print(event_name)
-        self.application.adaptation_loop.evaluateRules(event_name, int(round(time.time() * 1000)), True)
 
 class SampleHandler(tornado.web.RequestHandler):
     def get(self):
