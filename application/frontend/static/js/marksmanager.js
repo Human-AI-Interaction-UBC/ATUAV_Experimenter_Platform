@@ -287,6 +287,7 @@
   };
 
     /**
+     * NOT IN USE CURRENTLY
      * Draws one line to each mark
      * @param {int} transition_in - time in ms for transition of drawing lines
      * @param {string} id - reference id to label lines with
@@ -410,6 +411,7 @@
 	};
 
     /**
+     * NOT IN USE CURRENTLY
 	 * Draws a line to the centre of each cluster from the text AOI
 	 * centre bottom for vertical bars, centre left for horizontal
      * @param {int} transition_in - time in ms for transition of drawing lines
@@ -556,83 +558,288 @@
                 }
 
                 if (cur.length > 1) {
-                    relativeCoords.markx = relativeCoords.refX + 0.8 * (relativeCoords.markx - relativeCoords.refX);
-                    relativeCoords.marky = relativeCoords.refY + 0.8 * (relativeCoords.marky - relativeCoords.refY);
-                	let nodes = [];
-                	let connectors = [];
-                    let minX = cur.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 10), cur[0].left);
-                    let maxY = cur.reduce((acc, xy) => Math.max(acc, xy.top - refParentRect.top + xy.height + 10), 0);
-                    for (let i = 0; i < cur.length; i++) {
-                        let nodeXY = {};
-                        let treeConnectorXY = {};
-
-                        if (cur[i].width > cur[i].height || isHorizontal) {
-                            nodeXY.x = cur[i].left - refParentRect.left;
-                            nodeXY.y = cur[i].top - refParentRect.top + cur[i].height / 2;
-                            treeConnectorXY.x = minX;
-                            treeConnectorXY.y = nodeXY.y;
-                        } else {
-                            nodeXY.x = cur[i].left - refParentRect.left + cur[i].width / 2;
-                            nodeXY.y = cur[i].top - refParentRect.top + cur[i].height;
-                            treeConnectorXY.x = nodeXY.x;
-                            treeConnectorXY.y = maxY;
-                        }
-
-                        nodes.push(nodeXY);
-                        connectors.push(treeConnectorXY);
-                    }
-                    let textRef = {};
-                    textRef.x = relativeCoords.refX;
-                    textRef.y = relativeCoords.refY;
-
-                    function getDist(coords) {
-                    	return Math.sqrt(Math.pow(coords.x, 2) + Math.pow(coords.y, 2))
-					}
-                    let closestPoint = connectors.reduce((acc, cur) => {
-                        let dist = getDist({x: textRef.x - cur.x, y: textRef.y - cur.y});
-                        return dist < getDist({x: textRef.x - acc.x, y: textRef.y - acc.y}) ? cur : acc;
-                    });
-
-                    let links = [];
-                    let firstLine = {};
-                    // making the first line from the text to the nearest point to link to
-                    firstLine.source = textRef;
-                    firstLine.target = closestPoint;
-                    links.push(firstLine);
-                    // making a link for each bar out to the main line
-                    for (let i = 0; i < nodes.length; i++) {
-                    	links.push({
-							source: nodes[i],
-							target: connectors[i]
-						});
-					}
-					// making a line at the end of the links to connect them
-					links.push({
-						source: connectors[0],
-						target: connectors[connectors.length - 1]
-					});
-
-                    d3.select(self.textVisOverlay).selectAll(".links")
-						.data(links)
-						.enter()
-						.append('g')
-                        .classed('links', true)
-                        .attr("class", "line_" + id)
-						.append('path')
-                        .attr('d', function(d) {
-                            return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
-                        })
-						.style("stroke", "black")
-						.style("stroke-dasharray", (3, 3))
-						.style("stroke-width", self.strokeWidth)
-						.style("opacity", 0)
-                        .transition()
-                        .duration(transition_in)
-                        .style("opacity", 1);
+                    drawPhylogeneticTreeBranching(cur, transition_in, id, isHorizontal, relativeCoords);
+                	// let nodes = [];
+                	// let connectors = [];
+                    // let minX = cur.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 10), cur[0].left);
+                    // let maxY = cur.reduce((acc, xy) => Math.max(acc, xy.top - refParentRect.top + xy.height + 10), 0);
+                    // for (let i = 0; i < cur.length; i++) {
+                    //     let nodeXY = {};
+                    //     let treeConnectorXY = {};
+                    //
+                    //     if (cur[i].width > cur[i].height || isHorizontal) {
+                    //         nodeXY.x = cur[i].left - refParentRect.left;
+                    //         nodeXY.y = cur[i].top - refParentRect.top + cur[i].height / 2;
+                    //         treeConnectorXY.x = minX;
+                    //         treeConnectorXY.y = nodeXY.y;
+                    //     } else {
+                    //         nodeXY.x = cur[i].left - refParentRect.left + cur[i].width / 2;
+                    //         nodeXY.y = cur[i].top - refParentRect.top + cur[i].height;
+                    //         treeConnectorXY.x = nodeXY.x;
+                    //         treeConnectorXY.y = maxY;
+                    //     }
+                    //
+                    //     nodes.push(nodeXY);
+                    //     connectors.push(treeConnectorXY);
+                    // }
+                    // let textRef = {};
+                    // textRef.x = relativeCoords.refX;
+                    // textRef.y = relativeCoords.refY;
+                    //
+                    // function getDist(coords) {
+                    // 	return Math.sqrt(Math.pow(coords.x, 2) + Math.pow(coords.y, 2))
+					// }
+                    // let closestPoint = connectors.reduce((acc, cur) => {
+                    //     let dist = getDist({x: textRef.x - cur.x, y: textRef.y - cur.y});
+                    //     return dist < getDist({x: textRef.x - acc.x, y: textRef.y - acc.y}) ? cur : acc;
+                    // });
+                    //
+                    // let links = [];
+                    // let firstLine = {};
+                    // // making the first line from the text to the nearest point to link to
+                    // firstLine.source = textRef;
+                    // firstLine.target = closestPoint;
+                    // links.push(firstLine);
+                    // // making a link for each bar out to the main line
+                    // for (let i = 0; i < nodes.length; i++) {
+                    // 	links.push({
+					// 		source: nodes[i],
+					// 		target: connectors[i]
+					// 	});
+					// }
+					// // making a line at the end of the links to connect them
+					// links.push({
+					// 	source: connectors[0],
+					// 	target: connectors[connectors.length - 1]
+					// });
+                    //
+                    // d3.select(self.textVisOverlay).selectAll(".links")
+					// 	.data(links)
+					// 	.enter()
+					// 	.append('g')
+                    //     .classed('links', true)
+                    //     .attr("class", "line_" + id)
+					// 	.append('path')
+                    //     .attr('d', function(d) {
+                    //         return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
+                    //     })
+					// 	.style("stroke", "black")
+					// 	.style("stroke-dasharray", (3, 3))
+					// 	.style("stroke-width", self.strokeWidth)
+					// 	.style("opacity", 0)
+                    //     .transition()
+                    //     .duration(transition_in)
+                    //     .style("opacity", 1);
                 }
             }
 		}
     };
+
+
+    MarksManager.prototype.midlineTreeBranch = function(transition_in, id, tuple_ids){
+        let self = this;
+        let relativeCoords = {};
+        let ref = document.getElementsByClassName('refAOI')[0];
+        let refRect = ref.getBoundingClientRect();
+        let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
+        relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
+        relativeCoords.refY = refRect.top - refParentRect.top + refRect.height / 2;
+
+        let isHorizontal = false;
+        let marks = self.getSelectedMarks(tuple_ids);
+        let markRects = marks.selected_marks.map((mark) => {
+            return mark.getBoundingClientRect();
+        });
+        let sharedAxis = getSharedAxis(markRects, 10);
+        if (sharedAxis.hasOwnProperty('coord')) {
+            if (sharedAxis.axis === 'x') {
+                relativeCoords.branchx = sharedAxis.coord - refParentRect.left;
+                relativeCoords.branchy = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
+                isHorizontal = true;
+            } else {
+                relativeCoords.branchx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
+                relativeCoords.branchy = sharedAxis.coord - refParentRect.top;
+            }
+        } else {
+            // assuming that any marks with no shared axis are probably horizontal bars
+            let minY = markRects[0].top;
+            let maxY = markRects[0].bottom;
+            let left = markRects[0].left;
+
+            markRects.forEach((mark) => {
+                minY = Math.min(minY, mark.top);
+                maxY = Math.max(maxY, mark.bottom);
+                left = Math.min(left, mark.left);
+            });
+            relativeCoords.branchx = left - refParentRect.left;
+            relativeCoords.branchy = (minY + maxY) / 2 - refParentRect.top;
+        }
+
+        let branchX = relativeCoords.refX + 0.8 * (relativeCoords.branchx - relativeCoords.refX);
+        let branchY = relativeCoords.refY + 0.8 * (relativeCoords.branchy - relativeCoords.refY);
+
+        d3.select(self.textVisOverlay).append("line")
+            .attr("class", "line_" + id)
+            .attr("x2", branchX).attr("y2", branchY)
+            .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
+            .style("stroke-dasharray", (3, 3))
+            .style("stroke", "black")
+            .style("opacity", 0)
+            .style("stroke-width", self.strokeWidth)
+            .transition()
+            .duration(transition_in)
+            .style("opacity", 1);
+
+        drawPhylogeneticTreeBranching(markRects, transition_in, id, isHorizontal, relativeCoords);
+        // let nodes = [];
+        // let connectors = [];
+        // let minX = markRects.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 10), markRects[0].left);
+        // let maxY = markRects.reduce((acc, xy) => Math.max(acc, xy.top - refParentRect.top + xy.height + 10), 0);
+        // for (let i = 0; i < markRects.length; i++) {
+        //     let nodeXY = {};
+        //     let treeConnectorXY = {};
+        //
+        //     if (markRects[i].width > markRects[i].height || isHorizontal) {
+        //         nodeXY.x = markRects[i].left - refParentRect.left;
+        //         nodeXY.y = markRects[i].top - refParentRect.top + markRects[i].height / 2;
+        //         treeConnectorXY.x = minX;
+        //         treeConnectorXY.y = nodeXY.y;
+        //     } else {
+        //         nodeXY.x = markRects[i].left - refParentRect.left + markRects[i].width / 2;
+        //         nodeXY.y = markRects[i].top - refParentRect.top + markRects[i].height;
+        //         treeConnectorXY.x = nodeXY.x;
+        //         treeConnectorXY.y = maxY;
+        //     }
+        //
+        //     nodes.push(nodeXY);
+        //     connectors.push(treeConnectorXY);
+        // }
+        // let textRef = {};
+        // textRef.x = relativeCoords.refX;
+        // textRef.y = relativeCoords.refY;
+        //
+        // function getDist(coords) {
+        //     return Math.sqrt(Math.pow(coords.x, 2) + Math.pow(coords.y, 2))
+        // }
+        //
+        // let closestPoint = connectors.reduce((acc, cur) => {
+        //     let dist = getDist({x: textRef.x - cur.x, y: textRef.y - cur.y});
+        //     return dist < getDist({x: textRef.x - acc.x, y: textRef.y - acc.y}) ? cur : acc;
+        // });
+        //
+        // let links = [];
+        // let firstLine = {};
+        // // making the first line from the text to the nearest point to link to
+        // firstLine.source = textRef;
+        // firstLine.target = closestPoint;
+        // links.push(firstLine);
+        // // making a link for each bar out to the main line
+        // for (let i = 0; i < nodes.length; i++) {
+        //     links.push({
+        //         source: nodes[i],
+        //         target: connectors[i]
+        //     });
+        // }
+        // // making a line at the end of the links to connect them
+        // links.push({
+        //     source: connectors[0],
+        //     target: connectors[connectors.length - 1]
+        // });
+        //
+        // d3.select(self.textVisOverlay).selectAll(".links")
+        //     .data(links)
+        //     .enter()
+        //     .append('g')
+        //     .classed('links', true)
+        //     .attr("class", "line_" + id)
+        //     .append('path')
+        //     .attr('d', function (d) {
+        //         return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
+        //     })
+        //     .style("stroke", "black")
+        //     .style("stroke-dasharray", (3, 3))
+        //     .style("stroke-width", self.strokeWidth)
+        //     .style("opacity", 0)
+        //     .transition()
+        //     .duration(transition_in)
+        //     .style("opacity", 1);
+    };
+
+    function drawPhylogeneticTreeBranching(markRects, transition_in, id, isHorizontal, textRefCoords) {
+        let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
+        let nodes = [];
+        let connectors = [];
+        let minX = markRects.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 10), markRects[0].left);
+        let maxY = markRects.reduce((acc, xy) => Math.max(acc, xy.top - refParentRect.top + xy.height + 10), 0);
+        for (let i = 0; i < markRects.length; i++) {
+            let nodeXY = {};
+            let treeConnectorXY = {};
+
+            if (markRects[i].width > markRects[i].height || isHorizontal) {
+                nodeXY.x = markRects[i].left - refParentRect.left;
+                nodeXY.y = markRects[i].top - refParentRect.top + markRects[i].height / 2;
+                treeConnectorXY.x = minX;
+                treeConnectorXY.y = nodeXY.y;
+            } else {
+                nodeXY.x = markRects[i].left - refParentRect.left + markRects[i].width / 2;
+                nodeXY.y = markRects[i].top - refParentRect.top + markRects[i].height;
+                treeConnectorXY.x = nodeXY.x;
+                treeConnectorXY.y = maxY;
+            }
+
+            nodes.push(nodeXY);
+            connectors.push(treeConnectorXY);
+        }
+        let textRef = {};
+        textRef.x = textRefCoords.refX;
+        textRef.y = textRefCoords.refY;
+
+        function getDist(coords) {
+            return Math.sqrt(Math.pow(coords.x, 2) + Math.pow(coords.y, 2))
+        }
+
+        let closestPoint = connectors.reduce((acc, cur) => {
+            let dist = getDist({x: textRef.x - cur.x, y: textRef.y - cur.y});
+            return dist < getDist({x: textRef.x - acc.x, y: textRef.y - acc.y}) ? cur : acc;
+        });
+
+        let links = [];
+        let firstLine = {};
+        // making the first line from the text to the nearest point to link to
+        firstLine.source = textRef;
+        firstLine.target = closestPoint;
+        links.push(firstLine);
+        // making a link for each bar out to the main line
+        for (let i = 0; i < nodes.length; i++) {
+            links.push({
+                source: nodes[i],
+                target: connectors[i]
+            });
+        }
+        // making a line at the end of the links to connect them
+        links.push({
+            source: connectors[0],
+            target: connectors[connectors.length - 1]
+        });
+
+        d3.select(self.textVisOverlay).selectAll(".links")
+            .data(links)
+            .enter()
+            .append('g')
+            .classed('links', true)
+            .attr("class", "line_" + id)
+            .append('path')
+            .attr('d', function (d) {
+                return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
+            })
+            .style("stroke", "black")
+            .style("stroke-dasharray", (3, 3))
+            .style("stroke-width", self.strokeWidth)
+            .style("opacity", 0)
+            .transition()
+            .duration(transition_in)
+            .style("opacity", 1);
+    }
 
     /**
 	 * Draws one line from the text AOI that branches (tree branching) off to one line per cluster
