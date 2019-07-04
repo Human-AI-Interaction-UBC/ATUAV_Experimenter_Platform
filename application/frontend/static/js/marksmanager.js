@@ -493,29 +493,15 @@
                 relativeCoords.branchx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
                 relativeCoords.branchy = sharedAxis.coord - refParentRect.top;
             }
-        } else {
-            // assuming that any marks with no shared axis are probably horizontal bars
-            if (markRects.length === 1) {
-                let mark = markRects[0];
-                relativeCoords.branchx = mark.width > mark.height ? mark.left - refParentRect.left :
-                    mark.left + mark.width - refParentRect.left;
-                relativeCoords.branchy = mark.width > mark.height ? mark.top + mark.height / 2 - refParentRect.top :
-                    mark.top + mark.height - refParentRect.top;
-            }
-            let minY = markRects[0].top;
-            let maxY = markRects[0].bottom;
-            let left = markRects[0].left;
-
-            markRects.forEach((mark) => {
-                minY = Math.min(minY, mark.top);
-                maxY = Math.max(maxY, mark.bottom);
-                left = Math.min(left, mark.left);
-            });
-            relativeCoords.branchx = left - refParentRect.left;
-            relativeCoords.branchy = (minY + maxY) / 2 - refParentRect.top;
         }
 
         if (markRects.length === 1) {
+            let mark = markRects[0];
+            relativeCoords.branchx = mark.width > mark.height ? mark.left - refParentRect.left :
+                mark.left + mark.width - refParentRect.left;
+            relativeCoords.branchy = mark.width > mark.height ? mark.top + mark.height / 2 - refParentRect.top :
+                mark.top + mark.height - refParentRect.top;
+
             d3.select(self.textVisOverlay).append("line")
                 .attr("class", "line_" + id)
                 .attr("x2", relativeCoords.branchx).attr("y2", relativeCoords.branchy)
