@@ -525,6 +525,9 @@ function handleDelivery(obj) {
 
   }
 
+    /**
+     * Handles drawing the new links to relevant bars, drawing the greyed out bar highlights, as well as removing the old links
+     */
   if (func == 'highlightVisAndRef_recency') {
       console.log('old_activeA:', $scopeGlobal.old_active_interventions);
       let tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
@@ -551,25 +554,11 @@ function handleDelivery(obj) {
 
       let arguments = $scopeGlobal.interventions[obj.deliver[0].name].args;
 
-      // if (arguments.clustering) {
-      //   if (arguments.branching) {
-      //       $scopeGlobal.curMarksManager.clusterBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
-        // } else {
-        //     $scopeGlobal.curMarksManager.clusterLines(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
-        // }
-      // } else {
-      //   if (arguments.branching) {
-      //       $scopeGlobal.curMarksManager.midLineBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
-      //   } else {
-      //       $scopeGlobal.curMarksManager.drawMidLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
-      //   }
-      // }
-
-      $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
-
-      $scopeGlobal.curMarksManager.midlineTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
-
-      // $scopeGlobal.curMarksManager.midlineBranchToCluster(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
+      if (arguments.clustering) {
+          $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
+      } else {
+          $scopeGlobal.curMarksManager.midlineTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
+      }
   }
 
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency
@@ -626,7 +615,12 @@ function highlightVisOnly_recency(referenceID, transition_in, args) {
     //},transition_in*1.2); //TODO:CHECK
 }
 
-// is used by intervention
+/**
+ * Handles part of the intervention: highlights the relevant bars and underlines the relevant text AOI (does not draw links)
+ * @param {Object} referenceID - contains tuple id (for relevant bars), arguments from database, transition out, and refId
+ * @param {int} transition_in
+ * @param {Object} args - the arguments passed in from database
+ */
 function highlightVisAndRef_recency(referenceID, transition_in, args) {
     let tuple_ids = Object.values($scopeGlobal.interventions).map(function (obj) {
         return obj.tuple_id
@@ -642,12 +636,8 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     let paragraph = document.getElementById('theTextParagraph');
     // Create the spans in the text
 
-    // let refAOI = document.getElementById('aoi_' + refToHighlight.refId);
-    // refAOI.setAttribute('class', "refAOI text-reference");
-
     let sm = new SpanManager(paragraph);
-    //
-    // // if (args.underline) {
+    // if (args.underline) {
         sm.createSpans([refToHighlight], function(elem, _) {
           elem.setAttribute('class', 'text-reference refAOI');
         });
@@ -660,12 +650,9 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     //     });
     // }
 
-    // if (args.link) {
       if (!document.getElementById('textVisContainer')) {
         $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
       }
-    // }
-
 }
 
 /**

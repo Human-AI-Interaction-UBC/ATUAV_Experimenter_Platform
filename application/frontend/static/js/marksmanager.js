@@ -498,8 +498,8 @@
         if (markRects.length === 1) {
             let mark = markRects[0];
             relativeCoords.branchx = mark.width > mark.height ? mark.left - refParentRect.left :
-                mark.left + mark.width - refParentRect.left;
-            relativeCoords.branchy = mark.width > mark.height ? mark.top + mark.height / 2 - refParentRect.top :
+                mark.left + mark.width/2 - refParentRect.left;
+            relativeCoords.branchy = mark.width > mark.height ? mark.top + mark.height/2 - refParentRect.top :
                 mark.top + mark.height - refParentRect.top;
 
             d3.select(self.textVisOverlay).append("line")
