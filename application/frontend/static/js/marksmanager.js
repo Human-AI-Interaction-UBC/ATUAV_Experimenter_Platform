@@ -558,7 +558,7 @@
                 }
 
                 if (cur.length > 1) {
-                    self.drawPhylogeneticTreeBranching(cur, transition_in, id, isHorizontal, relativeCoords);
+                    let links = self.drawPhylogeneticTreeBranching(cur, isHorizontal, relativeCoords);
                 	// let nodes = [];
                 	// let connectors = [];
                     // let minX = cur.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 10), cur[0].left);
@@ -613,23 +613,23 @@
 					// 	target: connectors[connectors.length - 1]
 					// });
                     //
-                    // d3.select(self.textVisOverlay).selectAll(".links")
-					// 	.data(links)
-					// 	.enter()
-					// 	.append('g')
-                    //     .classed('links', true)
-                    //     .attr("class", "line_" + id)
-					// 	.append('path')
-                    //     .attr('d', function(d) {
-                    //         return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
-                    //     })
-					// 	.style("stroke", "black")
-					// 	.style("stroke-dasharray", (3, 3))
-					// 	.style("stroke-width", self.strokeWidth)
-					// 	.style("opacity", 0)
-                    //     .transition()
-                    //     .duration(transition_in)
-                    //     .style("opacity", 1);
+                    d3.select(self.textVisOverlay).selectAll(".links")
+						.data(links)
+						.enter()
+						.append('g')
+                        .classed('links', true)
+                        .attr("class", "line_" + id)
+						.append('path')
+                        .attr('d', function(d) {
+                            return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
+                        })
+						.style("stroke", "black")
+						.style("stroke-dasharray", (3, 3))
+						.style("stroke-width", self.strokeWidth)
+						.style("opacity", 0)
+                        .transition()
+                        .duration(transition_in)
+                        .style("opacity", 1);
                 }
             }
 		}
@@ -690,7 +690,7 @@
             .duration(transition_in)
             .style("opacity", 1);
 
-        self.drawPhylogeneticTreeBranching(markRects, transition_in, id, isHorizontal, relativeCoords);
+        let links = self.drawPhylogeneticTreeBranching(markRects, isHorizontal, relativeCoords);
         // let nodes = [];
         // let connectors = [];
         // let minX = markRects.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 10), markRects[0].left);
@@ -746,26 +746,26 @@
         //     target: connectors[connectors.length - 1]
         // });
         //
-        // d3.select(self.textVisOverlay).selectAll(".links")
-        //     .data(links)
-        //     .enter()
-        //     .append('g')
-        //     .classed('links', true)
-        //     .attr("class", "line_" + id)
-        //     .append('path')
-        //     .attr('d', function (d) {
-        //         return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
-        //     })
-        //     .style("stroke", "black")
-        //     .style("stroke-dasharray", (3, 3))
-        //     .style("stroke-width", self.strokeWidth)
-        //     .style("opacity", 0)
-        //     .transition()
-        //     .duration(transition_in)
-        //     .style("opacity", 1);
+        d3.select(self.textVisOverlay).selectAll(".links")
+            .data(links)
+            .enter()
+            .append('g')
+            .classed('links', true)
+            .attr("class", "line_" + id)
+            .append('path')
+            .attr('d', function (d) {
+                return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
+            })
+            .style("stroke", "black")
+            .style("stroke-dasharray", (3, 3))
+            .style("stroke-width", self.strokeWidth)
+            .style("opacity", 0)
+            .transition()
+            .duration(transition_in)
+            .style("opacity", 1);
     };
 
-    MarksManager.prototype.drawPhylogeneticTreeBranching = function (markRects, transition_in, id, isHorizontal, textRefCoords) {
+    MarksManager.prototype.drawPhylogeneticTreeBranching = function (markRects, isHorizontal, textRefCoords) {
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
         let nodes = [];
         let connectors = [];
@@ -821,25 +821,8 @@
             source: connectors[0],
             target: connectors[connectors.length - 1]
         });
-
-        d3.select(self.textVisOverlay).selectAll(".links")
-            .data(links)
-            .enter()
-            .append('g')
-            .classed('links', true)
-            .attr("class", "line_" + id)
-            .append('path')
-            .attr('d', function (d) {
-                return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
-            })
-            .style("stroke", "black")
-            .style("stroke-dasharray", (3, 3))
-            .style("stroke-width", self.strokeWidth)
-            .style("opacity", 0)
-            .transition()
-            .duration(transition_in)
-            .style("opacity", 1);
-    }
+      return links;
+    };
 
     /**
 	 * Draws one line from the text AOI that branches (tree branching) off to one line per cluster
