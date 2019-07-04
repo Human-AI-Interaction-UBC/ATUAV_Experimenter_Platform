@@ -424,33 +424,33 @@
                         .duration(transition_in)
                         .style("opacity", 1);
 
-                } else if (sharedAxis.hasOwnProperty('coord')) {
-                    if (sharedAxis.axis === 'x') {
-                        relativeCoords.markx = sharedAxis.coord - refParentRect.left;
-                        relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
-                        isHorizontal = true;
-                    } else {
-                        relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
-                        relativeCoords.marky = sharedAxis.coord - refParentRect.top;
+                } else {
+                    if (sharedAxis.hasOwnProperty('coord')) {
+                        if (sharedAxis.axis === 'x') {
+                            relativeCoords.markx = sharedAxis.coord - refParentRect.left;
+                            relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
+                            isHorizontal = true;
+                        } else {
+                            relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
+                            relativeCoords.marky = sharedAxis.coord - refParentRect.top;
+                        }
                     }
-                }
 
-                if (cur.length > 1) {
                     let links = self.getPhylogeneticTreeNodeLinks(cur, isHorizontal, relativeCoords);
                     d3.select(self.textVisOverlay).selectAll(".links")
-						.data(links)
-						.enter()
-						.append('g')
+                        .data(links)
+                        .enter()
+                        .append('g')
                         .classed('links', true)
                         .attr("class", "line_" + id)
-						.append('path')
-                        .attr('d', function(d) {
+                        .append('path')
+                        .attr('d', function (d) {
                             return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
                         })
-						.style("stroke", "black")
-						.style("stroke-dasharray", (3, 3))
-						.style("stroke-width", self.strokeWidth)
-						.style("opacity", 0)
+                        .style("stroke", "black")
+                        .style("stroke-dasharray", (3, 3))
+                        .style("stroke-width", self.strokeWidth)
+                        .style("opacity", 0)
                         .transition()
                         .duration(transition_in)
                         .style("opacity", 1);
@@ -495,6 +495,13 @@
             }
         } else {
             // assuming that any marks with no shared axis are probably horizontal bars
+            if (markRects.length === 1) {
+                let mark = markRects[0];
+                relativeCoords.branchx = mark.width > mark.height ? mark.left - refParentRect.left :
+                    mark.left + mark.width - refParentRect.left;
+                relativeCoords.branchy = mark.width > mark.height ? mark.top + mark.height / 2 - refParentRect.top :
+                    mark.top + mark.height - refParentRect.top;
+            }
             let minY = markRects[0].top;
             let maxY = markRects[0].bottom;
             let left = markRects[0].left;
@@ -541,7 +548,6 @@
                 .style("opacity", 1);
         }
     };
-
 
     /**
      * NOT CURRENTLY IN USE
@@ -744,7 +750,7 @@
 
     /*************************** END METHODS FOR DRAWING LINKS FOR CLUSTERING AND BRANCHING ***************************/
 
-    /*******************************HELPER METHODS FOR DRAWING LINKS AND CLUSTERING*****************************/
+    /******************************* HELPER METHODS FOR DRAWING LINKS AND CLUSTERING *******************************/
     /**
      * Helper method for clustering and branching: used to check if the marks are adjacent to each other to determine whether the marks should belong in the same cluster or not
      * @param {DOMRect} prevMark - the previous mark
@@ -909,7 +915,7 @@
         return links;
     };
 
-    /******************************* END HELPER METHODS FOR DRAWING LINKS AND CLUSTERING*****************************/
+    /******************************* END HELPER METHODS FOR DRAWING LINKS AND CLUSTERING *******************************/
 
     /**
      * Method to remove the links intervention
