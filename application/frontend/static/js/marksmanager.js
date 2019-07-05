@@ -802,7 +802,7 @@
             return mark.getBoundingClientRect();
         });
 
-        let allShared = getSharedAxis(markRects, 0);
+        let allShared = getSharedAxis(markRects, 1);
         if (allShared.isShared) {
             if (allShared.hasOwnProperty('coord') && allShared.axis === 'x') {
                 markRects.sort((prev, cur) => {
@@ -854,7 +854,7 @@
      *                             source/target = the nodes
      */
     MarksManager.prototype.getPhylogeneticTreeNodeLinks = function (markRects, isHorizontal, textRefCoords) {
-        let allShared = getSharedAxis(markRects, 0);
+        let allShared = getSharedAxis(markRects, 1);
         if (allShared.isShared) {
             if (allShared.hasOwnProperty('coord') && allShared.axis === 'x') {
                 markRects.sort((prev, cur) => {
