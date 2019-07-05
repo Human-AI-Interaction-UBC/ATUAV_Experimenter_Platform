@@ -854,6 +854,18 @@
      *                             source/target = the nodes
      */
     MarksManager.prototype.getPhylogeneticTreeNodeLinks = function (markRects, isHorizontal, textRefCoords) {
+        let allShared = getSharedAxis(markRects, 0);
+        if (allShared.isShared) {
+            if (allShared.hasOwnProperty('coord') && allShared.axis === 'x') {
+                markRects.sort((prev, cur) => {
+                    return prev.y - cur.y;
+                });
+            } else {
+                markRects.sort((prev, cur) => {
+                    return prev.x - cur.x;
+                });
+            }
+        }
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
         let nodes = [];
         let connectors = [];
