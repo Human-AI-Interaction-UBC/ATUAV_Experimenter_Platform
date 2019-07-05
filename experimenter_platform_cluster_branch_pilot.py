@@ -127,13 +127,10 @@ class MainHandler(tornado.web.RequestHandler):
 
         q1 = self.get_argument('element_1')
         if(int(q1)==1):
-            conditions = [[31, 761, 181, 281, 51, 301, 601, 661], [32, 762, 182, 282, 52, 302, 602, 662]]
-            for intervention in conditions:
-                random.shuffle(intervention)
-            # self.application.mmd_order = [60]
+            conditions = [31, 761, 181, 281, 51, 301, 601, 32, 762, 182, 282, 52, 302, 602]
             # shuffle MMD order
             random.shuffle(conditions)
-            self.application.mmd_order = [cond for intervention in conditions for cond in intervention]
+            self.application.mmd_order = conditions
             self.application.mmd_index = 0
             self.redirect('/userID')
         else:
