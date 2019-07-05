@@ -801,9 +801,20 @@
         let markRects = marks.selected_marks.map((mark) => {
             return mark.getBoundingClientRect();
         });
-        // markRects.sort((prev, cur) => {
-        // 	return prev.x === cur.x ? prev.y - cur.y : prev.x - cur.x;
-        // });
+
+        let allShared = getSharedAxis(markRects, 0);
+        if (allShared.isShared) {
+            if (allShared.hasOwnProperty('coord') && allShared.axis === 'x') {
+                markRects.sort((prev, cur) => {
+                	return prev.y - cur.y;
+                });
+            } else {
+                markRects.sort((prev, cur) => {
+                    return prev.x - cur.x;
+                });
+            }
+        }
+        
         let curCluster = [];
         let clusters = [];
         let prevMarkRect = markRects[0];

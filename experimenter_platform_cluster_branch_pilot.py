@@ -206,10 +206,7 @@ class QuestionnaireHandler(tornado.web.RequestHandler):
         mmdQuestions = self.loadMMDQuestions()
         noofMMD = len(self.application.mmd_order)
         progress = str(self.application.mmd_index)+ ' of '+ str(noofMMD)
-        if (self.application.mmd_index % 2 == 0):
-            self.render('questionnaire.html', mmd=self.application.cur_mmd, progress = progress, questions = mmdQuestions)
-        else:
-            self.redirect('/mmd')
+        self.render('questionnaire.html', mmd=self.application.cur_mmd, progress = progress, questions = mmdQuestions)
 
         print("finished rendering qustionnaire")
 
