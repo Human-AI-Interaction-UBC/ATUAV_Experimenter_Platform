@@ -416,9 +416,7 @@ function initReferences($scope) {
       console.log("creating spans");
         elem.setAttribute('id', 'aoi_' + span.refId);
 
-        elem.addEventListener('mouseover', (event) => {
-          console.log("mouse over");
-            console.log(event);
+        elem.addEventListener('mouseover', () => {
             $.ajax({
                 url: '/triggerIntervention',
 
@@ -433,6 +431,10 @@ function initReferences($scope) {
                 },
             });
         });
+
+        elem.addEventListener('mouseout', () => {
+          removeAllInterventions(span.refId);
+        })
     });
 
   // Add the marks that have associated text
