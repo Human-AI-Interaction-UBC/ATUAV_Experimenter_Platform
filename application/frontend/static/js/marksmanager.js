@@ -745,8 +745,8 @@
      * @returns {boolean}
      */
     function areMarksAdjacent(prevMark, curMark, threshold) {
-        return Math.abs(prevMark.top - curMark.bottom) < threshold || Math.abs(prevMark.bottom - curMark.top) < threshold ||
-            Math.abs(prevMark.left - curMark.right) < threshold || Math.abs(prevMark.right - curMark.left) < threshold;
+        return Math.abs(prevMark.top - curMark.bottom) <= threshold || Math.abs(prevMark.bottom - curMark.top) <= threshold ||
+            Math.abs(prevMark.left - curMark.right) <= threshold || Math.abs(prevMark.right - curMark.left) <= threshold;
     }
 
     /**
@@ -769,12 +769,12 @@
         let prev = cluster[0];
         for (let i = 1; i < cluster.length; i++) {
             let cur = cluster[i];
-            if ((Math.abs(cur.top - prev.top) < threshold) || (Math.abs(cur.bottom - prev.bottom) < threshold)) {
+            if ((Math.abs(cur.top - prev.top) <= threshold) || (Math.abs(cur.bottom - prev.bottom) <= threshold)) {
                 shared.coord = cur.bottom;
                 shared.axis = 'y';
                 shared.min = Math.min(cur.left, shared.hasOwnProperty('min') ? shared.min : prev.left);
                 shared.max = Math.max(cur.right, shared.hasOwnProperty('max') ? shared.max : prev.right);
-            } else if ((Math.abs(cur.left - prev.left) < threshold) || (Math.abs(cur.right - prev.right) < threshold)) {
+            } else if ((Math.abs(cur.left - prev.left) <= threshold) || (Math.abs(cur.right - prev.right) <= threshold)) {
                 shared.coord = cur.left;
                 shared.axis = 'x';
                 shared.min = Math.min(cur.top, shared.hasOwnProperty('min') ? shared.min : prev.top);
@@ -802,7 +802,7 @@
             return mark.getBoundingClientRect();
         });
 
-        let allShared = getSharedAxis(markRects, 1);
+        let allShared = getSharedAxis(markRects, 0);
         if (allShared.isShared) {
             if (allShared.hasOwnProperty('coord') && allShared.axis === 'x') {
                 markRects.sort((prev, cur) => {
