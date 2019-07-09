@@ -477,11 +477,11 @@
         relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
         relativeCoords.refY = refRect.top - refParentRect.top + refRect.height / 2;
 
-        let isHorizontal = false;
         let marks = self.getSelectedMarks(tuple_ids);
         let markRects = marks.selected_marks.map((mark) => {
             return mark.getBoundingClientRect();
         });
+        let isHorizontal = markRects[0].width > markRects[0].height;
 
         let sharedAxis = getSharedAxis(markRects, 10);
         if (sharedAxis.hasOwnProperty('coord')) {
