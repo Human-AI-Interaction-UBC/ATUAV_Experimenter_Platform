@@ -877,9 +877,11 @@
 
             if (markRects[i].width > markRects[i].height || isHorizontal) {
                 nodeXY.x = markRects[i].left - refParentRect.left;
-                nodeXY.y = textRefCoords.refY > nodeXY.y ? markRects[i].top - refParentRect.top + markRects[i].height : markRects[i].top - refParentRect.top;
+                nodeXY.y = textRefCoords.refY > (markRects[i].top - refParentRect.top) ?
+                    markRects[i].top - refParentRect.top + markRects[i].height : markRects[i].top - refParentRect.top;
                 treeConnectorXY.x = minX;
-                treeConnectorXY.y = textRefCoords.refY > nodeXY.y ? nodeXY.y + markRects[i].height / 2 : nodeXY.y - markRects[i].height / 2;
+                treeConnectorXY.y = textRefCoords.refY > nodeXY.y ?
+                    nodeXY.y + markRects[i].height / 2 : nodeXY.y - markRects[i].height / 2;
             } else {
                 nodeXY.x = markRects[i].left - refParentRect.left + markRects[i].width / 2;
                 nodeXY.y = markRects[i].top - refParentRect.top + markRects[i].height;
