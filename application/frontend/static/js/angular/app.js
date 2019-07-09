@@ -433,7 +433,7 @@ function initReferences($scope) {
         });
 
         elem.addEventListener('mouseout', () => {
-          removeAllInterventions(span.refId);
+          $scopeGlobal.curMarksManager.removeLines(span.refId);
         })
     });
 
@@ -675,27 +675,9 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     let refAOI = document.getElementById('aoi_' + refToHighlight.refId);
     refAOI.setAttribute('class', "refAOI text-reference");
 
-    // let sm = new SpanManager(paragraph);
-    //
-    // // if (args.underline) {
-    //     sm.createSpans([refToHighlight], function(elem, _) {
-    //       elem.setAttribute('class', 'text-reference');
-    //       elem.setAttribute('id', 'refAOI');
-    //     });
-    // }
-
-    // if (args.highlight) {
-    //     sm.createSpans([refToHighlight], function(elem, _) {
-    //         elem.setAttribute('class', 'text-highlight');
-    //         elem.setAttribute('id', 'refAOI');
-    //     });
-    // }
-
-    // if (args.link) {
-      if (!document.getElementById('textVisContainer')) {
-        $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
-      }
-    // }
+    if (!document.getElementById('textVisContainer')) {
+      $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
+    }
 
 }
 
