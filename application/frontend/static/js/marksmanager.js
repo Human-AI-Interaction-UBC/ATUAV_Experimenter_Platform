@@ -823,7 +823,7 @@
             let curMarkRect = markRects[i];
             let isShared = getSharedAxis(curCluster.concat(curMarkRect), 10).isShared;
 
-            if (!areMarksAdjacent(prevMarkRect, curMarkRect, 10) || !isShared) {
+            if (!areMarksAdjacent(prevMarkRect, curMarkRect, 15) || !isShared) {
                 clusters.push(curCluster);
                 curCluster = [];
             }
@@ -869,8 +869,8 @@
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
         let nodes = [];
         let connectors = [];
-        let minX = markRects.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 5), markRects[0].left);
-        let maxY = markRects.reduce((acc, xy) => Math.max(acc, xy.top - refParentRect.top + xy.height + 5), 0);
+        let minX = markRects.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 8), markRects[0].left);
+        let maxY = markRects.reduce((acc, xy) => Math.max(acc, xy.top - refParentRect.top + xy.height + 8), 0);
         for (let i = 0; i < markRects.length; i++) {
             let nodeXY = {};
             let treeConnectorXY = {};
