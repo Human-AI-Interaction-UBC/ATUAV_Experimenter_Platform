@@ -813,6 +813,10 @@
                     return prev.x - cur.x;
                 });
             }
+        } else if (markRects[0].width > markRects[0].height) {
+            markRects.sort((prev, cur) => {
+                return prev.y - cur.y;
+            })
         }
         
         let curCluster = [];
