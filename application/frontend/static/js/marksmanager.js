@@ -869,8 +869,8 @@
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
         let nodes = [];
         let connectors = [];
-        let minX = markRects.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 10), markRects[0].left);
-        let maxY = markRects.reduce((acc, xy) => Math.max(acc, xy.top - refParentRect.top + xy.height + 10), 0);
+        let minX = markRects.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 5), markRects[0].left);
+        let maxY = markRects.reduce((acc, xy) => Math.max(acc, xy.top - refParentRect.top + xy.height + 5), 0);
         for (let i = 0; i < markRects.length; i++) {
             let nodeXY = {};
             let treeConnectorXY = {};
@@ -879,11 +879,11 @@
                 nodeXY.x = markRects[i].left - refParentRect.left;
                 nodeXY.y = markRects[i].top - refParentRect.top + markRects[i].height / 2;
                 treeConnectorXY.x = minX;
-                treeConnectorXY.y = nodeXY.y;
+                treeConnectorXY.y = textRefCoords.refY > nodeXY.y ? nodeXY.y + markRects[i].height / 2 : nodeXY.y - markRects[i].height / 2;
             } else {
                 nodeXY.x = markRects[i].left - refParentRect.left + markRects[i].width / 2;
                 nodeXY.y = markRects[i].top - refParentRect.top + markRects[i].height;
-                treeConnectorXY.x = nodeXY.x;
+                treeConnectorXY.x = nodeXY.x - markRects[i].width / 2;
                 treeConnectorXY.y = maxY;
             }
 
