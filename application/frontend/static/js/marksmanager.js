@@ -814,7 +814,7 @@
                 });
             }
         }
-        
+
         let curCluster = [];
         let clusters = [];
         let prevMarkRect = markRects[0];
@@ -877,8 +877,7 @@
 
             if (markRects[i].width > markRects[i].height || isHorizontal) {
                 nodeXY.x = markRects[i].left - refParentRect.left;
-                nodeXY.y = textRefCoords.refY > (markRects[i].top - refParentRect.top) ?
-                    markRects[i].top - refParentRect.top + markRects[i].height : markRects[i].top - refParentRect.top;
+                nodeXY.y = markRects[i].top - refParentRect.top + markRects[i].height / 2;
                 treeConnectorXY.x = minX;
                 treeConnectorXY.y = textRefCoords.refY > nodeXY.y ?
                     nodeXY.y + markRects[i].height / 2 : nodeXY.y - markRects[i].height / 2;
