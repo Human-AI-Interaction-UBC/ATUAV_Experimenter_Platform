@@ -417,8 +417,8 @@ function initReferences($scope) {
         elem.setAttribute('id', 'aoi_' + span.refId);
 
         if ($scopeGlobal.showInterventions) {
-            elem.addEventListener('mouseover', handleMouseover(span));
-            elem.addEventListener('mouseout', handleMouseout(span));
+            elem.addEventListener('mouseover', handleMouseover(span.refId));
+            elem.addEventListener('mouseout', handleMouseout(span.refId));
         }
     });
 
@@ -681,11 +681,12 @@ function removeAllInterventions(referenceID) {
     document.getElementsByClassName('refAOI')[0].removeAttribute('class');
 }
 
-function handleMouseover(span) {
+function handleMouseover(refId) {
+  console.log(refId);
     $.ajax({
         url: '/triggerIntervention',
 
-        data: "ref_" + span.refId + "_fix",
+        data: "ref_" + refId + "_fix",
         dataType: "JSON",
         type: "POST",
         success: function (data, status_text, jqXHR) {
@@ -697,8 +698,8 @@ function handleMouseover(span) {
     });
 }
 
-function handleMouseout(span) {
-    $scopeGlobal.curMarksManager.removeLines(span.refId);
+function handleMouseout(refId) {
+    $scopeGlobal.curMarksManager.removeLines(refId);
 }
 
 function toggleIntervention() {
@@ -710,13 +711,13 @@ function toggleIntervention() {
       }
 
       $scopeGlobal.aoiSpans.forEach((span) => {
-        document.getElementById('aoi_' + span.refId).removeEventListener('mouseover', handleMouseover);
-        document.getElementById('aoi_' + span.refId).removeEventListener('mouseout', handleMouseout);
+        span.removeEventListener('mouseover', handleMouseover);
+        span.removeEventListener('mouseout', handleMouseout);
       })
   } else {
         $scopeGlobal.aoiSpans.forEach((span) => {
-            document.getElementById('aoi_' + span.refId).addEventListener('mouseover', handleMouseover);
-            document.getElementById('aoi_' + span.refId).addEventListener('mouseout', handleMouseout);
+            span.addEventListener('mouseover', handleMouseover);
+            span.addEventListener('mouseout', handleMouseout);
         })
     }
     $.ajax({
