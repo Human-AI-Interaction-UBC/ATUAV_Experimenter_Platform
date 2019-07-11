@@ -684,24 +684,28 @@ function removeAllInterventions(referenceID) {
 }
 
 function handleMouseover(refId) {
-  console.log(refId);
-    $.ajax({
-        url: '/triggerIntervention',
+  return function() {
+      console.log(refId);
+      $.ajax({
+          url: '/triggerIntervention',
 
-        data: "ref_" + refId + "_fix",
-        dataType: "JSON",
-        type: "POST",
-        success: function (data, status_text, jqXHR) {
-            console.log('ajax success')
-        },
-        error: function (data, status_text, jqXHR) {
-            console.log('ajax fail')
-        },
-    });
+          data: "ref_" + refId + "_fix",
+          dataType: "JSON",
+          type: "POST",
+          success: function (data, status_text, jqXHR) {
+              console.log('ajax success')
+          },
+          error: function (data, status_text, jqXHR) {
+              console.log('ajax fail')
+          },
+      });
+  };
 }
 
 function handleMouseout(refId) {
-    $scopeGlobal.curMarksManager.removeLines(refId);
+  return function() {
+      $scopeGlobal.curMarksManager.removeLines(refId);
+  };
 }
 
 function toggleIntervention() {
@@ -720,11 +724,10 @@ function toggleIntervention() {
 
     } else {
         $scopeGlobal.aoiSpans.forEach((span) => {
+            $scopeGlobal.ws.send("showInterventions");
             let refId = span.id.split("_")[1];
             span.addEventListener('mouseover', handleMouseover(refId));
             span.addEventListener('mouseout', handleMouseout(refId));
         });
-        $scopeGlobal.ws.send("showInterventions");
-
     }
 }
