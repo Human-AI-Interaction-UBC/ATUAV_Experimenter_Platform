@@ -108,11 +108,11 @@ class MMDWebSocket(ApplicationWebSocket):
             self.stop_detection_components()
             self.tobii_controller.stopTracking()
             return
-        elif message == "showIntervention":
-            self.start_detection_components()
+        elif message == "showInterventions":
+            self.tobii_controller.startTracking()
             return
-        elif message == "hideIntervention":
-            self.stop_detection_components()
+        elif message == "hideInterventions":
+            self.tobii_controller.stopTracking()
             return
         else:
             self.stop_detection_components()
