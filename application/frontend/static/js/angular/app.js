@@ -716,13 +716,14 @@ function toggleIntervention() {
       })
   } else {
         $scopeGlobal.aoiSpans.forEach((span) => {
-            span.addEventListener('mouseover', handleMouseover(span.id));
-            span.addEventListener('mouseout', handleMouseout(span.id));
+          let refId = span.id.split("_")[1];
+            span.addEventListener('mouseover', handleMouseover(refId));
+            span.addEventListener('mouseout', handleMouseout(refId));
         })
     }
     $.ajax({
         url: '/toggleIntervention',
-        data: JSON.stringify({showIntervention: $scopeGlobal.showInterventions}),
+        data: JSON.stringify({"showIntervention": $scopeGlobal.showInterventions}),
         dataType: "JSON",
         type: "POST",
         success: function (data, status_text, jqXHR) {
