@@ -678,7 +678,9 @@ function removeAllInterventions(referenceID) {
   //if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
     $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
     $scopeGlobal.curMarksManager.removeLines(referenceID.tuple_id);
-    document.getElementsByClassName('refAOI')[0].removeAttribute('class');
+    if (document.getElementsByClassName('refAOI')[0]) {
+      document.getElementsByClassName('refAOI')[0].removeAttribute('class');      
+    }
 }
 
 function handleMouseover(refId) {

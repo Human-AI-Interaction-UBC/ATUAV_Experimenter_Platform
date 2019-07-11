@@ -99,8 +99,8 @@ class MMDWebSocket(ApplicationWebSocket):
         self.adaptation_loop.liveWebSocket = self
         # print self.tobii_controller.eyetrackers
 
-        self.start_detection_components()
-        self.tobii_controller.startTracking()
+        # self.start_detection_components()
+        # self.tobii_controller.startTracking()
 
     def on_message(self, message):
         print("RECEIVED MESSAGE: " + message)
@@ -109,9 +109,11 @@ class MMDWebSocket(ApplicationWebSocket):
             self.tobii_controller.stopTracking()
             return
         elif message == "showInterventions":
+            self.start_detection_components()
             self.tobii_controller.startTracking()
             return
         elif message == "hideInterventions":
+            self.stop_detection_components()
             self.tobii_controller.stopTracking()
             return
         else:
