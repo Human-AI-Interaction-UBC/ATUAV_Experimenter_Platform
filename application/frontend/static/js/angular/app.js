@@ -705,9 +705,9 @@ function toggleIntervention() {
     $scopeGlobal.showInterventions = !$scopeGlobal.showInterventions;
 
     if (!$scopeGlobal.showInterventions) {
-      $scopeGlobal.interventions.forEach((intervention) => {
+      for (let intervention in $scopeGlobal.interventions) {
           removeAllInterventions(intervention);
-      });
+      }
 
       $scopeGlobal.aoiSpans.forEach((span) => {
         document.getElementById('aoi_' + span.refId).removeEventListener('mouseover', handleMouseover);
