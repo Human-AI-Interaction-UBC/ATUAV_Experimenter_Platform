@@ -412,29 +412,14 @@ function initReferences($scope) {
     // Create the spans in the text
     $scope.curSpanManager = new SpanManager(paragraph);
 
-    $scope.curSpanManager.createSpans($scope.startEndCoords, (elem, span) => {
+    $scopeGlobal.aoiSpans = $scope.curSpanManager.createSpans($scope.startEndCoords, (elem, span) => {
       console.log("creating spans");
         elem.setAttribute('id', 'aoi_' + span.refId);
 
-        elem.addEventListener('mouseover', () => {
-            $.ajax({
-                url: '/triggerIntervention',
-
-                data: "ref_" + span.refId + "_fix",
-                dataType: "JSON",
-                type: "POST",
-                success: function (data, status_text, jqXHR) {
-                    console.log('ajax success')
-                },
-                error: function (data, status_text, jqXHR) {
-                    console.log('ajax fail')
-                },
-            });
-        });
-
-        elem.addEventListener('mouseout', () => {
-          $scopeGlobal.curMarksManager.removeLines(span.refId);
-        })
+        if ($scopeGlobal.showInterventions) {
+            elem.addEventListener('mouseover', handleMouseover(span));
+            elem.addEventListener('mouseout', handleMouseout(span));
+        }
     });
 
   // Add the marks that have associated text
@@ -696,6 +681,26 @@ function removeAllInterventions(referenceID) {
     document.getElementsByClassName('refAOI')[0].removeAttribute('class');
 }
 
+function handleMouseover(span) {
+    $.ajax({
+        url: '/triggerIntervention',
+
+        data: "ref_" + span.refId + "_fix",
+        dataType: "JSON",
+        type: "POST",
+        success: function (data, status_text, jqXHR) {
+            console.log('ajax success')
+        },
+        error: function (data, status_text, jqXHR) {
+            console.log('ajax fail')
+        },
+    });
+}
+
+function handleMouseout(span) {
+    $scopeGlobal.curMarksManager.removeLines(span.refId);
+}
+
 function toggleIntervention() {
     $scopeGlobal.showInterventions = !$scopeGlobal.showInterventions;
 
@@ -703,7 +708,17 @@ function toggleIntervention() {
       $scopeGlobal.interventions.forEach((intervention) => {
           removeAllInterventions(intervention);
       });
-  }
+
+      $scopeGlobal.aoiSpans.forEach((span) => {
+        document.getElementById('aoi_' + span.refId).removeEventListener('mouseover', handleMouseover);
+        document.getElementById('aoi_' + span.refId).removeEventListener('mouseout', handleMouseout);
+      })
+  } else {
+        $scopeGlobal.aoiSpans.forEach((span) => {
+            document.getElementById('aoi_' + span.refId).addEventListener('mouseover', handleMouseover);
+            document.getElementById('aoi_' + span.refId).addEventListener('mouseout', handleMouseout);
+        })
+    }
     $.ajax({
         url: '/toggleIntervention',
         data: JSON.stringify({showIntervention: $scopeGlobal.showInterventions}),

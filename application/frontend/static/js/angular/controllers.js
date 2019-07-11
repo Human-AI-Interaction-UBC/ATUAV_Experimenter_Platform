@@ -33,6 +33,7 @@ var AppCtrl = function($scope, $http, $location) {
   };
   /***** Server communications block *****/
   $scopeGlobal.showInterventions = false;
+  $scopeGlobal.aoiSpans = [];
   $scopeGlobal.interventions = {};
   $scopeGlobal.old_active_interventions = [];
   $scopeGlobal.ws = new WebSocket("ws://localhost:8888/websocket");
