@@ -32,6 +32,7 @@ var AppCtrl = function($scope, $http, $location) {
     matchMode: 'lenient'
   };
   /***** Server communications block *****/
+  $scopeGlobal.showInterventions = false;
   $scopeGlobal.interventions = {};
   $scopeGlobal.old_active_interventions = [];
   $scopeGlobal.ws = new WebSocket("ws://localhost:8888/websocket");

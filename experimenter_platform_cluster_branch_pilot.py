@@ -68,6 +68,7 @@ class Application(tornado.web.Application):
             (r"/tobii", TobiiHandler),
             (r"/ready", ReadyHandler),
             (r"/triggerIntervention", TriggerInterventionHandler),
+            (r"/toggleIntervention", ToggleInterventionHandler),
             (r"/done", DoneHandler),
             (r"/final_question", FinalHandler), (r"/(1.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
                                                 (r"/(2.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
@@ -363,6 +364,16 @@ class TriggerInterventionHandler(tornado.web.RequestHandler):
         event_name = self.request.body
         print(event_name)
         self.application.adaptation_loop.evaluateRules(event_name, int(round(time.time() * 1000)), True)
+
+
+class ToggleInterventionHandler(tornado.web.RequestHandler):
+    def post(self):
+        should_show_interventions = json.loads(self.request.body)
+        if (not should_show_interventions.showIntervention):
+            self.application.application_web_socket.stop_detection_components()
+        else:
+            self.application.application_web_socket.start_detection_components()
+
 
 class SampleHandler(tornado.web.RequestHandler):
     def get(self):

@@ -695,3 +695,25 @@ function removeAllInterventions(referenceID) {
     $scopeGlobal.curMarksManager.removeLines(referenceID.tuple_id);
     document.getElementsByClassName('refAOI')[0].removeAttribute('class');
 }
+
+function toggleIntervention() {
+    $scopeGlobal.showInterventions = !$scopeGlobal.showInterventions;
+
+    if (!$scopeGlobal.showInterventions) {
+      $scopeGlobal.interventions.forEach((intervention) => {
+          removeAllInterventions(intervention);
+      });
+  }
+    $.ajax({
+        url: '/toggleIntervention',
+        data: JSON.stringify({showIntervention: $scopeGlobal.showInterventions}),
+        dataType: "JSON",
+        type: "POST",
+        success: function (data, status_text, jqXHR) {
+            console.log('ajax success')
+        },
+        error: function (data, status_text, jqXHR) {
+            console.log('ajax fail')
+        },
+    });
+}
