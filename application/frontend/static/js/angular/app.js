@@ -706,31 +706,23 @@ function toggleIntervention() {
     $scopeGlobal.showInterventions = !$scopeGlobal.showInterventions;
 
     if (!$scopeGlobal.showInterventions) {
-      for (let intervention in $scopeGlobal.interventions) {
-          removeAllInterventions(intervention);
-      }
+        for (let intervention in $scopeGlobal.interventions) {
+            removeAllInterventions(intervention);
+        }
 
-      $scopeGlobal.aoiSpans.forEach((span) => {
-        span.removeEventListener('mouseover', handleMouseover);
-        span.removeEventListener('mouseout', handleMouseout);
-      })
-  } else {
         $scopeGlobal.aoiSpans.forEach((span) => {
-          let refId = span.id.split("_")[1];
+            span.removeEventListener('mouseover', handleMouseover);
+            span.removeEventListener('mouseout', handleMouseout);
+        });
+        $scopeGlobal.ws.send("hideInterventions");
+
+    } else {
+        $scopeGlobal.aoiSpans.forEach((span) => {
+            let refId = span.id.split("_")[1];
             span.addEventListener('mouseover', handleMouseover(refId));
             span.addEventListener('mouseout', handleMouseout(refId));
-        })
+        });
+        $scopeGlobal.ws.send("showInterventions");
+
     }
-    $.ajax({
-        url: '/toggleIntervention',
-        data: JSON.stringify({"showIntervention": $scopeGlobal.showInterventions}),
-        dataType: "JSON",
-        type: "POST",
-        success: function (data, status_text, jqXHR) {
-            console.log('ajax success')
-        },
-        error: function (data, status_text, jqXHR) {
-            console.log('ajax fail')
-        },
-    });
 }
