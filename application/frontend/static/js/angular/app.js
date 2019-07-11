@@ -716,8 +716,8 @@ function toggleIntervention() {
       })
   } else {
         $scopeGlobal.aoiSpans.forEach((span) => {
-            span.addEventListener('mouseover', handleMouseover);
-            span.addEventListener('mouseout', handleMouseout);
+            span.addEventListener('mouseover', handleMouseover(span.id));
+            span.addEventListener('mouseout', handleMouseout(span.id));
         })
     }
     $.ajax({
