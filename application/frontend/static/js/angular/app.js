@@ -415,11 +415,6 @@ function initReferences($scope) {
     $scopeGlobal.aoiSpans = $scope.curSpanManager.createSpans($scope.startEndCoords, (elem, span) => {
       console.log("creating spans");
         elem.setAttribute('id', 'aoi_' + span.refId);
-
-        if ($scopeGlobal.showInterventions) {
-            elem.addEventListener('mouseover', handleMouseover(span.refId));
-            elem.addEventListener('mouseout', handleMouseout(span.refId));
-        }
     });
 
   // Add the marks that have associated text
@@ -683,31 +678,6 @@ function removeAllInterventions(referenceID) {
     }
 }
 
-function handleMouseover(refId) {
-  return function() {
-      console.log(refId);
-      $.ajax({
-          url: '/triggerIntervention',
-
-          data: "ref_" + refId + "_fix",
-          dataType: "JSON",
-          type: "POST",
-          success: function (data, status_text, jqXHR) {
-              console.log('ajax success')
-          },
-          error: function (data, status_text, jqXHR) {
-              console.log('ajax fail')
-          },
-      });
-  };
-}
-
-function handleMouseout(refId) {
-  return function() {
-      $scopeGlobal.curMarksManager.removeLines(refId);
-  };
-}
-
 function toggleIntervention() {
     $scopeGlobal.showInterventions = !$scopeGlobal.showInterventions;
 
@@ -715,19 +685,38 @@ function toggleIntervention() {
         for (let intervention in $scopeGlobal.interventions) {
             removeAllInterventions(intervention);
         }
-
-        $scopeGlobal.aoiSpans.forEach((span) => {
-            span.removeEventListener('mouseover', handleMouseover);
-            span.removeEventListener('mouseout', handleMouseout);
-        });
         $scopeGlobal.ws.send("hideInterventions");
 
     } else {
-        $scopeGlobal.aoiSpans.forEach((span) => {
-            $scopeGlobal.ws.send("showInterventions");
-            let refId = span.id.split("_")[1];
-            span.addEventListener('mouseover', handleMouseover(refId));
-            span.addEventListener('mouseout', handleMouseout(refId));
-        });
+        $scopeGlobal.ws.send("showInterventions");
     }
+    $scopeGlobal.aoiSpans.forEach((span) => {
+        let refId = span.id.split("_")[1];
+        let handleMouseover = () => {
+            $.ajax({
+                url: '/triggerIntervention',
+
+                data: "ref_" + refId + "_fix",
+                dataType: "JSON",
+                type: "POST",
+                success: function (data, status_text, jqXHR) {
+                    console.log('ajax success')
+                },
+                error: function (data, status_text, jqXHR) {
+                    console.log('ajax fail')
+                },
+            });
+        };
+        let handleMouseout = () => {
+            $scopeGlobal.curMarksManager.removeLines(refId);
+        };
+        if (!$scopeGlobal.showInterventions) {
+          span.removeEventListener('mouseover', handleMouseover);
+          span.removeEventListener('mouseout', handleMouseout);
+        } else {
+          span.addEventListener('mouseover', handleMouseover);
+          span.addEventListener('mouseout', handleMouseout);
+        }
+    });
+
 }
