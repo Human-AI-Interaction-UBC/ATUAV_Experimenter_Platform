@@ -678,6 +678,26 @@ function removeAllInterventions(referenceID) {
     }
 }
 
+function handleMouseover(refId) {
+    $.ajax({
+        url: '/triggerIntervention',
+
+        data: "ref_" + refId + "_fix",
+        dataType: "JSON",
+        type: "POST",
+        success: function (data, status_text, jqXHR) {
+            console.log('ajax success')
+        },
+        error: function (data, status_text, jqXHR) {
+            console.log('ajax fail')
+        },
+    });
+}
+
+function handleMouseout(refId) {
+    $scopeGlobal.curMarksManager.removeLines(refId);
+}
+
 function toggleIntervention() {
     $scopeGlobal.showInterventions = !$scopeGlobal.showInterventions;
 
@@ -685,38 +705,23 @@ function toggleIntervention() {
         for (let intervention in $scopeGlobal.interventions) {
             removeAllInterventions(intervention);
         }
+        $scopeGlobal.aoiSpans.forEach((span) => {
+            let refId = span.id.split("_")[1];
+            span.removeEventListener('mouseover', $scopeGlobal.mouseOverEvents.get(refId));
+            span.removeEventListener('mouseout', $scopeGlobal.mouseOutEvents.get(refId));
+        });
         $scopeGlobal.ws.send("hideInterventions");
 
     } else {
         $scopeGlobal.ws.send("showInterventions");
+        $scopeGlobal.aoiSpans.forEach((span) => {
+            let refId = span.id.split("_")[1];
+            let mouseOverEvent = handleMouseover.bind(null, refId);
+            $scopeGlobal.mouseOverEvents.set(refId, mouseOverEvent);
+            let mouseOutEvent = handleMouseout.bind(null, refId);
+            $scopeGlobal.mouseOutEvents.set(refId, mouseOutEvent);
+            span.addEventListener('mouseover', mouseOverEvent);
+            span.addEventListener('mouseout', mouseOutEvent);
+        });
     }
-    $scopeGlobal.aoiSpans.forEach((span) => {
-        let refId = span.id.split("_")[1];
-        let handleMouseover = () => {
-            $.ajax({
-                url: '/triggerIntervention',
-
-                data: "ref_" + refId + "_fix",
-                dataType: "JSON",
-                type: "POST",
-                success: function (data, status_text, jqXHR) {
-                    console.log('ajax success')
-                },
-                error: function (data, status_text, jqXHR) {
-                    console.log('ajax fail')
-                },
-            });
-        };
-        let handleMouseout = () => {
-            $scopeGlobal.curMarksManager.removeLines(refId);
-        };
-        if (!$scopeGlobal.showInterventions) {
-          span.removeEventListener('mouseover', handleMouseover);
-          span.removeEventListener('mouseout', handleMouseout);
-        } else {
-          span.addEventListener('mouseover', handleMouseover);
-          span.addEventListener('mouseout', handleMouseout);
-        }
-    });
-
 }

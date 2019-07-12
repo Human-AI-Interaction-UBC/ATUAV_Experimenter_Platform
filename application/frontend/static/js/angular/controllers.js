@@ -36,6 +36,8 @@ var AppCtrl = function($scope, $http, $location) {
   $scopeGlobal.aoiSpans = [];
   $scopeGlobal.interventions = {};
   $scopeGlobal.old_active_interventions = [];
+  $scopeGlobal.mouseOverEvents = new Map();
+  $scopeGlobal.mouseOutEvents = new Map();
   $scopeGlobal.ws = new WebSocket("ws://localhost:8888/websocket");
   // Generic app.js functions for triggering/dremoving interventions
   $scopeGlobal.ws.onmessage = function (evt) {
