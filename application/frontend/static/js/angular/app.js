@@ -674,7 +674,7 @@ function removeAllInterventions(referenceID) {
     $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
     $scopeGlobal.curMarksManager.removeLines(referenceID.tuple_id);
     if (document.getElementsByClassName('refAOI')[0]) {
-      document.getElementsByClassName('refAOI')[0].removeAttribute('class');      
+      document.getElementsByClassName('refAOI')[0].removeAttribute('class');
     }
 }
 
@@ -696,6 +696,9 @@ function handleMouseover(refId) {
 
 function handleMouseout(refId) {
     $scopeGlobal.curMarksManager.removeLines(refId);
+    if (document.getElementsByClassName('refAOI')[0]) {
+      document.getElementsByClassName('refAOI')[0].removeAttribute('class');
+    }
 }
 
 function toggleIntervention() {
@@ -703,7 +706,7 @@ function toggleIntervention() {
 
     if (!$scopeGlobal.showInterventions) {
         for (let intervention in $scopeGlobal.interventions) {
-            removeAllInterventions(intervention);
+            removeAllInterventions($scopeGlobal.interventions[intervention]);
         }
         $scopeGlobal.aoiSpans.forEach((span) => {
             let refId = span.id.split("_")[1];
