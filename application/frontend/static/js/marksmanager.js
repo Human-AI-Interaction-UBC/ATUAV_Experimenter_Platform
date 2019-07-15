@@ -821,9 +821,9 @@
         curCluster.push(prevMarkRect);
         for (let i = 1; i < markRects.length; i++) {
             let curMarkRect = markRects[i];
-            let isShared = getSharedAxis(curCluster.concat(curMarkRect), 10).isShared;
+            let isShared = getSharedAxis(curCluster.concat(curMarkRect), 15).isShared;
 
-            if (!areMarksAdjacent(prevMarkRect, curMarkRect, 15) || !isShared) {
+            if (!areMarksAdjacent(prevMarkRect, curMarkRect, 25) || !isShared) {
                 clusters.push(curCluster);
                 curCluster = [];
             }
