@@ -791,7 +791,7 @@
     }
 
     /**
-     * Helper method to get all the clusters for an intervention
+     * Helper method to group all relevant marks into clusters for an intervention
      * @param {Array.<string>} tuple_ids - the ids to get the relevant marks for
      * @returns {Array.<Array.<DOMRect>>} - an array of clusters (where clusters are an array of adjacent marks with a shared axis)
      */
@@ -821,9 +821,9 @@
         curCluster.push(prevMarkRect);
         for (let i = 1; i < markRects.length; i++) {
             let curMarkRect = markRects[i];
-            let isShared = getSharedAxis(curCluster.concat(curMarkRect), 15).isShared;
+            // let isShared = getSharedAxis(curCluster.concat(curMarkRect), 15).isShared;
 
-            if (!areMarksAdjacent(prevMarkRect, curMarkRect, 25) || !isShared) {
+            if (!areMarksAdjacent(prevMarkRect, curMarkRect, 25)) {
                 clusters.push(curCluster);
                 curCluster = [];
             }
