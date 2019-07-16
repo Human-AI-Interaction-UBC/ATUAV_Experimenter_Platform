@@ -899,30 +899,70 @@
             return Math.sqrt(Math.pow(coords.x, 2) + Math.pow(coords.y, 2))
         }
 
-        let closestPoint = connectors.reduce((acc, cur) => {
-            let dist = getDist({x: textRef.x - cur.x, y: textRef.y - cur.y});
-            return dist < getDist({x: textRef.x - acc.x, y: textRef.y - acc.y}) ? cur : acc;
-        });
-
+        // where links is an array of arrays of source-target pairs that fit with the same connector
         let links = [];
-        let firstLine = {};
-        // making the first line from the text to the nearest point to link to
-        firstLine.source = textRef;
-        firstLine.target = closestPoint;
-        links.push(firstLine);
-        // making a link for each bar out to the main line
+
         for (let i = 0; i < nodes.length; i++) {
+            if (getDist({x: nodes[i].x - connectors[i].x, y: nodes[i].y - connectors[i].y}) > 50) {
+                for (let j = 0; j < links.length; j++) {
+                    if (getDist({x: nodes[i].x - links[j][0].source.x, y: nodes[i].y - links[j][0].source.y}) > 50) {
+                        links[links.length].push({
+                            source: nodes[i],
+                            target: connectors[i]
+                        });
+                    } else {
+                        links[j].push({
+                            source: nodes[i],
+                            target: connectors[i]
+                        });
+                    }
+                }
+            } else {
+                links[0].push({
+                    source: nodes[i],
+                    target: connectors[i]
+                });
+            }
+        }
+
+        // separated due to too far distance
+        if (links.length > 1) {
+            // need to redo connectors for the other arrays
+            for (let i = 1; i < links.length; i++) {
+                let minX = links[i].reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 8), links[i][0].left);
+                let maxY = links[i].reduce((acc, xy) => Math.max(acc, xy.top - refParentRect.top + xy.height + 8), 0);
+                for (let j = 0; j < links[i].length; j++) {
+                    let cur = links[i][j];
+                    if (isHorizontal) {
+                        cur.target = {x: minX, y: cur.target.y}
+                    } else {
+                        cur.target = {x: cur.target.x, y: maxY}
+                    }
+
+                }
+            }
+        }
+
+        for (let i = 0; i < links.length; i++) {
+            let closestPoint = connectors.reduce((acc, cur) => {
+                let dist = getDist({x: textRef.x - cur.x, y: textRef.y - cur.y});
+                return dist < getDist({x: textRef.x - acc.x, y: textRef.y - acc.y}) ? cur : acc;
+            });
+
+            let firstLine = {};
+            // making the first line from the text to the nearest point to link to
+            firstLine.source = textRef;
+            firstLine.target = closestPoint;
+            links.push(firstLine);
+
+            // making a line at the end of the links to connect them
             links.push({
-                source: nodes[i],
-                target: connectors[i]
+                source: connectors[0],
+                target: connectors[connectors.length - 1]
             });
         }
-        // making a line at the end of the links to connect them
-        links.push({
-            source: connectors[0],
-            target: connectors[connectors.length - 1]
-        });
-        return links;
+
+        return links.flat();
     };
 
     /******************************* END HELPER METHODS FOR DRAWING LINKS AND CLUSTERING *******************************/
