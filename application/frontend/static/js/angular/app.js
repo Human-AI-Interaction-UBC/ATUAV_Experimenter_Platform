@@ -549,13 +549,7 @@ function handleDelivery(obj) {
       $scopeGlobal.old_active_interventions = [...new Set($scopeGlobal.old_active_interventions)]
       console.log('old_activeB:', $scopeGlobal.old_active_interventions);
 
-      let arguments = $scopeGlobal.interventions[obj.deliver[0].name].args;
-
-      if (arguments.clustering) {
-          $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
-      } else {
-          $scopeGlobal.curMarksManager.midlineTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
-      }
+       $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
   }
 
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency
