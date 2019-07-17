@@ -634,18 +634,9 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     // Create the spans in the text
 
     let sm = new SpanManager(paragraph);
-    // if (args.underline) {
         sm.createSpans([refToHighlight], function(elem, _) {
           elem.setAttribute('class', 'text-reference refAOI');
         });
-    // }
-
-    // if (args.highlight) {
-    //     sm.createSpans([refToHighlight], function(elem, _) {
-    //         elem.setAttribute('class', 'text-highlight');
-    //         elem.setAttribute('id', 'refAOI');
-    //     });
-    // }
 
       if (!document.getElementById('textVisContainer')) {
         $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');

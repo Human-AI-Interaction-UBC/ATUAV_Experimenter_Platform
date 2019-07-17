@@ -260,6 +260,7 @@
 	};
 
 
+    /** NOT IN USE**/
   MarksManager.prototype.drawArrow = function(svgElement, x1, y1, x2, y2, size, transition_in, id){
     this.strokeWidth = 2;
     var angle = Math.atan2(x1 - x2, y2 - y1);
@@ -288,95 +289,6 @@
 
 
     /*************************** METHODS FOR DRAWING LINKS FOR CLUSTERING AND BRANCHING ***************************/
-    /**
-     * NOT IN USE CURRENTLY
-	 * Draws a line to the centre of each cluster from the text AOI
-	 * centre bottom for vertical bars, centre left for horizontal
-     * @param {int} transition_in - time in ms for transition of drawing lines
-     * @param {string} id - reference id to label lines with
-     * @param {Array.<string>} tuple_ids - tuples to draw links to
-     */
-    MarksManager.prototype.clusterBranch = function(transition_in, id, tuple_ids){
-        let self = this;
-        let relativeCoords = {};
-        let ref = document.getElementsByClassName('refAOI')[0];
-        let refRect = ref.getBoundingClientRect();
-        let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
-        relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
-        relativeCoords.refY = refRect.top - refParentRect.top + refRect.height / 2;
-        let clusters = self.getClusters(tuple_ids);
-
-        for (let i = 0; i < clusters.length; i++) {
-            let curCluster = clusters[i];
-            if (curCluster.length > 0) {
-                let sharedAxis = getSharedAxis(curCluster, 10);
-
-                if (curCluster.length === 1) {
-                    let curMark = curCluster[0];
-                    if (curMark.width > curMark.height) {
-                        relativeCoords.markx = curMark.left - refParentRect.left;
-                        relativeCoords.marky = curMark.top - refParentRect.top + curMark.height / 2;
-                    } else {
-                        relativeCoords.markx = curMark.left - refParentRect.left + curMark.width / 2;
-                        relativeCoords.marky = curMark.top - refParentRect.top + curMark.height;
-                    }
-
-                } else {
-                    if (sharedAxis.hasOwnProperty('coord')) {
-                        if (sharedAxis.axis === 'x') {
-                            relativeCoords.markx = sharedAxis.coord - refParentRect.left;
-                            relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
-                        } else {
-                            relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
-                            relativeCoords.marky = sharedAxis.coord - refParentRect.top;
-                        }
-                    }
-                    let xDiff = relativeCoords.markx - relativeCoords.refX;
-                    relativeCoords.markx = relativeCoords.refX + 0.8 * xDiff;
-                    let yDiff = relativeCoords.marky - relativeCoords.refY;
-                    relativeCoords.marky = relativeCoords.refY + 0.8 * yDiff;
-
-                    let xySum = curCluster.reduce((acc, cur) => {
-                        let markX = cur.left;
-                        let markY = cur.top;
-                        if (cur.width > cur.height) {
-                            markX = cur.left - refParentRect.left;
-                            markY = cur.top - refParentRect.top + cur.height / 2;
-                        } else {
-                            markX = cur.left - refParentRect.left + cur.width / 2;
-                            markY = cur.top - refParentRect.top + cur.height;
-                        }
-                        return [acc[0] + markX, acc[1] + markY];
-                    }, [0, 0]);
-
-                    d3.select(self.textVisOverlay).append("line")
-                        .attr("class", "line_" + id)
-                        .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
-                        .attr("x1", xySum[0]/curCluster.length).attr("y1", xySum[1]/curCluster.length)
-                        .style("stroke-dasharray", (3, 3))
-                        .style("stroke", "black")
-                        .style("opacity", 0)
-                        .style("stroke-width", self.strokeWidth)
-                        .transition()
-                        .duration(transition_in)
-                        .style("opacity", 1);
-                }
-
-                d3.select(self.textVisOverlay).append("line")
-                    .attr("class", "line_" + id)
-                    .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
-                    .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
-                    .style("stroke-dasharray", (3, 3))
-                    .style("stroke", "black")
-                    .style("opacity", 0)
-                    .style("stroke-width", self.strokeWidth)
-                    .transition()
-                    .duration(transition_in)
-                    .style("opacity", 1);
-            }
-        }
-    };
-
     /**
 	 * Draws a line from text AOI to each cluster, branching off 10px before the leftmost/bottom-most (depending on bar orientation) bar
 	 * to connect into a phylogenetic tree branching
@@ -539,8 +451,6 @@
         }
     };
 
-    /*************************** END METHODS FOR DRAWING LINKS FOR CLUSTERING AND BRANCHING ***************************/
-
     /******************************* HELPER METHODS FOR DRAWING LINKS AND CLUSTERING *******************************/
     /**
      * Helper method for clustering and branching: used to check if the marks are adjacent to each other to determine whether the marks should belong in the same cluster or not
@@ -651,6 +561,12 @@
      *      - the text AOI to the closest created node on the straight line
      *      - the corresponding node on the connector to each respective relevant bar
      *      - the first and last node on the connector
+     * If the distance between a connector and the relevant bar is too great (constant threshold - currently at 70):
+     *      - move that bar to a different array
+     *      - iterate through the rest of the array to sort each bar into respective bins by distance from connector
+     *          (either > or <, or another bin if it's far from both the original and the new array)
+     *      - make new connector points for the new arrays
+     *      - draw same lines as if creating links but for each array of bars/connectors
      * @param {Array.<DOMRect>} markRects
      * @param {boolean} isHorizontal
      * @param textRefCoords - an object containing x and y coordinates for the text AOI
