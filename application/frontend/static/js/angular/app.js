@@ -536,10 +536,7 @@ function handleDelivery(obj) {
       });
 
       if ($scopeGlobal.old_active_interventions.length > 0){
-          //args.color = 'grey'
           args.color = '#606060'
-          //args.dash = true
-          //args.bold_thickness = args.bold_thickness/2
           for (let a_mark of $scopeGlobal.old_active_interventions) {
               //console.log('Attempting to grey:', a_mark)
               $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, args);
