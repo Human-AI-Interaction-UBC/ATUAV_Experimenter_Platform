@@ -951,7 +951,10 @@
         }
 
         for (let i = 0; i < links.length; i++) {
-            let closestPoint = connectors.reduce((acc, cur) => {
+            let linkConnectors = links[i].map((link) => {
+                return link.target;
+            });
+            let closestPoint = linkConnectors.reduce((acc, cur) => {
                 let dist = getDist({x: textRef.x - cur.x, y: textRef.y - cur.y});
                 return dist < getDist({x: textRef.x - acc.x, y: textRef.y - acc.y}) ? cur : acc;
             });
