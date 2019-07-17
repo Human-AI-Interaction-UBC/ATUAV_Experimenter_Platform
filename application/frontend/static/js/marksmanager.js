@@ -660,12 +660,7 @@
                 let maxY = links[i].reduce((acc, xy) => Math.max(acc, xy.source.y + 8), 0);
                 for (let j = 0; j < links[i].length; j++) {
                     let cur = links[i][j];
-                    if (isHorizontal) {
-                        cur.target = {x: minX, y: cur.target.y}
-                    } else {
-                        cur.target = {x: cur.target.x, y: maxY}
-                    }
-
+                    cur.target = {x: minX, y: cur.target.y}
                 }
             }
         }
