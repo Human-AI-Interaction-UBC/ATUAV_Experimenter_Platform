@@ -908,8 +908,9 @@
                     links.push([]);
                 }
                 for (let j = 0; j < links.length; j++) {
-                    if (getDist({x: nodes[i].x - links[j][0].source.x, y: nodes[i].y - links[j][0].source.y}) > 50) {
-                        links[links.length].push({
+                    if (links[j][0].isDefined && getDist({x: nodes[i].x - links[j][0].source.x, y: nodes[i].y - links[j][0].source.y}) > 50) {
+                        links.push([]);
+                        links[links.length-1].push({
                             source: nodes[i],
                             target: connectors[i]
                         });
@@ -959,10 +960,10 @@
             // making the first line from the text to the nearest point to link to
             firstLine.source = textRef;
             firstLine.target = closestPoint;
-            links.push(firstLine);
+            links[i].push(firstLine);
 
             // making a line at the end of the links to connect them
-            links.push({
+            links[i].push({
                 source: connectors[0],
                 target: connectors[connectors.length - 1]
             });
