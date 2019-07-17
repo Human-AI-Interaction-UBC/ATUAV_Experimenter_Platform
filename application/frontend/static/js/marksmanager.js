@@ -966,8 +966,8 @@
 
             // making a line at the end of the links to connect them
             links[i].push({
-                source: connectors[0],
-                target: connectors[connectors.length - 1]
+                source: linkConnectors[0],
+                target: linkConnectors[linkConnectors.length - 1]
             });
         }
 
