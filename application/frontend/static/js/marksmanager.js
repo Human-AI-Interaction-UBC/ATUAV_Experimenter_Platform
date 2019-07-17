@@ -904,6 +904,9 @@
 
         for (let i = 0; i < nodes.length; i++) {
             if (getDist({x: nodes[i].x - connectors[i].x, y: nodes[i].y - connectors[i].y}) > 50) {
+                if (links.length <= 1) {
+                    links.push([]);
+                }
                 for (let j = 0; j < links.length; j++) {
                     if (getDist({x: nodes[i].x - links[j][0].source.x, y: nodes[i].y - links[j][0].source.y}) > 50) {
                         links[links.length].push({
@@ -918,6 +921,9 @@
                     }
                 }
             } else {
+                if (links.length === 0) {
+                    links.push([]);
+                }
                 links[0].push({
                     source: nodes[i],
                     target: connectors[i]
