@@ -696,6 +696,9 @@ function handleMouseout(refId) {
     if (document.getElementsByClassName('refAOI')[0]) {
       document.getElementsByClassName('refAOI')[0].removeAttribute('class');
     }
+    for (let intervention in $scopeGlobal.interventions) {
+        removeAllInterventions($scopeGlobal.interventions[intervention]);
+    }
 }
 
 function toggleIntervention() {
