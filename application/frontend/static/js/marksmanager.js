@@ -395,13 +395,18 @@
         relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
         relativeCoords.refY = refRect.top - refParentRect.top + refRect.height / 2;
 
+        let marks = self.getSelectedMarks(tuple_ids);
+        let markRects = marks.selected_marks.map((mark) => {
+            return mark.getBoundingClientRect();
+        });
+        let isHorizontal = markRects[0].width > markRects[0].height;
+
         let clusters = self.getClusters(tuple_ids);
         for (let i = 0; i < clusters.length; i++) {
         	let cur = clusters[i];
             if (cur.length > 0) {
                 let sharedAxis = getSharedAxis(cur, 10);
 
-                let isHorizontal = false;
                 if (cur.length === 1) {
                     let curMark = cur[0];
                     if (curMark.width > curMark.height) {
@@ -429,7 +434,6 @@
                         if (sharedAxis.axis === 'x') {
                             relativeCoords.markx = sharedAxis.coord - refParentRect.left;
                             relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
-                            isHorizontal = true;
                         } else {
                             relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
                             relativeCoords.marky = sharedAxis.coord - refParentRect.top;
