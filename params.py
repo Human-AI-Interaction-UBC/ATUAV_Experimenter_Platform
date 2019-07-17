@@ -16,7 +16,7 @@ PILOT_MMD_SUBSET = [5]
 # Reference highlighting rules
 #RUN USING:  python -u experimenter_platform_stage_1_demo.py
 if PILOT_CONDITION_TEXT_INTERVENTION:
-    USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight.db"
+    USER_MODEL_STATE_PATH = "./database/user_model_state_ref_pilot.db"
 else:
     USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight.db"
 # GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_and_text.db"

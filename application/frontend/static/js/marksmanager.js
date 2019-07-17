@@ -131,7 +131,7 @@
 							.duration(TRANSITION_DURATION);*/
 						var desat = Object.values(interventions).map(function(obj) {return obj.args.desat}).includes(true); // true if there is an intervention with desat
 						var transition_out = to_be_removed.transition_out || 0;
-						d3.selectAll(marks.unselected_marks)
+						d3.selectAll(marks.selected_marks)
 							.transition()
 							.duration(transition_out)
 							.attr('fill-opacity', desat? DESATURATION: 0)
