@@ -908,7 +908,7 @@
                     links.push([]);
                 }
                 for (let j = 0; j < links.length; j++) {
-                    if (links[j][0].isDefined && getDist({x: nodes[i].x - links[j][0].source.x, y: nodes[i].y - links[j][0].source.y}) > 50) {
+                    if (links[j].length > 0 && getDist({x: nodes[i].x - links[j][0].source.x, y: nodes[i].y - links[j][0].source.y}) > 50) {
                         links.push([]);
                         links[links.length-1].push({
                             source: nodes[i],
@@ -936,8 +936,8 @@
         if (links.length > 1) {
             // need to redo connectors for the other arrays
             for (let i = 1; i < links.length; i++) {
-                let minX = links[i].reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 8), links[i][0].left);
-                let maxY = links[i].reduce((acc, xy) => Math.max(acc, xy.top - refParentRect.top + xy.height + 8), 0);
+                let minX = links[i].reduce((acc, xy) => Math.min(acc, xy.source.x - 8), links[i][0].source.x);
+                let maxY = links[i].reduce((acc, xy) => Math.max(acc, xy.source.y + 8), 0);
                 for (let j = 0; j < links[i].length; j++) {
                     let cur = links[i][j];
                     if (isHorizontal) {
