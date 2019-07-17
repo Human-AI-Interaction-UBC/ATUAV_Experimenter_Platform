@@ -97,7 +97,11 @@
 								else {
 									MarksManager.internal.highlights['desaturate'].unhighlight.call(self);
 								}
-	            });
+	            })
+							.sort(function(a,b) {
+								return a.id - b.id;
+							});
+						console.log(marks);
 						// Extract only the marks that are mentioned
 						var referenced_marks = self.data.reduce(function(acc, val) {
 													if(val.tuple) acc.push(val);
@@ -281,6 +285,205 @@
         .duration(transition_in)
         .style("opacity", 1);
   };
+
+    MarksManager.prototype.clusterAndDrawLine = function(transition_in, id, tuple_ids){
+        let self = this;
+        let relativeCoords = {};
+        let ref = document.getElementById('refAOI');
+        let refRect = ref.getBoundingClientRect();
+        let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
+        relativeCoords.refTop = refRect.top - refParentRect.top;
+        relativeCoords.refLeft = refRect.left - refParentRect.left;
+
+        let marks = self.getSelectedMarks(tuple_ids);
+        let markRects = marks.selected_marks.map((mark) => {
+        	return mark.getBoundingClientRect();
+		});
+        // markRects.sort((prev, cur) => {
+        // 	return prev.x === cur.x ? prev.y - cur.y : prev.x - cur.x;
+		// });
+        let curCluster = [];
+        let prevMarkRect = markRects[0];
+        curCluster.push(prevMarkRect);
+        for (let i = 1; i < markRects.length; i++) {
+            let curMarkRect = markRects[i];
+            let isShared = getSharedAxis(curCluster.concat(curMarkRect), 10).isShared;
+            let sharedAxis = getSharedAxis(curCluster, 10);
+
+            if (sharedAxis.hasOwnProperty('coord')) {
+                if (sharedAxis.axis === 'x') {
+                    relativeCoords.markx = sharedAxis.coord - refParentRect.left;
+                    relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
+                } else {
+                    relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
+                    relativeCoords.marky = sharedAxis.coord - refParentRect.top;
+                }
+            }
+
+            if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !isShared) {
+                self.strokeWidth = 1;
+                if (curCluster.length === 1) {
+                	if (prevMarkRect.width > prevMarkRect.height) {
+                        relativeCoords.markx = prevMarkRect.left - refParentRect.left;
+                        relativeCoords.marky = prevMarkRect.top - refParentRect.top + prevMarkRect.height / 2;
+					} else {
+                        relativeCoords.markx = prevMarkRect.left - refParentRect.left + prevMarkRect.width / 2;
+                        relativeCoords.marky = prevMarkRect.top - refParentRect.top + prevMarkRect.height;
+					}
+                }
+
+                d3.select(self.textVisOverlay).append("line")
+                    .attr("class", "line_" + id)
+                    .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
+                    .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
+					.style("stroke-dasharray", (3, 3))
+                    .style("stroke", "black")
+                    .style("opacity", 0)
+                    .style("stroke-width", self.strokeWidth)
+                    .transition()
+                    .duration(transition_in)
+                    .style("opacity", 1);
+                curCluster = [];
+            }
+            curCluster.push(curMarkRect);
+            prevMarkRect = curMarkRect;
+        }
+        if (curCluster.length > 0) {
+            let sharedAxis = getSharedAxis(curCluster, 10);
+
+            if (curCluster.length === 1) {
+            	let curMark = curCluster[0];
+            	if (curMark.width > curMark.height) {
+                    relativeCoords.markx = curMark.left - refParentRect.left;
+                    relativeCoords.marky = curMark.top - refParentRect.top + curMark.height / 2;
+				} else {
+                    relativeCoords.markx = curMark.left - refParentRect.left + curMark.width / 2;
+                    relativeCoords.marky = curMark.top - refParentRect.top + curMark.height;
+				}
+
+            } else if (sharedAxis.hasOwnProperty('coord')) {
+                if (sharedAxis.axis === 'x') {
+                    relativeCoords.markx = sharedAxis.coord - refParentRect.left;
+                    relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
+                } else {
+                    relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
+                    relativeCoords.marky = sharedAxis.coord - refParentRect.top;
+                }
+            }
+            
+            d3.select(self.textVisOverlay).append("line")
+                .attr("class", "line_" + id)
+                .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
+                .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
+                .style("stroke-dasharray", (3, 3))
+                .style("stroke", "black")
+                .style("opacity", 0)
+                .style("stroke-width", self.strokeWidth)
+                .transition()
+                .duration(transition_in)
+                .style("opacity", 1);
+        }
+    };
+
+    function areMarksAdjacent (prevMark, curMark, threshold) {
+    	return Math.abs(prevMark.top - curMark.bottom) < threshold || Math.abs(prevMark.bottom - curMark.top) < threshold ||
+			Math.abs(prevMark.left - curMark.right) < threshold || Math.abs(prevMark.right - curMark.left) < threshold;
+	}
+
+	function getSharedAxis(cluster, threshold) {
+    	let shared = {};
+
+    	if (cluster.length < 2) {
+    		shared.isShared = true;
+    		return shared;
+		}
+
+    	let prev = cluster[0];
+    	for (let i = 1; i < cluster.length; i++) {
+    		let cur = cluster[i];
+
+    		if (shared.hasOwnProperty('axis')) {
+    			if (shared.axis === 'x') {
+                    shared.min = Math.min(cur.top, shared.min);
+                    shared.max = Math.max(cur.bottom, shared.max);
+    				if (!(Math.abs(prev.left - cur.left) < threshold || Math.abs(prev.right - cur.right) < threshold)) {
+    					// NO shared axis
+						shared.isShared = false;
+						return shared;
+					}
+				} else if (shared.axis === 'y') {
+                    shared.min = Math.min(cur.left, shared.min);
+                    shared.max = Math.max(cur.right, shared.max);
+                    if (!(Math.abs(prev.top - cur.top) < threshold || Math.abs(prev.bottom - cur.bottom) < threshold)) {
+                        // NO shared axis
+                        shared.isShared = false;
+                        return shared;
+                    }
+				}
+			} else {
+                if (Math.abs(cur.top - prev.top) < threshold) {
+                    shared.coord = cur.top;
+                    shared.axis = 'y';
+                    shared.min = Math.min(cur.left, prev.left);
+                    shared.max = Math.max(cur.right, prev.right);
+                } else if (Math.abs(cur.bottom - prev.bottom) < threshold) {
+                    shared.coord = cur.bottom;
+                    shared.axis = 'y';
+                    shared.min = Math.min(cur.left, prev.left);
+                    shared.max = Math.max(cur.right, prev.right);
+                } else if (Math.abs(cur.left - prev.left) < threshold) {
+                    shared.coord = cur.left;
+                    shared.axis = 'x';
+                    shared.min = Math.min(cur.top, prev.top);
+                    shared.max = Math.max(cur.bottom, prev.bottom);
+                } else if (Math.abs(cur.right - prev.right) < threshold) {
+                    shared.coord = cur.right;
+                    shared.axis = 'x';
+                    shared.min = Math.min(cur.top, prev.top);
+                    shared.max = Math.max(cur.bottom, prev.bottom);
+                } else {
+                	// NO shared axis
+                    shared.isShared = false;
+                    return shared;
+				}
+			}
+			prev = cur;
+		}
+
+		shared.isShared = true;
+		return shared;
+	}
+
+    MarksManager.prototype.removeLines = function(tuple_id) {
+    	d3.selectAll('.line_' + tuple_id).remove();
+	};
+
+    MarksManager.prototype.createTextVisOverlay = function(elem_id) {
+        let textVisElement = document.getElementById(elem_id);
+        let textVisCoords = textVisElement.getBoundingClientRect();
+        let containingDiv = document.createElement('div');
+        containingDiv.setAttribute('class','textVisOverlayContainer');
+        containingDiv.setAttribute('id', 'textVisContainer');
+        containingDiv.style.position = 'absolute';
+        containingDiv.style.width = Math.ceil(textVisCoords.width)+'px';
+        containingDiv.style.height = Math.ceil(textVisCoords.height)+'px';
+
+        this.textVisOverlay = document.createElementNS("http://www.w3.org/2000/svg", 'svg:svg');
+        d3.select(this.textVisOverlay).attr({
+            "class": "textVisOverlay",
+            'height': Math.ceil(textVisCoords.height),
+            "width": Math.ceil(textVisCoords.width)
+        }).style({
+            'position': 'absolute'
+        });
+
+        containingDiv.appendChild(this.textVisOverlay);
+
+        let parent = textVisElement.parentNode;
+        let nextSibling = textVisElement.nextSibling;
+        parent.insertBefore(containingDiv, nextSibling);
+	};
+
 	MarksManager.prototype.changeType = function(type) {
 		var marks;
 
@@ -419,7 +622,6 @@
 	};
 	MarksManager.prototype.unhighlight = function(interventions, to_be_removed) {
 		console.log("NEW TUPLE IDS")
-		console.log()
 		MarksManager.internal.highlights[this.type].unhighlight.call(this, interventions, to_be_removed);
 	};
 	MarksManager.prototype.highlightLegend = function(transition_in, args) {

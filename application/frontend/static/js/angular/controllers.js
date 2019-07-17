@@ -78,9 +78,9 @@ var AppCtrl = function($scope, $http, $location) {
           $scope.marks = data.marks;
           $scope.visualReferences = data.visual_references;
           $scope.curReference = data.references
-          startEndCoords = [];
+          $scope.startEndCoords = [];
           Object.keys($scope.curReference).forEach(function(key) {
-            startEndCoords.push({"refId": key, "start": $scope.curReference[key]['sentence_start_char'], "end": $scope.curReference[key]['sentence_end_char']})
+            $scope.startEndCoords.push({"refId": key, "start": $scope.curReference[key]['sentence_start_char'], "end": $scope.curReference[key]['sentence_end_char']})
           });
           $scope.selectedReference = 0;
           $scope.lastSelectedReference = -1;
@@ -88,7 +88,7 @@ var AppCtrl = function($scope, $http, $location) {
           $scope.coordinatesofChar = findCoordinatesofCharacters("#theTextParagraph");
           $scope.coordinatesofSentences = findCoordinatesofSentences("#theTextParagraph", $scope.coordinatesofChar);
           $scope.coordinatesofWords = findCoordinatesofWords("#theTextParagraph", $scope.coordinatesofChar);
-          $scope.coordinatesofRefSentences = findCoordinatesofRefSentences("#theTextParagraph", $scope.coordinatesofChar, startEndCoords);
+          $scope.coordinatesofRefSentences = findCoordinatesofRefSentences("#theTextParagraph", $scope.coordinatesofChar, $scope.startEndCoords);
           $scope.aggregatedData = aggregateDataIntoJSON($scope.coordinatesofChar, $scope.coordinatesofRefSentences, $scope.coordinatesofWords);
           console.log($scope.aggregatedData)
           //uncomment this to store the json data

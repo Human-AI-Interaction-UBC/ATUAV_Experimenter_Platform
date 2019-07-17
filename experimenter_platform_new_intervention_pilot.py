@@ -68,7 +68,9 @@ class Application(tornado.web.Application):
             (r"/tobii", TobiiHandler),
             (r"/ready", ReadyHandler),
             (r"/done", DoneHandler),
-            (r"/final_question", FinalHandler), (r"/(post_question.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+            (r"/final_question", FinalHandler), (r"/(1.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+                                                (r"/(2.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+                                                (r"/(3.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/done2", DoneHandler2),
             (r"/websocket", MMDWebSocket, dict(websocket_dict = websocket_dict))
         ]
@@ -94,7 +96,7 @@ class MMDWebSocket(ApplicationWebSocket):
         self.websocket_ping_interval = 0
         self.websocket_ping_timeout = float("inf")
         self.adaptation_loop.liveWebSocket = self
-        print self.tobii_controller.eyetrackers
+        # print self.tobii_controller.eyetrackers
 
         self.start_detection_components()
         self.tobii_controller.startTracking()
@@ -119,17 +121,24 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
 
         self.application.start_time = str(datetime.datetime.now().time())
-        self.render('index.html', mmd="3")
+        self.render('index.html', mmd="181")
 
     def post(self):
 
         q1 = self.get_argument('element_1')
         if(int(q1)==1):
-            self.application.mmd_order = [3,5,9,11,18,20,27,28,30,60,62,66,72,74,76]
+            # self.application.mmd_order = [31, 32, 33, 34, 35, 36,
+            #                               181, 182, 183, 184, 185, 186,
+            #                               281, 282, 283, 284, 285, 286]
+            # conditions = [181, 182, 183,
+            #               281, 282, 283]
+            conditions = [[181, 281], [182, 282], [183, 283]]
+            for intervention in conditions:
+                random.shuffle(intervention)
             # self.application.mmd_order = [60]
-
-            #suffle MMD order
-            random.shuffle(self.application.mmd_order)
+            # shuffle MMD order
+            random.shuffle(conditions)
+            self.application.mmd_order = [cond for intervention in conditions for cond in intervention]
             self.application.mmd_index = 0
             self.redirect('/userID')
         else:
@@ -145,7 +154,7 @@ class MainHandler(tornado.web.RequestHandler):
 class ResumeHandler(tornado.web.RequestHandler):
     def get(self):
         users_list = self.loadUsersList()
-        print users_list
+        # print users_list
         self.render('resume.html', users = users_list)
 
     def loadUsersList (self):
@@ -160,7 +169,7 @@ class ResumeHandler(tornado.web.RequestHandler):
 
     def post(self):
         userOptions = self.get_argument('userOptions')
-        print 'selected user id',userOptions
+        # print 'selected user id',userOptions
         self.application.cur_user = int(userOptions)
         query_results = self.application.conn.execute('select * from study_progress where user_id=' + str(userOptions))
         user_data = query_results.fetchall()
@@ -174,7 +183,7 @@ class ResumeHandler(tornado.web.RequestHandler):
 
         if last_page[1]=='mmd':
             self.application.cur_mmd = int(last_page[2])
-            print 'last mmd',self.application.cur_mmd
+            print ('last mmd',self.application.cur_mmd)
 
             #find the mmd order for this user
             query_results = self.application.conn.execute('select * from user_data where user_id=' + str(userOptions))
@@ -182,38 +191,41 @@ class ResumeHandler(tornado.web.RequestHandler):
 
             if (len(user_data)>0):
                 self.application.mmd_order = eval(user_data[0][2])
-                print self.application.mmd_order
+                print (self.application.mmd_order)
                 counter = 0
                 for mmd in self.application.mmd_order:
-                    print mmd
+                    print (mmd)
                     if int(mmd)== self.application.cur_mmd:
                         self.application.mmd_index = counter+1
-                        print 'mmd_index', self.application.mmd_index
+                        print ('mmd_index', self.application.mmd_index)
                         self.redirect('/mmd')
                     counter+=1
             else:
-                print 'ERROR! Cannot resule this user'
+                print ('ERROR! Cannot resule this user')
 
 class QuestionnaireHandler(tornado.web.RequestHandler):
     def get(self):
         #displays contents of index.html
-        print 'questionnaire handler'
+        # print 'questionnaire handler'
         self.application.start_time = str(datetime.datetime.now().time())
         mmdQuestions = self.loadMMDQuestions()
         noofMMD = len(self.application.mmd_order)
         progress = str(self.application.mmd_index)+ ' of '+ str(noofMMD)
-        self.render('questionnaire.html', mmd=self.application.cur_mmd, progress = progress, questions = mmdQuestions)
+        if (self.application.mmd_index % 2 == 0):
+            self.render('questionnaire.html', mmd=self.application.cur_mmd, progress = progress, questions = mmdQuestions)
+        else:
+            self.redirect('/mmd')
+
         print("finished rendering qustionnaire")
 
-
     def post(self):
-        print 'post'
+        print ('post')
         answers = self.get_argument('answers')
-        print answers
+        # print answers
 
         answers = json.loads(answers)
 
-        print answers
+        # print answers
 
         self.application.end_time = str(datetime.datetime.now().time())
         questionnaire_data = [
@@ -227,8 +239,8 @@ class QuestionnaireHandler(tornado.web.RequestHandler):
         for a in answers:
             #questionnaire_data.append(a)
             answer_data = (self.application.cur_user, self.application.cur_mmd,i, a[0],a[1])
-            print 'question results:'
-            print answer_data
+            # print 'question results:'
+            # print answer_data
             self.application.conn.execute('INSERT INTO Questions_results VALUES (?,?,?,?,?)', answer_data)
             i = i+1
 
@@ -250,14 +262,18 @@ class QuestionnaireHandler(tornado.web.RequestHandler):
         self.redirect('/mmd')
 
     def loadMMDQuestions (self):
-        conn = sqlite3.connect('database_questions.db')
+        conn = sqlite3.connect('database_questions_pilot.db')
         query_results = conn.execute('select * from MMD_questions where mmd_id='+str(self.application.cur_mmd))
 
         # hard-coded two questions as they appear in all mmds
         questions = []
-        questions.append([self.application.cur_mmd, "1", "The snippet I read was easy to understand.", "Likert", "Subjective"])
 
-        questions.append([self.application.cur_mmd, "2", "I would be interested in reading the full article.", "Likert", "Subjective"])
+        # for pilot only
+        questions.append([self.application.cur_mmd, "1", "The underline and link intervention was helpful.", "Likert", "Subjective"])
+
+        # questions.append([self.application.cur_mmd, "2", "The snippet I read was easy to understand.", "Likert", "Subjective"])
+
+        # questions.append([self.application.cur_mmd, "2", "I would be interested in reading the full article.", "Likert", "Subjective"])
 
         questions.extend(query_results.fetchall())
 
@@ -267,7 +283,7 @@ class MMDHandler(tornado.web.RequestHandler):
     def get(self):
         #displays contents of index.html
         self.application.start_time = str(datetime.datetime.now().time())
-        print 'mmd order',self.application.mmd_order, self.application.mmd_index
+        print ('mmd order',self.application.mmd_order, self.application.mmd_index)
         if self.application.mmd_index<len(self.application.mmd_order):
             self.application.cur_mmd = self.application.mmd_order[self.application.mmd_index]
 
