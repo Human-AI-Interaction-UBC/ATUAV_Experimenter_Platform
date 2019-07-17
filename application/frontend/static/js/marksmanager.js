@@ -901,30 +901,32 @@
 
         // where links is an array of arrays of source-target pairs that fit with the same connector
         let links = [];
+        links.push([]);
 
         for (let i = 0; i < nodes.length; i++) {
             if (getDist({x: nodes[i].x - connectors[i].x, y: nodes[i].y - connectors[i].y}) > 50) {
                 if (links.length <= 1) {
                     links.push([]);
                 }
-                for (let j = 0; j < links.length; j++) {
-                    if (links[j].length > 0 && getDist({x: nodes[i].x - links[j][0].source.x, y: nodes[i].y - links[j][0].source.y}) > 50) {
-                        links.push([]);
-                        links[links.length-1].push({
-                            source: nodes[i],
-                            target: connectors[i]
-                        });
-                    } else {
+                let adjacentOtherLinks = false;
+                for (let j = 1; j < links.length; j++) {
+                    if (links[j].length > 0 && getDist({x: nodes[i].x - links[j][0].source.x, y: nodes[i].y - links[j][0].source.y}) <= 50) {
                         links[j].push({
                             source: nodes[i],
                             target: connectors[i]
                         });
+                        adjacentOtherLinks = true;
+                        break;
                     }
                 }
-            } else {
-                if (links.length === 0) {
+                if (!adjacentOtherLinks) {
                     links.push([]);
+                    links[links.length-1].push({
+                        source: nodes[i],
+                        target: connectors[i]
+                    });
                 }
+            } else {
                 links[0].push({
                     source: nodes[i],
                     target: connectors[i]
