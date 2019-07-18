@@ -629,7 +629,7 @@
             if (getDist({x: nodes[i].x - connectors[i].x, y: nodes[i].y - connectors[i].y}) > 70) {
                 let adjacentOtherLinks = false;
                 for (let j = 1; j < links.length; j++) {
-                    if (links[j].length > 0 && getDist({x: nodes[i].x - links[j][0].source.x, y: nodes[i].y - links[j][0].source.y}) <= 70) {
+                    if (links[j].length > 0 && getDist({x: nodes[i].x - links[j][links[j].length - 1].source.x, y: nodes[i].y - links[j][links[j].length - 1].source.y}) <= 70) {
                         links[j].push({
                             source: nodes[i],
                             target: connectors[i]
