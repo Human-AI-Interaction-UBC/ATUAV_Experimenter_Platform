@@ -297,8 +297,9 @@
      * @param {int} transition_in - time in ms for transition of drawing lines
      * @param {string} id - reference id to label lines with
      * @param {Array.<string>} tuple_ids - tuples to draw links to
+     * @param {Object} args - arguments from db
      */
-    MarksManager.prototype.clusterTreeBranch = function(transition_in, id, tuple_ids){
+    MarksManager.prototype.clusterTreeBranch = function(transition_in, id, tuple_ids, args){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementsByClassName('refAOI')[0];
@@ -311,7 +312,7 @@
         let markRects = marks.selected_marks.map((mark) => {
             return mark.getBoundingClientRect();
         });
-        let isHorizontal = markRects[0].width > markRects[0].height;
+        let isHorizontal = args.hasOwnProperty("isHorizontal") ? args.isHorizontal : markRects[0].width > markRects[0].height;
 
         let clusters = self.getClusters(tuple_ids);
         for (let i = 0; i < clusters.length; i++) {
@@ -660,7 +661,12 @@
                 let maxY = links[i].reduce((acc, xy) => Math.max(acc, xy.source.y + 8), 0);
                 for (let j = 0; j < links[i].length; j++) {
                     let cur = links[i][j];
-                    cur.target = {x: minX, y: cur.target.y}
+                    if (isHorizontal) {
+                        cur.target = {x: minX, y: cur.target.y}
+                    } else {
+                        cur.target = {x: cur.target.x, y: maxY}
+                    }
+
                 }
             }
         }
