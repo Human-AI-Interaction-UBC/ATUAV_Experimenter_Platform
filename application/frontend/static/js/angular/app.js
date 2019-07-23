@@ -694,7 +694,7 @@ function handleMouseover(refId) {
 function handleMouseout(refId) {
     $scopeGlobal.curMarksManager.removeLines(refId);
     if (document.getElementsByClassName('refAOI')[0]) {
-      document.getElementsByClassName('refAOI')[0].removeAttribute('class');
+      document.getElementsByClassName('refAOI')[0].setAttribute("class", "mouseover-indicator");
     }
     for (let intervention in $scopeGlobal.interventions) {
         removeAllInterventions($scopeGlobal.interventions[intervention]);
@@ -726,6 +726,7 @@ function toggleIntervention() {
             $scopeGlobal.mouseOutEvents.set(refId, mouseOutEvent);
             span.addEventListener('mouseover', mouseOverEvent);
             span.addEventListener('mouseout', mouseOutEvent);
+            span.setAttribute("class", "mouseover-indicator");
         });
     }
 }

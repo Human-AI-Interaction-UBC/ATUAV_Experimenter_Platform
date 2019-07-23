@@ -28,6 +28,14 @@ div {
   border-bottom-width: 1px;
 }
 
+.mouseover-indicator {
+  border: dashed lightgrey;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-left-width: 0px;
+  border-bottom-width: 1px;
+}
+
 .text-highlight {
   background-color: rgba(255,255,50,0.7);
 }
