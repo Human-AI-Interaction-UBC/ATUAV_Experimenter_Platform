@@ -376,82 +376,6 @@
 		}
     };
 
-    /**
-     * Draws one line from the text AOI that branches off to each mark 10px before the leftmost/bottom-most bar
-     * to connect into a phylogenetic tree branching
-     * connecting link from text to the tree branching will draw the link to the closest point on the branch
-     * tree branching will always be on the left for horizontal bars, and on the bottom for vertical bars
-     * @param {int} transition_in - time in ms for transition of drawing lines
-     * @param {string} id - reference id to label lines with
-     * @param {Array.<string>} tuple_ids - tuples to draw links to
-     */
-    MarksManager.prototype.midlineTreeBranch = function(transition_in, id, tuple_ids){
-        let self = this;
-        let relativeCoords = {};
-        let ref = document.getElementsByClassName('refAOI')[0];
-        let refRect = ref.getBoundingClientRect();
-        let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
-        relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
-        relativeCoords.refY = refRect.top - refParentRect.top + refRect.height / 2;
-
-        let marks = self.getSelectedMarks(tuple_ids);
-        let markRects = marks.selected_marks.map((mark) => {
-            return mark.getBoundingClientRect();
-        });
-        let isHorizontal = markRects[0].width > markRects[0].height;
-
-        let sharedAxis = getSharedAxis(markRects, 10);
-        if (sharedAxis.hasOwnProperty('coord')) {
-            if (sharedAxis.axis === 'x') {
-                relativeCoords.branchx = sharedAxis.coord - refParentRect.left;
-                relativeCoords.branchy = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
-                isHorizontal = true;
-            } else {
-                relativeCoords.branchx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
-                relativeCoords.branchy = sharedAxis.coord - refParentRect.top;
-            }
-        }
-
-        if (markRects.length === 1) {
-            let mark = markRects[0];
-            relativeCoords.branchx = mark.width > mark.height ? mark.left - refParentRect.left :
-                mark.left + mark.width/2 - refParentRect.left;
-            relativeCoords.branchy = mark.width > mark.height ? mark.top + mark.height/2 - refParentRect.top :
-                mark.top + mark.height - refParentRect.top;
-
-            d3.select(self.textVisOverlay).append("line")
-                .attr("class", "line_" + id)
-                .attr("x2", relativeCoords.branchx).attr("y2", relativeCoords.branchy)
-                .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
-                .style("stroke-dasharray", (3, 3))
-                .style("stroke", "black")
-                .style("opacity", 0)
-                .style("stroke-width", self.strokeWidth)
-                .transition()
-                .duration(transition_in)
-                .style("opacity", 1);
-        } else {
-            let links = self.getPhylogeneticTreeNodeLinks(markRects, isHorizontal, relativeCoords);
-            d3.select(self.textVisOverlay).selectAll(".links")
-                .data(links)
-                .enter()
-                .append('g')
-                .classed('links', true)
-                .attr("class", "line_" + id)
-                .append('path')
-                .attr('d', function (d) {
-                    return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
-                })
-                .style("stroke", "black")
-                .style("stroke-dasharray", (3, 3))
-                .style("stroke-width", self.strokeWidth)
-                .style("opacity", 0)
-                .transition()
-                .duration(transition_in)
-                .style("opacity", 1);
-        }
-    };
-
     /******************************* HELPER METHODS FOR DRAWING LINKS AND CLUSTERING *******************************/
     /**
      * Helper method for clustering and branching: used to check if the marks are adjacent to each other to determine whether the marks should belong in the same cluster or not
@@ -621,15 +545,17 @@
             return Math.sqrt(Math.pow(coords.x, 2) + Math.pow(coords.y, 2))
         }
 
-        // where links is an array of arrays of source-target pairs that fit with the same connector
+        // links is an array of arrays of source-target pairs that fit with the same connector
         let links = [];
         links.push([]);
 
+        let distanceThreshold = 70;
         for (let i = 0; i < nodes.length; i++) {
-            if (getDist({x: nodes[i].x - connectors[i].x, y: nodes[i].y - connectors[i].y}) > 70) {
+            if (getDist({x: nodes[i].x - connectors[i].x, y: nodes[i].y - connectors[i].y}) > distanceThreshold) {
                 let adjacentOtherLinks = false;
                 for (let j = 1; j < links.length; j++) {
-                    if (links[j].length > 0 && getDist({x: nodes[i].x - links[j][links[j].length - 1].source.x, y: nodes[i].y - links[j][links[j].length - 1].source.y}) <= 70) {
+                    let length = links[j].length;
+                    if (length > 0 && getDist({x: nodes[i].x - links[j][length - 1].source.x, y: nodes[i].y - links[j][length - 1].source.y}) <= distanceThreshold) {
                         links[j].push({
                             source: nodes[i],
                             target: connectors[i]
