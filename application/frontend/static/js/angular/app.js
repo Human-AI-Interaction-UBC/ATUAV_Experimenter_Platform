@@ -669,6 +669,7 @@ function highlightLegend(referenceID, transition_in, args) {
 function removeAllInterventions(referenceID) {
   //if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
     $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
+    $scopeGlobal.old_active_interventions = [];
     $scopeGlobal.curMarksManager.removeLines(referenceID.tuple_id);
     if (document.getElementsByClassName('refAOI')[0]) {
       document.getElementsByClassName('refAOI')[0].removeAttribute('class');
