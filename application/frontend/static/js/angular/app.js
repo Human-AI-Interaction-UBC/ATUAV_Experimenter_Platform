@@ -545,7 +545,9 @@ function handleDelivery(obj) {
           args.color = '#606060'
           for (let a_mark of $scopeGlobal.old_active_interventions) {
               //console.log('Attempting to grey:', a_mark)
-              $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, args);
+              if (!$scopeGlobal.mouseOver) {
+                  $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, args);
+              }
               $scopeGlobal.curMarksManager.removeLines(a_mark);
           }
       }
@@ -699,7 +701,6 @@ function handleMouseout(refId) {
     for (let intervention in $scopeGlobal.interventions) {
         removeAllInterventions($scopeGlobal.interventions[intervention]);
     }
-    $scopeGlobal.old_active_interventions = [];
 }
 
 function toggleIntervention() {
@@ -715,6 +716,7 @@ function toggleIntervention() {
             span.removeEventListener('mouseout', $scopeGlobal.mouseOutEvents.get(refId));
         });
         $scopeGlobal.ws.send("hideInterventions");
+        $scopeGlobal.mouseOver = false;
 
     } else {
         $scopeGlobal.ws.send("showInterventions");
@@ -727,6 +729,7 @@ function toggleIntervention() {
             span.addEventListener('mouseover', mouseOverEvent);
             span.addEventListener('mouseout', mouseOutEvent);
             span.setAttribute("class", "mouseover-indicator");
+            $scopeGlobal.mouseOver = true;
         });
     }
 }
