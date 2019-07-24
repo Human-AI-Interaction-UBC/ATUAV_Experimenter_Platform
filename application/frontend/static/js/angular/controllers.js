@@ -81,6 +81,7 @@ var AppCtrl = function($scope, $http, $location) {
           $scope.sentences = data.sentences;
           $scope.datatable = data.datatable;
           $scope.marks = data.marks;
+          $scope.labels = data.labels;
           $scope.visualReferences = data.visual_references;
           $scope.curReference = data.references
           $scope.startEndCoords = [];
