@@ -372,7 +372,9 @@ function initReferences($scope) {
   var marks = $scope.marks;
   var visual_references = $scope.visualReferences;
   var textrefs =  $scope.curReference;
+  let labels = $scope.labels;
 
+  $scopeGlobal.allAOIs = marks.marks.concat(labels);
   var refMapper = new ReferenceMapper(visual_references);
 
   // Merge the data tables
@@ -550,7 +552,7 @@ function handleDelivery(obj) {
       console.log('old_activeB:', $scopeGlobal.old_active_interventions);
 
        $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id,
-           new_tuple_ids, $scopeGlobal.interventions[obj.deliver[0].name].args);
+           new_tuple_ids, $scopeGlobal.interventions[obj.deliver[0].name].args, $scopeGlobal.allAOIs);
   }
 
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency
@@ -621,7 +623,7 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     $scopeGlobal.curMarksManager.highlight(tuple_ids, referenceID.tuple_id, transition_in, args);
 
     let refToHighlight = $scopeGlobal.startEndCoords.find(function (startEnd) {
-      let refNumber = referenceID.ref_id.split("_")[1];
+        let refNumber = referenceID.ref_id.split("_")[1];
         return startEnd.refId === refNumber;
     });
 
@@ -629,13 +631,19 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
     // Create the spans in the text
 
     let sm = new SpanManager(paragraph);
-        sm.createSpans([refToHighlight], function(elem, _) {
-          elem.setAttribute('class', 'text-reference refAOI');
-        });
+    sm.createSpans([refToHighlight], function (elem, _) {
+        elem.setAttribute('class', 'text-reference refAOI');
+    });
 
-      if (!document.getElementById('textVisContainer')) {
+    if (!document.getElementById('textVisContainer')) {
         $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
-      }
+    }
+
+    let possibleOverlapAOIs = [];
+    for (let i = 0; i < $scopeGlobal.allAOIs.length; i++) {
+      let aoi = $scopeGlobal.allAOIs[i];
+
+    }
 }
 
 /**
