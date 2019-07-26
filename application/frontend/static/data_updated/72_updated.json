@@ -258,73 +258,73 @@
   "labels": [
     {
       "width": 16,
-      "top": 194,
-      "left": 44,
+      "top": 220,
+      "left": 48,
       "id": 1,
       "height": 8
     },
     {
-      "width": 40,
-      "top": 194,
-      "left": 93,
+      "width": 43,
+      "top": 220,
+      "left": 105,
       "id": 2,
-      "height": 31
+      "height": 35
     },
     {
-      "width": 35,
-      "top": 194,
-      "left": 143,
+      "width": 37,
+      "top": 220,
+      "left": 161,
       "id": 3,
       "height": 20
     },
     {
-      "width": 30,
-      "top": 194,
-      "left": 195,
+      "width": 32,
+      "top": 220,
+      "left": 220,
       "id": 4,
-      "height": 42
+      "height": 47
     },
     {
-      "width": 34,
-      "top": 194,
-      "left": 248,
+      "width": 36,
+      "top": 220,
+      "left": 281,
       "id": 5,
-      "height": 30
+      "height": 35
     },
     {
       "width": 7,
-      "top": 178,
-      "left": 16,
+      "top": 201,
+      "left": 19,
       "id": 6,
       "height": 11
     },
     {
       "width": 21,
-      "top": 134,
-      "left": 16,
+      "top": 154,
+      "left": 19,
       "id": 7,
       "height": 12
     },
     {
       "width": 21,
-      "top": 93,
-      "left": 16,
+      "top": 103,
+      "left": 19,
       "id": 8,
       "height": 10
     },
     {
       "width": 21,
-      "top": 48,
-      "left": 16,
+      "top": 55,
+      "left": 19,
       "id": 9,
       "height": 11
     },
     {
       "width": 9,
-      "top": 98,
-      "left": 0,
+      "top": 109,
+      "left": 1,
       "id": 10,
-      "height": 47
+      "height": 54
     }
   ],
   "chart": "corpus/blogs/datablog/gender_global_voices/article_gender_category/Article-by-gender-and-cat-008.jpg",
