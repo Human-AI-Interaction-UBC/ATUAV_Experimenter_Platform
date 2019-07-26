@@ -39,6 +39,7 @@ var AppCtrl = function($scope, $http, $location) {
   $scopeGlobal.mouseOverEvents = new Map();
   $scopeGlobal.mouseOutEvents = new Map();
   $scopeGlobal.mouseOver = false;
+  $scopeGlobal.allAOIs = [];
   $scopeGlobal.ws = new WebSocket("ws://localhost:8888/websocket");
   // Generic app.js functions for triggering/dremoving interventions
   $scopeGlobal.ws.onmessage = function (evt) {
@@ -81,8 +82,9 @@ var AppCtrl = function($scope, $http, $location) {
           $scope.sentences = data.sentences;
           $scope.datatable = data.datatable;
           $scope.marks = data.marks;
+          $scope.labels = data.labels;
           $scope.visualReferences = data.visual_references;
-          $scope.curReference = data.references
+          $scope.curReference = data.references;
           $scope.startEndCoords = [];
           Object.keys($scope.curReference).forEach(function(key) {
             $scope.startEndCoords.push({"refId": key, "start": $scope.curReference[key]['sentence_start_char'], "end": $scope.curReference[key]['sentence_end_char']})

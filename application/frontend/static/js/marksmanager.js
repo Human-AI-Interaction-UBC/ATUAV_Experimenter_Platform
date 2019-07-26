@@ -298,8 +298,9 @@
      * @param {string} id - reference id to label lines with
      * @param {Array.<string>} tuple_ids - tuples to draw links to
      * @param {Object} args - arguments from db
+     * @param {Array.{Object}} allAOIs - all the AOIs on screen (used as param for function to avoid them when drawing links)
      */
-    MarksManager.prototype.clusterTreeBranch = function(transition_in, id, tuple_ids, args){
+    MarksManager.prototype.clusterTreeBranch = function(transition_in, id, tuple_ids, args, allAOIs){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementsByClassName('refAOI')[0];
@@ -330,17 +331,75 @@
                         relativeCoords.marky = curMark.top - refParentRect.top + curMark.height;
                     }
 
-                    d3.select(self.textVisOverlay).append("line")
-                        .attr("class", "line_" + id)
-                        .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
-                        .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
-                        .style("stroke-dasharray", (3, 3))
-                        .style("stroke", "black")
-                        .style("opacity", 0)
-                        .style("stroke-width", self.strokeWidth)
-                        .transition()
-                        .duration(transition_in)
-                        .style("opacity", 1);
+                    let newPoints = [];
+                    for (let i = 0; i < allAOIs.length; i++) {
+                        let aoi = allAOIs[i];
+                        if (relativeCoords.refX < aoi.left && aoi.left < relativeCoords.markx) {
+                            let aoiCoords = {
+                                x1: aoi.left,
+                                y1: aoi.top,
+                                x2: aoi.left + aoi.width,
+                                y2: aoi.top + aoi.height
+                            };
+                            if (intersectAOI(relativeCoords.refX, relativeCoords.refY, relativeCoords.markx, relativeCoords.marky, aoiCoords)) {
+                                let newPoint = {};
+                                if ((aoiCoords.y2 - aoiCoords.y1)/(aoiCoords.x2 - aoiCoords.x1) > 0) {
+                                    if (aoiCoords.y1 < relativeCoords.marky && relativeCoords.marky < aoiCoords.y2) {
+                                        newPoint.x = aoiCoords.x2;
+                                        newPoint.y = aoiCoords.y2;
+                                    } else {
+                                        newPoint.x = aoiCoords.x1;
+                                        newPoint.y = aoiCoords.y1;
+                                    }
+                                } else {
+                                    if (aoiCoords.y1 < relativeCoords.marky && relativeCoords.marky < aoiCoords.y2) {
+                                        newPoint.x = aoiCoords.x2;
+                                        newPoint.y = aoiCoords.y1;
+                                    } else {
+                                        newPoint.x = aoiCoords.x1;
+                                        newPoint.y = aoiCoords.y2;
+                                    }
+                                }
+                                newPoints.push(newPoint);
+                            }
+                        }
+                    }
+
+                    if (newPoints.length > 0) {
+                        d3.select(self.textVisOverlay)
+                            .data(newPoints)
+                            .enter()
+                            .append('g')
+                            .classed('links', true)
+                            .attr("class", "line_" + id)
+                            .append('path')
+                            .attr('d', function (d) {
+                                let allPoints = "";
+                                for (let i = 0; i < newPoints.length; i++) {
+                                    allPoints += newPoints[i].x + " " + newPoints[i].y + " ";
+                                }
+                                return 'M ' + relativeCoords.refX + ' ' + relativeCoords.refY + ' Q ' + allPoints;
+                            })
+                            .style("stroke", "black")
+                            .style("stroke-dasharray", (3, 3))
+                            .style("stroke-width", self.strokeWidth)
+                            .style("opacity", 0)
+                            .transition()
+                            .duration(transition_in)
+                            .style("opacity", 1);
+                    } else {
+                        d3.select(self.textVisOverlay).append("line")
+                            .attr("class", "line_" + id)
+                            .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
+                            .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
+                            .style("stroke-dasharray", (3, 3))
+                            .style("stroke", "black")
+                            .style("opacity", 0)
+                            .style("stroke-width", self.strokeWidth)
+                            .transition()
+                            .duration(transition_in)
+                            .style("opacity", 1);
+                    }
 
                 } else {
                     if (sharedAxis.hasOwnProperty('coord')) {
@@ -353,7 +412,7 @@
                         }
                     }
 
-                    let links = self.getPhylogeneticTreeNodeLinks(cur, isHorizontal, relativeCoords);
+                    let links = self.getPhylogeneticTreeNodeLinks(cur, isHorizontal, relativeCoords, allAOIs);
                     d3.select(self.textVisOverlay).selectAll(".links")
                         .data(links)
                         .enter()
@@ -486,20 +545,16 @@
      *      - the text AOI to the closest created node on the straight line
      *      - the corresponding node on the connector to each respective relevant bar
      *      - the first and last node on the connector
-     * If the distance between a connector and the relevant bar is too great (constant threshold - currently at 70):
-     *      - move that bar to a different array
-     *      - iterate through the rest of the array to sort each bar into respective bins by distance from connector
-     *          (either > or <, or another bin if it's far from both the original and the new array)
-     *      - make new connector points for the new arrays
-     *      - draw same lines as if creating links but for each array of bars/connectors
+     *
      * @param {Array.<DOMRect>} markRects
      * @param {boolean} isHorizontal
      * @param textRefCoords - an object containing x and y coordinates for the text AOI
+     * @param allAOIs - all the AOIs in the current MSNV - they need to be avoided when drawing links
      * @returns {Array.<Object>} - an array of links containing source and target objects
      *                             where a source/target object contains the xy coordinate for that point
      *                             source/target = the nodes
      */
-    MarksManager.prototype.getPhylogeneticTreeNodeLinks = function (markRects, isHorizontal, textRefCoords) {
+    MarksManager.prototype.getPhylogeneticTreeNodeLinks = function (markRects, isHorizontal, textRefCoords, allAOIs) {
         let allShared = getSharedAxis(markRects, 1);
         if (allShared.isShared) {
             if (allShared.hasOwnProperty('coord') && allShared.axis === 'x') {
@@ -541,15 +596,52 @@
         textRef.x = textRefCoords.refX;
         textRef.y = textRefCoords.refY;
 
-        function getDist(coords) {
-            return Math.sqrt(Math.pow(coords.x, 2) + Math.pow(coords.y, 2))
+        let links = divideLinkByDistance(nodes, connectors, isHorizontal, 70);
+
+        for (let i = 0; i < links.length; i++) {
+            let linkConnectors = links[i].map((link) => {
+                return link.target;
+            });
+            let closestPoint = linkConnectors.reduce((acc, cur) => {
+                let dist = getDist({x: textRef.x - cur.x, y: textRef.y - cur.y});
+                return dist < getDist({x: textRef.x - acc.x, y: textRef.y - acc.y}) ? cur : acc;
+            });
+
+            let firstLine = {};
+            // making the first line from the text to the nearest point to link to
+            firstLine.source = textRef;
+            firstLine.target = closestPoint;
+            links[i].push(firstLine);
+
+            // making a line at the end of the links to connect them
+            links[i].push({
+                source: linkConnectors[0],
+                target: linkConnectors[linkConnectors.length - 1]
+            });
         }
 
+        return links.flat();
+    };
+
+    /**
+     * Creates new links if the distance between some relevant bar(s) are too great to draw line to only 1 link
+     * (constant threshold - currently at 70):
+     *      - move that bar to a different array
+     *      - iterate through the rest of the array to sort each bar into respective bins by distance from connector
+     *          (either > or <, or another bin if it's far from both the original and the new array)
+     *      - make new connector points for the new arrays
+     *      - draw same lines as if creating links but for each array of bars/connectors
+     * @param nodes
+     * @param connectors
+     * @param isHorizontal
+     * @param distanceThreshold
+     * @returns {Array}
+     */
+    function divideLinkByDistance(nodes, connectors, isHorizontal, distanceThreshold) {
         // links is an array of arrays of source-target pairs that fit with the same connector
         let links = [];
         links.push([]);
 
-        let distanceThreshold = 70;
         for (let i = 0; i < nodes.length; i++) {
             if (getDist({x: nodes[i].x - connectors[i].x, y: nodes[i].y - connectors[i].y}) > distanceThreshold) {
                 let adjacentOtherLinks = false;
@@ -596,31 +688,32 @@
                 }
             }
         }
+        return links;
+    }
 
-        for (let i = 0; i < links.length; i++) {
-            let linkConnectors = links[i].map((link) => {
-                return link.target;
-            });
-            let closestPoint = linkConnectors.reduce((acc, cur) => {
-                let dist = getDist({x: textRef.x - cur.x, y: textRef.y - cur.y});
-                return dist < getDist({x: textRef.x - acc.x, y: textRef.y - acc.y}) ? cur : acc;
-            });
+    function getDist(coords) {
+        return Math.sqrt(Math.pow(coords.x, 2) + Math.pow(coords.y, 2))
+    }
 
-            let firstLine = {};
-            // making the first line from the text to the nearest point to link to
-            firstLine.source = textRef;
-            firstLine.target = closestPoint;
-            links[i].push(firstLine);
-
-            // making a line at the end of the links to connect them
-            links[i].push({
-                source: linkConnectors[0],
-                target: linkConnectors[linkConnectors.length - 1]
-            });
+    function intersectLine(l1x1,l1y1,l1x2,l1y2,l2x1,l2y1,l2x2,l2y2) {
+        var det, gamma, lambda;
+        det = (l1x2 - l1x1) * (l2y2 - l2y1) - (l2x2 - l2x1) * (l1y2 - l1y1);
+        if (det === 0) {
+            return false;
+        } else {
+            lambda = ((l2y2 - l2y1) * (l2x2 - l1x1) + (l2x1 - l2x2) * (l2y2 - l1y1)) / det;
+            gamma = ((l1y1 - l1y2) * (l2x2 - l1x1) + (l1x2 - l1x1) * (l2y2 - l1y1)) / det;
+            return (0 < lambda && lambda < 1) && (0 < gamma && gamma < 1);
         }
+    }
 
-        return links.flat();
-    };
+    function intersectAOI(x1, y1, x2, y2, aoiCoords) {
+        return intersectLine(x1, y1, x2, y2, aoiCoords.x1, aoiCoords.y1, aoiCoords.x1, aoiCoords.y2) ||
+            intersectLine(x1, y1, x2, y2, aoiCoords.x1, aoiCoords.y1, aoiCoords.x2, aoiCoords.y1) ||
+            intersectLine(x1, y1, x2, y2, aoiCoords.x2, aoiCoords.y1, aoiCoords.x2, aoiCoords.y2) ||
+            intersectLine(x1, y1, x2, y2, aoiCoords.x1, aoiCoords.y2, aoiCoords.x2, aoiCoords.y2);
+    }
+
 
     /******************************* END HELPER METHODS FOR DRAWING LINKS AND CLUSTERING *******************************/
 
