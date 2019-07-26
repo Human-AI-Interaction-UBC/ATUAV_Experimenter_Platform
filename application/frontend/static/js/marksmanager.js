@@ -1,7 +1,9 @@
 (function(){
-	var MarksManager = function(marks, img) {
+	var MarksManager = function(marks, labels, img) {
 		this.data = marks;
 		this.img = img;
+		this.labels = labels;
+		this.allAOIs = [];
 
 		this.type = MarksManager.HIGHLIGHT;
 		this.current_params = MarksManager.defaultHighlightParams;
@@ -107,6 +109,25 @@
 													if(val.tuple) acc.push(val);
 													return acc;
 												}, []);
+
+
+                        let labels = d3.select(self.overlay).selectAll('labels')
+                            .data(self.labels, function(d) { return d.id; }).enter()
+                            .append('rect')
+                            .attr('x', function(d) {
+                                return (d.left-margin)*self.scale.x;
+                            })
+                            .attr('y', function(d) {
+                                return (d.top-margin)*self.scale.y;
+                            })
+                            .attr('width', function(d) {
+                                return (d.width+margin*2)*self.scale.x;
+                            })
+                            .attr('height', function(d) {
+                                return (d.height+margin*2)*self.scale.y;
+                            });
+
+                        this.allAOIs = marks.concat(labels);
 						return marks[0];
 						// var hints = d3.select(this.overlay).selectAll('circle')
 						// 			  .data(referenced_marks, function(d) { return d.id; })
@@ -298,9 +319,8 @@
      * @param {string} id - reference id to label lines with
      * @param {Array.<string>} tuple_ids - tuples to draw links to
      * @param {Object} args - arguments from db
-     * @param {Array.{Object}} allAOIs - all the AOIs on screen (used as param for function to avoid them when drawing links)
      */
-    MarksManager.prototype.clusterTreeBranch = function(transition_in, id, tuple_ids, args, allAOIs){
+    MarksManager.prototype.clusterTreeBranch = function(transition_in, id, tuple_ids, args){
         let self = this;
         let relativeCoords = {};
         let ref = document.getElementsByClassName('refAOI')[0];
@@ -332,8 +352,8 @@
                     }
 
                     let newPoints = [];
-                    for (let i = 0; i < allAOIs.length; i++) {
-                        let aoi = allAOIs[i];
+                    for (let i = 0; i < self.allAOIs.length; i++) {
+                        let aoi = self.allAOIs[i].getBoundingClientRect();
                         if (relativeCoords.refX < aoi.left && aoi.left < relativeCoords.markx) {
                             let aoiCoords = {
                                 x1: aoi.left,
@@ -412,7 +432,7 @@
                         }
                     }
 
-                    let links = self.getPhylogeneticTreeNodeLinks(cur, isHorizontal, relativeCoords, allAOIs);
+                    let links = self.getPhylogeneticTreeNodeLinks(cur, isHorizontal, relativeCoords);
                     d3.select(self.textVisOverlay).selectAll(".links")
                         .data(links)
                         .enter()
@@ -549,12 +569,11 @@
      * @param {Array.<DOMRect>} markRects
      * @param {boolean} isHorizontal
      * @param textRefCoords - an object containing x and y coordinates for the text AOI
-     * @param allAOIs - all the AOIs in the current MSNV - they need to be avoided when drawing links
      * @returns {Array.<Object>} - an array of links containing source and target objects
      *                             where a source/target object contains the xy coordinate for that point
      *                             source/target = the nodes
      */
-    MarksManager.prototype.getPhylogeneticTreeNodeLinks = function (markRects, isHorizontal, textRefCoords, allAOIs) {
+    MarksManager.prototype.getPhylogeneticTreeNodeLinks = function (markRects, isHorizontal, textRefCoords) {
         let allShared = getSharedAxis(markRects, 1);
         if (allShared.isShared) {
             if (allShared.hasOwnProperty('coord') && allShared.axis === 'x') {

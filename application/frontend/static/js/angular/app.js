@@ -421,7 +421,7 @@ function initReferences($scope) {
   });
   $scope.reference_tuples = referenced_tuples;
 
-  var marksManager = new MarksManager(marks.marks, document.getElementById('theChart'));
+  var marksManager = new MarksManager(marks.marks, labels, document.getElementById('theChart'));
   marksManager.createOverlay();
   marksManager.changeType(MarksManager.DESATURATE);
 
