@@ -354,40 +354,7 @@
                         relativeCoords.marky = curMark.top - refParentRect.top + curMark.height;
                     }
 
-                    let newPoints = [];
-                    for (let i = 0; i < self.allAOIs.length; i++) {
-                        let aoi = self.allAOIs[i].getBoundingClientRect();
-                        if (relativeCoords.refX < (aoi.left - refParentRect.left) && (aoi.left - refParentRect.left) < relativeCoords.markx) {
-                            let aoiCoords = {
-                                x1: aoi.left - refParentRect.left,
-                                y1: aoi.top - refParentRect.top,
-                                x2: aoi.left - refParentRect.left + aoi.width,
-                                y2: aoi.top - refParentRect.top + aoi.height
-                            };
-                            if (intersectAOI(relativeCoords.refX, relativeCoords.refY, relativeCoords.markx, relativeCoords.marky, aoiCoords)) {
-                                let newPoint = {};
-																let margin = 5;
-                                if ((aoiCoords.y2 - aoiCoords.y1)/(aoiCoords.x2 - aoiCoords.x1) > 0) {
-                                    if (aoiCoords.y1 < relativeCoords.marky && relativeCoords.marky < aoiCoords.y2) {
-                                        newPoint.x = aoiCoords.x2 + margin;
-                                        newPoint.y = aoiCoords.y2 + margin;
-                                    } else {
-                                        newPoint.x = aoiCoords.x1 - margin;
-                                        newPoint.y = aoiCoords.y1 - margin;
-                                    }
-                                } else {
-                                    if (aoiCoords.y1 < relativeCoords.marky && relativeCoords.marky < aoiCoords.y2) {
-                                        newPoint.x = aoiCoords.x2 + margin;
-                                        newPoint.y = aoiCoords.y1 - margin;
-                                    } else {
-                                        newPoint.x = aoiCoords.x1 - margin;
-                                        newPoint.y = aoiCoords.y2 + margin;
-                                    }
-                                }
-                                newPoints.push(newPoint);
-                            }
-                        }
-                    }
+                    let newPoints = self.getNewPointsForCurvedLine(relativeCoords.refX, relativeCoords.refY, relativeCoords.markx, relativeCoords.marky, refParentRect);
 
                     if (newPoints.length > 0) {
                         d3.select(self.textVisOverlay).selectAll(".newPoints")
@@ -436,23 +403,67 @@
                     }
 
                     let links = self.getPhylogeneticTreeNodeLinks(cur, isHorizontal, relativeCoords);
-                    d3.select(self.textVisOverlay).selectAll(".links")
-                        .data(links)
-                        .enter()
-                        .append('g')
-                        .classed('links', true)
-                        .attr("class", "line_" + id)
-                        .append('path')
-                        .attr('d', function (d) {
-                            return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
-                        })
-                        .style("stroke", "black")
-                        .style("stroke-dasharray", (3, 3))
-                        .style("stroke-width", self.strokeWidth)
-                        .style("opacity", 0)
-                        .transition()
-                        .duration(transition_in)
-                        .style("opacity", 1);
+                    let textToMarkLink = links[0];
+                    let newPoints = self.getNewPointsForCurvedLine(textToMarkLink.source.x, textToMarkLink.source.y, textToMarkLink.target.x, textToMarkLink.target.y, refParentRect);
+
+                    if (newPoints > 0) {
+                        d3.select(self.textVisOverlay).selectAll(".newPoints")
+                            .data(newPoints)
+                            .enter()
+                            .append('path')
+                            .attr('d', function (d) {
+                                let allPoints = "";
+                                for (let i = 0; i < newPoints.length; i++) {
+                                    allPoints += newPoints[i].x + " " + newPoints[i].y + " ";
+                                }
+                                return 'M ' + relativeCoords.refX + ' ' + relativeCoords.refY + ' Q ' + allPoints + relativeCoords.markx + ' ' + relativeCoords.marky;
+                            })
+                            .attr("fill", "none")
+                            .attr("class", "line_" + id)
+                            .style("stroke", "black")
+                            .style("stroke-dasharray", (3, 3))
+                            .style("stroke-width", self.strokeWidth)
+                            .style("opacity", 0)
+                            .transition()
+                            .duration(transition_in)
+                            .style("opacity", 1);
+                        
+                        d3.select(self.textVisOverlay).selectAll(".links")
+                            .data(links.slice(1))
+                            .enter()
+                            .append('g')
+                            .classed('links', true)
+                            .attr("class", "line_" + id)
+                            .append('path')
+                            .attr('d', function (d) {
+                                return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
+                            })
+                            .style("stroke", "black")
+                            .style("stroke-dasharray", (3, 3))
+                            .style("stroke-width", self.strokeWidth)
+                            .style("opacity", 0)
+                            .transition()
+                            .duration(transition_in)
+                            .style("opacity", 1);
+                    } else {
+                        d3.select(self.textVisOverlay).selectAll(".links")
+                            .data(links)
+                            .enter()
+                            .append('g')
+                            .classed('links', true)
+                            .attr("class", "line_" + id)
+                            .append('path')
+                            .attr('d', function (d) {
+                                return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
+                            })
+                            .style("stroke", "black")
+                            .style("stroke-dasharray", (3, 3))
+                            .style("stroke-width", self.strokeWidth)
+                            .style("opacity", 0)
+                            .transition()
+                            .duration(transition_in)
+                            .style("opacity", 1);
+                    }
                 }
             }
 		}
@@ -643,6 +654,46 @@
         }
 
         return links.flat();
+    };
+
+
+    MarksManager.prototype.getNewPointsForCurvedLine = function(refX, refY, markX, markY, refParentRect) {
+        let self = this;
+        let newPoints = [];
+        for (let i = 0; i < self.allAOIs.length; i++) {
+            let aoi = self.allAOIs[i].getBoundingClientRect();
+            if (refX < (aoi.left - refParentRect.left) && (aoi.left - refParentRect.left) < markx) {
+                let aoiCoords = {
+                    x1: aoi.left - refParentRect.left,
+                    y1: aoi.top - refParentRect.top,
+                    x2: aoi.left - refParentRect.left + aoi.width,
+                    y2: aoi.top - refParentRect.top + aoi.height
+                };
+                if (intersectAOI(refX, refY, markX, markY, aoiCoords)) {
+                    let newPoint = {};
+                    let margin = 5;
+                    if ((aoiCoords.y2 - aoiCoords.y1)/(aoiCoords.x2 - aoiCoords.x1) > 0) {
+                        if (aoiCoords.y1 < markY && markY < aoiCoords.y2) {
+                            newPoint.x = aoiCoords.x2 + margin;
+                            newPoint.y = aoiCoords.y2 + margin;
+                        } else {
+                            newPoint.x = aoiCoords.x1 - margin;
+                            newPoint.y = aoiCoords.y1 - margin;
+                        }
+                    } else {
+                        if (aoiCoords.y1 < markY && markY < aoiCoords.y2) {
+                            newPoint.x = aoiCoords.x2 + margin;
+                            newPoint.y = aoiCoords.y1 - margin;
+                        } else {
+                            newPoint.x = aoiCoords.x1 - margin;
+                            newPoint.y = aoiCoords.y2 + margin;
+                        }
+                    }
+                    newPoints.push(newPoint);
+                }
+            }
+        }
+        return newPoints;
     };
 
     /**
