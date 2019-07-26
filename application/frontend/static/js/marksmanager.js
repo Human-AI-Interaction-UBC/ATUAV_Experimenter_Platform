@@ -127,7 +127,10 @@
                                 return (d.height+margin*2)*self.scale.y;
                             });
 
-                        this.allAOIs = marks.concat(labels);
+                        // self.allAOIs = marks.concat(labels).flat();
+												self.allAOIs = labels.flat();
+												console.log(marks);
+												console.log(typeof(marks));
 						return marks[0];
 						// var hints = d3.select(this.overlay).selectAll('circle')
 						// 			  .data(referenced_marks, function(d) { return d.id; })
@@ -354,30 +357,31 @@
                     let newPoints = [];
                     for (let i = 0; i < self.allAOIs.length; i++) {
                         let aoi = self.allAOIs[i].getBoundingClientRect();
-                        if (relativeCoords.refX < aoi.left && aoi.left < relativeCoords.markx) {
+                        if (relativeCoords.refX < (aoi.left - refParentRect.left) && (aoi.left - refParentRect.left) < relativeCoords.markx) {
                             let aoiCoords = {
-                                x1: aoi.left,
-                                y1: aoi.top,
-                                x2: aoi.left + aoi.width,
-                                y2: aoi.top + aoi.height
+                                x1: aoi.left - refParentRect.left,
+                                y1: aoi.top - refParentRect.top,
+                                x2: aoi.left - refParentRect.left + aoi.width,
+                                y2: aoi.top - refParentRect.top + aoi.height
                             };
                             if (intersectAOI(relativeCoords.refX, relativeCoords.refY, relativeCoords.markx, relativeCoords.marky, aoiCoords)) {
                                 let newPoint = {};
+																let margin = 5;
                                 if ((aoiCoords.y2 - aoiCoords.y1)/(aoiCoords.x2 - aoiCoords.x1) > 0) {
                                     if (aoiCoords.y1 < relativeCoords.marky && relativeCoords.marky < aoiCoords.y2) {
-                                        newPoint.x = aoiCoords.x2;
-                                        newPoint.y = aoiCoords.y2;
+                                        newPoint.x = aoiCoords.x2 + margin;
+                                        newPoint.y = aoiCoords.y2 + margin;
                                     } else {
-                                        newPoint.x = aoiCoords.x1;
-                                        newPoint.y = aoiCoords.y1;
+                                        newPoint.x = aoiCoords.x1 - margin;
+                                        newPoint.y = aoiCoords.y1 - margin;
                                     }
                                 } else {
                                     if (aoiCoords.y1 < relativeCoords.marky && relativeCoords.marky < aoiCoords.y2) {
-                                        newPoint.x = aoiCoords.x2;
-                                        newPoint.y = aoiCoords.y1;
+                                        newPoint.x = aoiCoords.x2 + margin;
+                                        newPoint.y = aoiCoords.y1 - margin;
                                     } else {
-                                        newPoint.x = aoiCoords.x1;
-                                        newPoint.y = aoiCoords.y2;
+                                        newPoint.x = aoiCoords.x1 - margin;
+                                        newPoint.y = aoiCoords.y2 + margin;
                                     }
                                 }
                                 newPoints.push(newPoint);
@@ -386,20 +390,19 @@
                     }
 
                     if (newPoints.length > 0) {
-                        d3.select(self.textVisOverlay)
+                        d3.select(self.textVisOverlay).selectAll(".newPoints")
                             .data(newPoints)
                             .enter()
-                            .append('g')
-                            .classed('links', true)
-                            .attr("class", "line_" + id)
                             .append('path')
                             .attr('d', function (d) {
                                 let allPoints = "";
                                 for (let i = 0; i < newPoints.length; i++) {
                                     allPoints += newPoints[i].x + " " + newPoints[i].y + " ";
                                 }
-                                return 'M ' + relativeCoords.refX + ' ' + relativeCoords.refY + ' Q ' + allPoints;
+                                return 'M ' + relativeCoords.refX + ' ' + relativeCoords.refY + ' Q ' + allPoints + relativeCoords.markx + ' ' + relativeCoords.marky;
                             })
+														.attr("fill", "none")
+														.attr("class", "line_" + id)
                             .style("stroke", "black")
                             .style("stroke-dasharray", (3, 3))
                             .style("stroke-width", self.strokeWidth)
