@@ -403,67 +403,59 @@
                     }
 
                     let links = self.getPhylogeneticTreeNodeLinks(cur, isHorizontal, relativeCoords);
-                    let textToMarkLink = links[0];
-                    let newPoints = self.getNewPointsForCurvedLine(textToMarkLink.source.x, textToMarkLink.source.y, textToMarkLink.target.x, textToMarkLink.target.y, refParentRect);
+                    let textToMarkLinks = links.filter((link) => {
+                        return link.hasOwnProperty("textToMark") && link.textToMark;
+                    });
 
-                    if (newPoints > 0) {
-                        d3.select(self.textVisOverlay).selectAll(".newPoints")
-                            .data(newPoints)
-                            .enter()
-                            .append('path')
-                            .attr('d', function (d) {
-                                let allPoints = "";
-                                for (let i = 0; i < newPoints.length; i++) {
-                                    allPoints += newPoints[i].x + " " + newPoints[i].y + " ";
-                                }
-                                return 'M ' + relativeCoords.refX + ' ' + relativeCoords.refY + ' Q ' + allPoints + relativeCoords.markx + ' ' + relativeCoords.marky;
-                            })
-                            .attr("fill", "none")
-                            .attr("class", "line_" + id)
-                            .style("stroke", "black")
-                            .style("stroke-dasharray", (3, 3))
-                            .style("stroke-width", self.strokeWidth)
-                            .style("opacity", 0)
-                            .transition()
-                            .duration(transition_in)
-                            .style("opacity", 1);
-                        
-                        d3.select(self.textVisOverlay).selectAll(".links")
-                            .data(links.slice(1))
-                            .enter()
-                            .append('g')
-                            .classed('links', true)
-                            .attr("class", "line_" + id)
-                            .append('path')
-                            .attr('d', function (d) {
-                                return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
-                            })
-                            .style("stroke", "black")
-                            .style("stroke-dasharray", (3, 3))
-                            .style("stroke-width", self.strokeWidth)
-                            .style("opacity", 0)
-                            .transition()
-                            .duration(transition_in)
-                            .style("opacity", 1);
-                    } else {
-                        d3.select(self.textVisOverlay).selectAll(".links")
-                            .data(links)
-                            .enter()
-                            .append('g')
-                            .classed('links', true)
-                            .attr("class", "line_" + id)
-                            .append('path')
-                            .attr('d', function (d) {
-                                return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
-                            })
-                            .style("stroke", "black")
-                            .style("stroke-dasharray", (3, 3))
-                            .style("stroke-width", self.strokeWidth)
-                            .style("opacity", 0)
-                            .transition()
-                            .duration(transition_in)
-                            .style("opacity", 1);
+                    for (let i = 0; i < textToMarkLinks.length; i++) {
+                        let newPoints = self.getNewPointsForCurvedLine(textToMarkLinks[i].source.x, textToMarkLinks[i].source.y,
+                            textToMarkLinks[i].target.x, textToMarkLinks[i].target.y, refParentRect);
+                        if (newPoints > 0) {
+                            d3.select(self.textVisOverlay).selectAll(".newPoints")
+                                .data(newPoints)
+                                .enter()
+                                .append('path')
+                                .attr('d', function (d) {
+                                    let allPoints = "";
+                                    for (let i = 0; i < newPoints.length; i++) {
+                                        allPoints += newPoints[i].x + " " + newPoints[i].y + " ";
+                                    }
+                                    return 'M ' + relativeCoords.refX + ' ' + relativeCoords.refY + ' Q ' + allPoints + relativeCoords.markx + ' ' + relativeCoords.marky;
+                                })
+                                .attr("fill", "none")
+                                .attr("class", "line_" + id)
+                                .style("stroke", "black")
+                                .style("stroke-dasharray", (3, 3))
+                                .style("stroke-width", self.strokeWidth)
+                                .style("opacity", 0)
+                                .transition()
+                                .duration(transition_in)
+                                .style("opacity", 1);
+                        }
                     }
+
+                    let otherLinks = links.filter((link) => {
+                        return !textToMarkLinks.includes(link);
+                    });
+
+                    d3.select(self.textVisOverlay).selectAll(".links")
+                        .data(otherLinks)
+                        .enter()
+                        .append('g')
+                        .classed('links', true)
+                        .attr("class", "line_" + id)
+                        .append('path')
+                        .attr('d', function (d) {
+                            return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
+                        })
+                        .style("stroke", "black")
+                        .style("stroke-dasharray", (3, 3))
+                        .style("stroke-width", self.strokeWidth)
+                        .style("opacity", 0)
+                        .transition()
+                        .duration(transition_in)
+                        .style("opacity", 1);
+
                 }
             }
 		}
@@ -644,6 +636,7 @@
             // making the first line from the text to the nearest point to link to
             firstLine.source = textRef;
             firstLine.target = closestPoint;
+            firstLine.textToMark = true;
             links[i].push(firstLine);
 
             // making a line at the end of the links to connect them
@@ -662,7 +655,7 @@
         let newPoints = [];
         for (let i = 0; i < self.allAOIs.length; i++) {
             let aoi = self.allAOIs[i].getBoundingClientRect();
-            if (refX < (aoi.left - refParentRect.left) && (aoi.left - refParentRect.left) < markx) {
+            if (refX < (aoi.left - refParentRect.left) && (aoi.left - refParentRect.left) < markX) {
                 let aoiCoords = {
                     x1: aoi.left - refParentRect.left,
                     y1: aoi.top - refParentRect.top,
