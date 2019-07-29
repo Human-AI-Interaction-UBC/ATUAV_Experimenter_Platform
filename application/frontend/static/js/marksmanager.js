@@ -408,9 +408,9 @@
                     });
 
                     for (let i = 0; i < textToMarkLinks.length; i++) {
-                        let newPoints = self.getNewPointsForCurvedLine(textToMarkLinks[i].source.x, textToMarkLinks[i].source.y,
-                            textToMarkLinks[i].target.x, textToMarkLinks[i].target.y, refParentRect);
-                        if (newPoints > 0) {
+                        let newPoints = self.getNewPointsForCurvedLine(textToMarkLinks[0].source.x, textToMarkLinks[0].source.y,
+                            textToMarkLinks[0].target.x, textToMarkLinks[0].target.y, refParentRect);
+                        if (newPoints.length > 0) {
                             d3.select(self.textVisOverlay).selectAll(".newPoints")
                                 .data(newPoints)
                                 .enter()
@@ -420,7 +420,7 @@
                                     for (let i = 0; i < newPoints.length; i++) {
                                         allPoints += newPoints[i].x + " " + newPoints[i].y + " ";
                                     }
-                                    return 'M ' + relativeCoords.refX + ' ' + relativeCoords.refY + ' Q ' + allPoints + relativeCoords.markx + ' ' + relativeCoords.marky;
+                                    return 'M ' + relativeCoords.refX + ' ' + relativeCoords.refY + ' Q ' + allPoints + textToMarkLinks[0].target.x + ' ' + textToMarkLinks[0].target.y;
                                 })
                                 .attr("fill", "none")
                                 .attr("class", "line_" + id)
