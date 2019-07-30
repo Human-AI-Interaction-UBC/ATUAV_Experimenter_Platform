@@ -208,7 +208,7 @@ class AdaptationLoop():
             active_retrigger = rule['active_retrigger']
             remove_others = rule['trigger_other_removals'] #remove any of these if they are active
             #check the rule if it is not currently active or if active_retrigger = 1
-            if active_retrigger == 1 or not self.app_state_controller.isInterventionActive(intervention_name):
+            if active_retrigger == 1 or not self.app_state_controller.isRuleActive(rule_name):
                 #if both the rule and intervention has not exceeded max repeats
                 if self.__ruleRepeatsAllowed__(rule_name) and self.__interventionRepeatsAllowed__(intervention_name):
                     #check the delivery conditional
@@ -232,6 +232,9 @@ class AdaptationLoop():
                                         if target_bar not in to_remove:
                                             self.app_state_controller.setInterventionInactive(target_bar)
                                             to_remove.append(target_bar)
+
+                                if self.app_state_controller.isRuleActive(a_rule):
+                                    self.app_state_controller.setRuleInactive(a_rule)
 
         if to_remove:
             to_remove = json.dumps({'remove': to_remove})

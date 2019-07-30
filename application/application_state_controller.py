@@ -693,7 +693,7 @@ class ApplicationStateController():
             self.conn.execute("INSERT INTO rule_state values (?, ?, ?)", (rule_name, time_stamp, 1))
         else:
             occurences = int(rule_occurences['occurences']) + 1
-            self.conn.execute("UPDATE rule_state SET occurences = ? WHERE rule = ?", ( occurences, rule_name))
+            self.conn.execute("UPDATE rule_state SET active = 1, occurences = ? WHERE rule = ?", ( occurences, rule_name))
             self.conn.execute("INSERT INTO rule_state values (?, ?, ?)", (rule_name, time_stamp, occurences))
         self.conn.commit()
 
@@ -717,6 +717,25 @@ class ApplicationStateController():
         self.conn.execute("UPDATE intervention_state SET active = 0 WHERE intervention = ?", (intervention_name,))
         self.conn.commit()
 
+    def setRuleInactive(self, rule_name):
+        """Sets active column on rule to be false
+
+       arguments
+       rule_name       -- string, name of the rule to update
+
+       keyword arguments
+       None
+
+       returns
+       boolean                 -- true if the number of occurences so far is less than the maximum allowed repeats,
+                               if max_repeats is set as NULL or a negative number, always return True
+                               otherwise return false
+
+       """
+
+        self.conn.execute("UPDATE rule_state SET active = 0 WHERE rule = ?", (rule_name,))
+        self.conn.commit()
+
     def isInterventionActive(self, intervention_name):
 
         """Checks if this intervention is currently active
@@ -732,6 +751,23 @@ class ApplicationStateController():
 
         """
         query_results = self.conn.execute("SELECT * from intervention_state where intervention = ? and active = 1", (intervention_name,)).fetchone()
+        return not (query_results is None)
+
+    def isRuleActive(self, rule_name):
+
+        """Checks if this rule is currently active
+
+        arguments
+        rule_name       -- string, name of the rule to be checked
+
+        keyword arguments
+        None
+
+        returns
+        boolean                 -- true if active column of the rule == 1, else false
+
+        """
+        query_results = self.conn.execute("SELECT * from rule_state where rule = ? and active = 1", (rule_name,)).fetchone()
         return not (query_results is None)
 
 def main():
