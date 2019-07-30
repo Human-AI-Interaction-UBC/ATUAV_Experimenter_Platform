@@ -540,7 +540,9 @@ function handleDelivery(obj) {
           for (let a_mark of $scopeGlobal.old_active_interventions) {
               //console.log('Attempting to grey:', a_mark)
               $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, args);
-              $scopeGlobal.curMarksManager.removeLines(a_mark);
+              if ($scopeGlobal.withLink) {
+                  $scopeGlobal.curMarksManager.removeLines(a_mark);
+              }
           }
       }
 
@@ -549,8 +551,10 @@ function handleDelivery(obj) {
       $scopeGlobal.old_active_interventions = [...new Set($scopeGlobal.old_active_interventions)]
       console.log('old_activeB:', $scopeGlobal.old_active_interventions);
 
-       $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id,
-           new_tuple_ids, $scopeGlobal.interventions[obj.deliver[0].name].args);
+      if ($scopeGlobal.withLink) {
+          $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id,
+              new_tuple_ids, $scopeGlobal.interventions[obj.deliver[0].name].args);
+      }
   }
 
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency
@@ -649,6 +653,8 @@ function highlightLegend(referenceID, transition_in, args) {
 function removeAllInterventions(referenceID) {
   //if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
     $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
-    $scopeGlobal.curMarksManager.removeLines(referenceID.tuple_id);
+    if ($scopeGlobal.withLink) {
+        $scopeGlobal.curMarksManager.removeLines(referenceID.tuple_id);
+    }
     document.getElementsByClassName('refAOI')[0].removeAttribute('class');
 }
