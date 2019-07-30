@@ -486,12 +486,6 @@
      *      - the text AOI to the closest created node on the straight line
      *      - the corresponding node on the connector to each respective relevant bar
      *      - the first and last node on the connector
-     * If the distance between a connector and the relevant bar is too great (constant threshold - currently at 70):
-     *      - move that bar to a different array
-     *      - iterate through the rest of the array to sort each bar into respective bins by distance from connector
-     *          (either > or <, or another bin if it's far from both the original and the new array)
-     *      - make new connector points for the new arrays
-     *      - draw same lines as if creating links but for each array of bars/connectors
      * @param {Array.<DOMRect>} markRects
      * @param {boolean} isHorizontal
      * @param textRefCoords - an object containing x and y coordinates for the text AOI
@@ -541,15 +535,54 @@
         textRef.x = textRefCoords.refX;
         textRef.y = textRefCoords.refY;
 
-        function getDist(coords) {
-            return Math.sqrt(Math.pow(coords.x, 2) + Math.pow(coords.y, 2))
+        // links is an array of arrays of source-target pairs that fit with the same connector
+        let distanceThreshold = 70;
+        let links = divideLinkByDistance(nodes, connectors, isHorizontal, distanceThreshold);
+
+        for (let i = 0; i < links.length; i++) {
+            let linkConnectors = links[i].map((link) => {
+                return link.target;
+            });
+            let closestPoint = linkConnectors.reduce((acc, cur) => {
+                let dist = getDist({x: textRef.x - cur.x, y: textRef.y - cur.y});
+                return dist < getDist({x: textRef.x - acc.x, y: textRef.y - acc.y}) ? cur : acc;
+            });
+
+            let firstLine = {};
+            // making the first line from the text to the nearest point to link to
+            firstLine.source = textRef;
+            firstLine.target = closestPoint;
+            links[i].push(firstLine);
+
+            // making a line at the end of the links to connect them
+            links[i].push({
+                source: linkConnectors[0],
+                target: linkConnectors[linkConnectors.length - 1]
+            });
         }
 
+        return links.flat();
+    };
+
+    /**
+     * Creates new links if the distance between some relevant bar(s) are too great to draw line to only 1 link
+     * (constant threshold - currently at 70):
+     *      - move that bar to a different array
+     *      - iterate through the rest of the array to sort each bar into respective bins by distance from connector
+     *          (either > or <, or another bin if it's far from both the original and the new array)
+     *      - make new connector points for the new arrays
+     *      - draw same lines as if creating links but for each array of bars/connectors
+     * @param nodes
+     * @param connectors
+     * @param isHorizontal
+     * @param distanceThreshold
+     * @returns {Array}
+     */
+    function divideLinkByDistance(nodes, connectors, isHorizontal, distanceThreshold) {
         // links is an array of arrays of source-target pairs that fit with the same connector
         let links = [];
         links.push([]);
 
-        let distanceThreshold = 70;
         for (let i = 0; i < nodes.length; i++) {
             if (getDist({x: nodes[i].x - connectors[i].x, y: nodes[i].y - connectors[i].y}) > distanceThreshold) {
                 let adjacentOtherLinks = false;
@@ -596,31 +629,12 @@
                 }
             }
         }
+        return links;
+    }
 
-        for (let i = 0; i < links.length; i++) {
-            let linkConnectors = links[i].map((link) => {
-                return link.target;
-            });
-            let closestPoint = linkConnectors.reduce((acc, cur) => {
-                let dist = getDist({x: textRef.x - cur.x, y: textRef.y - cur.y});
-                return dist < getDist({x: textRef.x - acc.x, y: textRef.y - acc.y}) ? cur : acc;
-            });
-
-            let firstLine = {};
-            // making the first line from the text to the nearest point to link to
-            firstLine.source = textRef;
-            firstLine.target = closestPoint;
-            links[i].push(firstLine);
-
-            // making a line at the end of the links to connect them
-            links[i].push({
-                source: linkConnectors[0],
-                target: linkConnectors[linkConnectors.length - 1]
-            });
-        }
-
-        return links.flat();
-    };
+    function getDist(coords) {
+        return Math.sqrt(Math.pow(coords.x, 2) + Math.pow(coords.y, 2));
+    }
 
     /******************************* END HELPER METHODS FOR DRAWING LINKS AND CLUSTERING *******************************/
 
