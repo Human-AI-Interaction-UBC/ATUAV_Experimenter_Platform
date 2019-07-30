@@ -690,11 +690,11 @@ class ApplicationStateController():
         #update rule occurences
         rule_occurences = self.conn.execute("SELECT occurences FROM rule_state WHERE rule = ?", (rule_name,)).fetchone()
         if rule_occurences is None:
-            self.conn.execute("INSERT INTO rule_state values (?, ?, ?)", (rule_name, time_stamp, 1))
+            self.conn.execute("INSERT INTO rule_state values (?, ?, ?, ?)", (rule_name, time_stamp, 1, 1))
         else:
             occurences = int(rule_occurences['occurences']) + 1
             self.conn.execute("UPDATE rule_state SET active = 1, occurences = ? WHERE rule = ?", ( occurences, rule_name))
-            self.conn.execute("INSERT INTO rule_state values (?, ?, ?)", (rule_name, time_stamp, occurences))
+            self.conn.execute("INSERT INTO rule_state values (?, ?, ?, ?)", (rule_name, time_stamp, 1, occurences))
         self.conn.commit()
 
     def setInterventionInactive(self, intervention_name):
