@@ -165,7 +165,7 @@ class ApplicationStateController():
         """
 
         self.conn.execute("CREATE TABLE intervention_state ( `intervention` TEXT, `active` INTEGER, time_stamp INTEGER, occurences INTEGER)")
-        self.conn.execute("CREATE TABLE rule_state ( `rule` TEXT, time_stamp INTEGER, occurences INTEGER)")
+        self.conn.execute("CREATE TABLE rule_state ( `rule` TEXT, time_stamp INTEGER, active INTEGER, occurences INTEGER)")
         self.conn.commit()
         for user in self.userStates:
             table_name = user['event_name']
