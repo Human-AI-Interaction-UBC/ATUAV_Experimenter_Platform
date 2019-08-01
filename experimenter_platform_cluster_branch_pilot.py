@@ -136,7 +136,7 @@ class MainHandler(tornado.web.RequestHandler):
 
         q1 = self.get_argument('element_1')
         if(int(q1)==1):
-            conditions = [[31, 761, 181, 281], [32, 762, 182, 282], [33, 763, 183, 283], [34, 764, 184, 284]]
+            conditions = [[761, 762], [181, 182], [281, 282], [51, 52], [301, 302], [601,602]]
             for intervention in conditions:
                 random.shuffle(intervention)
             # self.application.mmd_order = [60]
@@ -215,10 +215,7 @@ class QuestionnaireHandler(tornado.web.RequestHandler):
         mmdQuestions = self.loadMMDQuestions()
         noofMMD = len(self.application.mmd_order)
         progress = str(self.application.mmd_index)+ ' of '+ str(noofMMD)
-        if (self.application.mmd_index % 2 == 0):
-            self.render('questionnaire.html', mmd=self.application.cur_mmd, progress = progress, questions = mmdQuestions)
-        else:
-            self.redirect('/mmd')
+        self.render('questionnaire.html', mmd=self.application.cur_mmd, progress = progress, questions = mmdQuestions)
 
         print("finished rendering qustionnaire")
 
