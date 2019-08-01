@@ -124,6 +124,11 @@ class MainHandler(tornado.web.RequestHandler):
     def post(self):
 
         q1 = self.get_argument('element_1')
+
+        cond_type = str(self.get_argument('element_2'))
+        print(cond_type)
+        self.application.cond_type = cond_type
+
         if(int(q1)==1):
             self.application.mmd_order = [3,5,9,11,18,20,27,28,30,60,62,66,72,74,76]
             # self.application.mmd_order = [60]
@@ -274,7 +279,7 @@ class MMDHandler(tornado.web.RequestHandler):
             if (self.application.show_question_only):
                 self.redirect('/questionnaire')
             else:
-                self.render('MMDExperimenter.html', mmd=str(self.application.cur_mmd))
+                self.render('MMDExperimenter.html', mmd=str(self.application.cur_mmd), condType=self.application.cond_type)
             self.application.mmd_index+=1
         else:
             self.redirect('/done')

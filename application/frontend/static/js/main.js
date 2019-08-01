@@ -3,6 +3,7 @@
  */
 var MMDSet = [];
 var currentMMD; //by default
+var condType;
 
 
 /*$( "#button_next" ).click(function() {

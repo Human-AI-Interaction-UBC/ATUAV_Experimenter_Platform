@@ -31,10 +31,11 @@ var AppCtrl = function($scope, $http, $location) {
      */
     matchMode: 'lenient'
   };
+
+  $scopeGlobal.withLink = condType;
   /***** Server communications block *****/
   $scopeGlobal.interventions = {};
   $scopeGlobal.old_active_interventions = [];
-  $scopeGlobal.withLink = false;
   $scopeGlobal.ws = new WebSocket("ws://localhost:8888/websocket");
   // Generic app.js functions for triggering/dremoving interventions
   $scopeGlobal.ws.onmessage = function (evt) {
