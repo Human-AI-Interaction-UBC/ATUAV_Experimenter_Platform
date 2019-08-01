@@ -173,7 +173,7 @@ class AdaptationLoop():
         occurences = self.app_state_controller.getInterventionOccurences(intervention_name)
         return occurences < max_repeat['max_repeat']
 
-    def __deliverNewInterventions__(self, event_name, task, time_stamp):
+    def __deliverNewInterventions__(self, event_name, task, time_stamp, bypass_fixations=False):
 
         """Dispacthes new interventions which are triggered
             - gets all the rules which have this event as a delivery trigger
@@ -212,7 +212,7 @@ class AdaptationLoop():
                 #if both the rule and intervention has not exceeded max repeats
                 if self.__ruleRepeatsAllowed__(rule_name) and self.__interventionRepeatsAllowed__(intervention_name):
                     #check the delivery conditional
-                    if self.app_state_controller.evaluateConditional(rule['delivery_sql_condition']):
+                    if self.app_state_controller.evaluateConditional(rule['delivery_sql_condition']) or bypass_fixations:
                         results = self.conn.execute("SELECT * FROM intervention WHERE intervention.name = ?", (intervention_name,))
                         intervention_params = results.fetchone()
                         intervention_params.update({'refId': event_name})
@@ -295,7 +295,7 @@ class AdaptationLoop():
             #print to_deliver_rules
             self.liveWebSocket.write_message(to_deliver_rules)
 
-    def evaluateRules(self, event_name, time_stamp):
+    def evaluateRules(self, event_name, time_stamp, bypass_fixations=False):
 
         """Evaluates all rules based that are triggered by the event with event_name
 
@@ -320,7 +320,7 @@ class AdaptationLoop():
         #self.__removeExpiredInterventions__(event_name, task)
 
         #deliver new interventions for all interventions that have this event as deliver_trigger
-        self.__deliverNewInterventions__(event_name, task, time_stamp)
+        self.__deliverNewInterventions__(event_name, task, time_stamp, bypass_fixations)
         #self.__deliverAllInterventions__(event_name, task, time_stamp)
 
     def test(self):
