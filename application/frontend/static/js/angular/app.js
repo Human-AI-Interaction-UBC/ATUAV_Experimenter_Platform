@@ -525,6 +525,9 @@ function handleDelivery(obj) {
 
   }
 
+    /**
+     * Handles drawing the new links to relevant bars, drawing the greyed out bar highlights, as well as removing the old links
+     */
   if (func == 'highlightVisAndRef_recency') {
       console.log('old_activeA:', $scopeGlobal.old_active_interventions);
       let tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
@@ -546,7 +549,8 @@ function handleDelivery(obj) {
       $scopeGlobal.old_active_interventions = [...new Set($scopeGlobal.old_active_interventions)]
       console.log('old_activeB:', $scopeGlobal.old_active_interventions);
 
-      $scopeGlobal.curMarksManager.clusterAndDrawLine(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id, new_tuple_ids);
+       $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id,
+           new_tuple_ids, $scopeGlobal.interventions[obj.deliver[0].name].args);
   }
 
   //CODE ADDED HERE TO GENRATE highlightVisOnly_recency
@@ -556,12 +560,12 @@ function handleDelivery(obj) {
 
     if ($scopeGlobal.old_active_interventions.length > 0){
       //args.color = 'grey'
-      args.color = '#606060'
+      arguments.color = '#606060'
       //args.dash = true
       //args.bold_thickness = args.bold_thickness/2
       for (let a_mark of $scopeGlobal.old_active_interventions) {
         //console.log('Attempting to grey:', a_mark)
-        $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, args);
+        $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, arguments);
       }
     }
 
@@ -603,7 +607,12 @@ function highlightVisOnly_recency(referenceID, transition_in, args) {
     //},transition_in*1.2); //TODO:CHECK
 }
 
-// is used by intervention
+/**
+ * Handles part of the intervention: highlights the relevant bars and underlines the relevant text AOI (does not draw links)
+ * @param {Object} referenceID - contains tuple id (for relevant bars), arguments from database, transition out, and refId
+ * @param {int} transition_in
+ * @param {Object} args - the arguments passed in from database
+ */
 function highlightVisAndRef_recency(referenceID, transition_in, args) {
     let tuple_ids = Object.values($scopeGlobal.interventions).map(function (obj) {
         return obj.tuple_id
@@ -618,28 +627,15 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
 
     let paragraph = document.getElementById('theTextParagraph');
     // Create the spans in the text
+
     let sm = new SpanManager(paragraph);
-
-    if (args.underline) {
         sm.createSpans([refToHighlight], function(elem, _) {
-          elem.setAttribute('class', 'text-reference');
-          elem.setAttribute('id', 'refAOI');
+          elem.setAttribute('class', 'text-reference refAOI');
         });
-    }
 
-    if (args.highlight) {
-        sm.createSpans([refToHighlight], function(elem, _) {
-            elem.setAttribute('class', 'text-highlight');
-            elem.setAttribute('id', 'refAOI');
-        });
-    }
-
-    if (args.link) {
       if (!document.getElementById('textVisContainer')) {
         $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
       }
-    }
-
 }
 
 /**
@@ -654,4 +650,5 @@ function removeAllInterventions(referenceID) {
   //if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
     $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
     $scopeGlobal.curMarksManager.removeLines(referenceID.tuple_id);
+    document.getElementsByClassName('refAOI')[0].removeAttribute('class');
 }

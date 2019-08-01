@@ -260,6 +260,7 @@
 	};
 
 
+    /** NOT IN USE**/
   MarksManager.prototype.drawArrow = function(svgElement, x1, y1, x2, y2, size, transition_in, id){
     this.strokeWidth = 2;
     var angle = Math.atan2(x1 - x2, y2 - y1);
@@ -286,178 +287,370 @@
         .style("opacity", 1);
   };
 
-    MarksManager.prototype.clusterAndDrawLine = function(transition_in, id, tuple_ids){
+
+    /*************************** METHODS FOR DRAWING LINKS FOR CLUSTERING AND BRANCHING ***************************/
+    /**
+	 * Draws a line from text AOI to each cluster, branching off 10px before the leftmost/bottom-most (depending on bar orientation) bar
+	 * to connect into a phylogenetic tree branching
+     * connecting link from text to the tree branching will draw the link to the closest point on the branch
+     * tree branching will always be on the left for horizontal bars, and on the bottom for vertical bars
+     * @param {int} transition_in - time in ms for transition of drawing lines
+     * @param {string} id - reference id to label lines with
+     * @param {Array.<string>} tuple_ids - tuples to draw links to
+     * @param {Object} args - arguments from db
+     */
+    MarksManager.prototype.clusterTreeBranch = function(transition_in, id, tuple_ids, args){
         let self = this;
         let relativeCoords = {};
-        let ref = document.getElementById('refAOI');
+        let ref = document.getElementsByClassName('refAOI')[0];
         let refRect = ref.getBoundingClientRect();
         let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
-        relativeCoords.refTop = refRect.top - refParentRect.top;
-        relativeCoords.refLeft = refRect.left - refParentRect.left;
+        relativeCoords.refX = refRect.left - refParentRect.left + refRect.width;
+        relativeCoords.refY = refRect.top - refParentRect.top + refRect.height / 2;
 
         let marks = self.getSelectedMarks(tuple_ids);
         let markRects = marks.selected_marks.map((mark) => {
-        	return mark.getBoundingClientRect();
-		});
-        // markRects.sort((prev, cur) => {
-        // 	return prev.x === cur.x ? prev.y - cur.y : prev.x - cur.x;
-		// });
+            return mark.getBoundingClientRect();
+        });
+        let isHorizontal = args.hasOwnProperty("isHorizontal") ? args.isHorizontal : markRects[0].width > markRects[0].height;
+
+        let clusters = self.getClusters(tuple_ids);
+        for (let i = 0; i < clusters.length; i++) {
+        	let cur = clusters[i];
+            if (cur.length > 0) {
+                let sharedAxis = getSharedAxis(cur, 10);
+
+                if (cur.length === 1) {
+                    let curMark = cur[0];
+                    if (curMark.width > curMark.height) {
+                        relativeCoords.markx = curMark.left - refParentRect.left;
+                        relativeCoords.marky = curMark.top - refParentRect.top + curMark.height / 2;
+                    } else {
+                        relativeCoords.markx = curMark.left - refParentRect.left + curMark.width / 2;
+                        relativeCoords.marky = curMark.top - refParentRect.top + curMark.height;
+                    }
+
+                    d3.select(self.textVisOverlay).append("line")
+                        .attr("class", "line_" + id)
+                        .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
+                        .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
+                        .style("stroke-dasharray", (3, 3))
+                        .style("stroke", "black")
+                        .style("opacity", 0)
+                        .style("stroke-width", self.strokeWidth)
+                        .transition()
+                        .duration(transition_in)
+                        .style("opacity", 1);
+
+                } else {
+                    if (sharedAxis.hasOwnProperty('coord')) {
+                        if (sharedAxis.axis === 'x') {
+                            relativeCoords.markx = sharedAxis.coord - refParentRect.left;
+                            relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
+                        } else {
+                            relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
+                            relativeCoords.marky = sharedAxis.coord - refParentRect.top;
+                        }
+                    }
+
+                    let links = self.getPhylogeneticTreeNodeLinks(cur, isHorizontal, relativeCoords);
+                    d3.select(self.textVisOverlay).selectAll(".links")
+                        .data(links)
+                        .enter()
+                        .append('g')
+                        .classed('links', true)
+                        .attr("class", "line_" + id)
+                        .append('path')
+                        .attr('d', function (d) {
+                            return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
+                        })
+                        .style("stroke", "black")
+                        .style("stroke-dasharray", (3, 3))
+                        .style("stroke-width", self.strokeWidth)
+                        .style("opacity", 0)
+                        .transition()
+                        .duration(transition_in)
+                        .style("opacity", 1);
+                }
+            }
+		}
+    };
+
+    /******************************* HELPER METHODS FOR DRAWING LINKS AND CLUSTERING *******************************/
+    /**
+     * Helper method for clustering and branching: used to check if the marks are adjacent to each other to determine whether the marks should belong in the same cluster or not
+     * @param {DOMRect} prevMark - the previous mark
+     * @param {DOMRect} curMark - the current mark
+     * @param {int} threshold - the threshold difference (px) between marks to count as adjacent
+     * @returns {boolean}
+     */
+    function areMarksAdjacent(prevMark, curMark, threshold) {
+        return Math.abs(prevMark.top - curMark.bottom) <= threshold || Math.abs(prevMark.bottom - curMark.top) <= threshold ||
+            Math.abs(prevMark.left - curMark.right) <= threshold || Math.abs(prevMark.right - curMark.left) <= threshold;
+    }
+
+    /**
+     * Helper method for clustering and branching: gets the shared axis between marks in a cluster
+     * @param {Array.<DOMRect>} cluster - the cluster to get the shared axis for
+     * @param {int} threshold - the threshold difference (px) between marks to count as sharing an axis
+     * @returns an object with isShared = true if there is a shared axis within threshold
+     *                         axis = the shared axis (x or y) if there is one
+     *                         coord = the shared coordinate between the marks on the shared axis
+     *                         min = the min value out of all marks of the not shared axis
+     *                         max = the max value out of all marks of the not shared axis
+     */
+    function getSharedAxis(cluster, threshold) {
+        let shared = {};
+        if (cluster.length < 2) {
+            shared.isShared = true;
+            return shared;
+        }
+
+        let prev = cluster[0];
+        for (let i = 1; i < cluster.length; i++) {
+            let cur = cluster[i];
+            if ((Math.abs(cur.top - prev.top) <= threshold) || (Math.abs(cur.bottom - prev.bottom) <= threshold)) {
+                shared.coord = cur.bottom;
+                shared.axis = 'y';
+                shared.min = Math.min(cur.left, shared.hasOwnProperty('min') ? shared.min : prev.left);
+                shared.max = Math.max(cur.right, shared.hasOwnProperty('max') ? shared.max : prev.right);
+            } else if ((Math.abs(cur.left - prev.left) <= threshold) || (Math.abs(cur.right - prev.right) <= threshold)) {
+                shared.coord = cur.left;
+                shared.axis = 'x';
+                shared.min = Math.min(cur.top, shared.hasOwnProperty('min') ? shared.min : prev.top);
+                shared.max = Math.max(cur.bottom, shared.hasOwnProperty('max') ? shared.max : prev.bottom);
+            } else {
+                // NO shared axis
+                shared.isShared = false;
+                return shared;
+            }
+            prev = cur;
+        }
+        shared.isShared = true;
+        return shared;
+    }
+
+    /**
+     * Helper method to group all relevant marks into clusters for an intervention
+     * @param {Array.<string>} tuple_ids - the ids to get the relevant marks for
+     * @returns {Array.<Array.<DOMRect>>} - an array of clusters (where clusters are an array of adjacent marks with a shared axis)
+     */
+    MarksManager.prototype.getClusters = function (tuple_ids) {
+        let self = this;
+        let marks = self.getSelectedMarks(tuple_ids);
+        let markRects = marks.selected_marks.map((mark) => {
+            return mark.getBoundingClientRect();
+        });
+
+        let allShared = getSharedAxis(markRects, 0);
+        if (allShared.isShared) {
+            if (allShared.hasOwnProperty('coord') && allShared.axis === 'x') {
+                markRects.sort((prev, cur) => {
+                	return prev.y - cur.y;
+                });
+            } else {
+                markRects.sort((prev, cur) => {
+                    return prev.x - cur.x;
+                });
+            }
+        }
+
         let curCluster = [];
+        let clusters = [];
         let prevMarkRect = markRects[0];
         curCluster.push(prevMarkRect);
         for (let i = 1; i < markRects.length; i++) {
             let curMarkRect = markRects[i];
-            let isShared = getSharedAxis(curCluster.concat(curMarkRect), 10).isShared;
-            let sharedAxis = getSharedAxis(curCluster, 10);
+            // let isShared = getSharedAxis(curCluster.concat(curMarkRect), 15).isShared;
 
-            if (sharedAxis.hasOwnProperty('coord')) {
-                if (sharedAxis.axis === 'x') {
-                    relativeCoords.markx = sharedAxis.coord - refParentRect.left;
-                    relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
-                } else {
-                    relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
-                    relativeCoords.marky = sharedAxis.coord - refParentRect.top;
-                }
-            }
-
-            if (!areMarksAdjacent(prevMarkRect, curMarkRect, 20) || !isShared) {
-                self.strokeWidth = 1;
-                if (curCluster.length === 1) {
-                	if (prevMarkRect.width > prevMarkRect.height) {
-                        relativeCoords.markx = prevMarkRect.left - refParentRect.left;
-                        relativeCoords.marky = prevMarkRect.top - refParentRect.top + prevMarkRect.height / 2;
-					} else {
-                        relativeCoords.markx = prevMarkRect.left - refParentRect.left + prevMarkRect.width / 2;
-                        relativeCoords.marky = prevMarkRect.top - refParentRect.top + prevMarkRect.height;
-					}
-                }
-
-                d3.select(self.textVisOverlay).append("line")
-                    .attr("class", "line_" + id)
-                    .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
-                    .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
-					.style("stroke-dasharray", (3, 3))
-                    .style("stroke", "black")
-                    .style("opacity", 0)
-                    .style("stroke-width", self.strokeWidth)
-                    .transition()
-                    .duration(transition_in)
-                    .style("opacity", 1);
+            if (!areMarksAdjacent(prevMarkRect, curMarkRect, 25)) {
+                clusters.push(curCluster);
                 curCluster = [];
             }
             curCluster.push(curMarkRect);
             prevMarkRect = curMarkRect;
         }
         if (curCluster.length > 0) {
-            let sharedAxis = getSharedAxis(curCluster, 10);
-
-            if (curCluster.length === 1) {
-            	let curMark = curCluster[0];
-            	if (curMark.width > curMark.height) {
-                    relativeCoords.markx = curMark.left - refParentRect.left;
-                    relativeCoords.marky = curMark.top - refParentRect.top + curMark.height / 2;
-				} else {
-                    relativeCoords.markx = curMark.left - refParentRect.left + curMark.width / 2;
-                    relativeCoords.marky = curMark.top - refParentRect.top + curMark.height;
-				}
-
-            } else if (sharedAxis.hasOwnProperty('coord')) {
-                if (sharedAxis.axis === 'x') {
-                    relativeCoords.markx = sharedAxis.coord - refParentRect.left;
-                    relativeCoords.marky = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.top;
-                } else {
-                    relativeCoords.markx = (sharedAxis.min + sharedAxis.max) / 2 - refParentRect.left;
-                    relativeCoords.marky = sharedAxis.coord - refParentRect.top;
-                }
-            }
-            
-            d3.select(self.textVisOverlay).append("line")
-                .attr("class", "line_" + id)
-                .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
-                .attr("x1", relativeCoords.refLeft + refRect.width).attr("y1", relativeCoords.refTop + refRect.height / 2)
-                .style("stroke-dasharray", (3, 3))
-                .style("stroke", "black")
-                .style("opacity", 0)
-                .style("stroke-width", self.strokeWidth)
-                .transition()
-                .duration(transition_in)
-                .style("opacity", 1);
+            clusters.push(curCluster);
         }
+        return clusters;
     };
 
-    function areMarksAdjacent (prevMark, curMark, threshold) {
-    	return Math.abs(prevMark.top - curMark.bottom) < threshold || Math.abs(prevMark.bottom - curMark.top) < threshold ||
-			Math.abs(prevMark.left - curMark.right) < threshold || Math.abs(prevMark.right - curMark.left) < threshold;
-	}
+    /**
+     * Helper method to get the nodes and links for the phylogenetic tree branching
+     * Creates all the nodes to draw links between:
+     *      - 1 from the text AOI
+     *      - 1 on the leftmost centre/bottom centre (depending on orientation) of each mark/relevant bar
+     *      - 1 on the leftmost/bottom-most corresponding coordinate (to each mark) to connect the nodes to a connector line
+     * Creates the links by linking between:
+     *      - the text AOI to the closest created node on the straight line
+     *      - the corresponding node on the connector to each respective relevant bar
+     *      - the first and last node on the connector
+     * @param {Array.<DOMRect>} markRects
+     * @param {boolean} isHorizontal
+     * @param textRefCoords - an object containing x and y coordinates for the text AOI
+     * @returns {Array.<Object>} - an array of links containing source and target objects
+     *                             where a source/target object contains the xy coordinate for that point
+     *                             source/target = the nodes
+     */
+    MarksManager.prototype.getPhylogeneticTreeNodeLinks = function (markRects, isHorizontal, textRefCoords) {
+        let allShared = getSharedAxis(markRects, 1);
+        if (allShared.isShared) {
+            if (allShared.hasOwnProperty('coord') && allShared.axis === 'x') {
+                markRects.sort((prev, cur) => {
+                    return prev.y - cur.y;
+                });
+            } else {
+                markRects.sort((prev, cur) => {
+                    return prev.x - cur.x;
+                });
+            }
+        }
+        let refParentRect = document.getElementById('textVisContainer').getBoundingClientRect();
+        let nodes = [];
+        let connectors = [];
+        let minX = markRects.reduce((acc, xy) => Math.min(acc, xy.left - refParentRect.left - 8), markRects[0].left);
+        let maxY = markRects.reduce((acc, xy) => Math.max(acc, xy.top - refParentRect.top + xy.height + 8), 0);
+        for (let i = 0; i < markRects.length; i++) {
+            let nodeXY = {};
+            let treeConnectorXY = {};
 
-	function getSharedAxis(cluster, threshold) {
-    	let shared = {};
+            if (markRects[i].width > markRects[i].height || isHorizontal) {
+                nodeXY.x = markRects[i].left - refParentRect.left;
+                nodeXY.y = markRects[i].top - refParentRect.top + markRects[i].height / 2;
+                treeConnectorXY.x = minX;
+                treeConnectorXY.y = textRefCoords.refY > nodeXY.y ?
+                    nodeXY.y + markRects[i].height / 2 : nodeXY.y - markRects[i].height / 2;
+            } else {
+                nodeXY.x = markRects[i].left - refParentRect.left + markRects[i].width / 2;
+                nodeXY.y = markRects[i].top - refParentRect.top + markRects[i].height;
+                treeConnectorXY.x = nodeXY.x - markRects[i].width / 2;
+                treeConnectorXY.y = maxY;
+            }
 
-    	if (cluster.length < 2) {
-    		shared.isShared = true;
-    		return shared;
-		}
+            nodes.push(nodeXY);
+            connectors.push(treeConnectorXY);
+        }
+        let textRef = {};
+        textRef.x = textRefCoords.refX;
+        textRef.y = textRefCoords.refY;
 
-    	let prev = cluster[0];
-    	for (let i = 1; i < cluster.length; i++) {
-    		let cur = cluster[i];
+        // links is an array of arrays of source-target pairs that fit with the same connector
+        let distanceThreshold = 70;
+        let links = divideLinkByDistance(nodes, connectors, isHorizontal, distanceThreshold);
 
-    		if (shared.hasOwnProperty('axis')) {
-    			if (shared.axis === 'x') {
-                    shared.min = Math.min(cur.top, shared.min);
-                    shared.max = Math.max(cur.bottom, shared.max);
-    				if (!(Math.abs(prev.left - cur.left) < threshold || Math.abs(prev.right - cur.right) < threshold)) {
-    					// NO shared axis
-						shared.isShared = false;
-						return shared;
-					}
-				} else if (shared.axis === 'y') {
-                    shared.min = Math.min(cur.left, shared.min);
-                    shared.max = Math.max(cur.right, shared.max);
-                    if (!(Math.abs(prev.top - cur.top) < threshold || Math.abs(prev.bottom - cur.bottom) < threshold)) {
-                        // NO shared axis
-                        shared.isShared = false;
-                        return shared;
+        for (let i = 0; i < links.length; i++) {
+            let linkConnectors = links[i].map((link) => {
+                return link.target;
+            });
+            let closestPoint = linkConnectors.reduce((acc, cur) => {
+                let dist = getDist({x: textRef.x - cur.x, y: textRef.y - cur.y});
+                return dist < getDist({x: textRef.x - acc.x, y: textRef.y - acc.y}) ? cur : acc;
+            });
+
+            let firstLine = {};
+            // making the first line from the text to the nearest point to link to
+            firstLine.source = textRef;
+            firstLine.target = closestPoint;
+            links[i].push(firstLine);
+
+            // making a line at the end of the links to connect them
+            links[i].push({
+                source: linkConnectors[0],
+                target: linkConnectors[linkConnectors.length - 1]
+            });
+        }
+
+        return links.flat();
+    };
+
+    /**
+     * Creates new links if the distance between some relevant bar(s) are too great to draw line to only 1 link
+     * (constant threshold - currently at 70):
+     *      - move that bar to a different array
+     *      - iterate through the rest of the array to sort each bar into respective bins by distance from connector
+     *          (either > or <, or another bin if it's far from both the original and the new array)
+     *      - make new connector points for the new arrays
+     *      - draw same lines as if creating links but for each array of bars/connectors
+     * @param nodes
+     * @param connectors
+     * @param isHorizontal
+     * @param distanceThreshold
+     * @returns {Array}
+     */
+    function divideLinkByDistance(nodes, connectors, isHorizontal, distanceThreshold) {
+        // links is an array of arrays of source-target pairs that fit with the same connector
+        let links = [];
+        links.push([]);
+
+        for (let i = 0; i < nodes.length; i++) {
+            if (getDist({x: nodes[i].x - connectors[i].x, y: nodes[i].y - connectors[i].y}) > distanceThreshold) {
+                let adjacentOtherLinks = false;
+                for (let j = 1; j < links.length; j++) {
+                    let length = links[j].length;
+                    if (length > 0 && getDist({x: nodes[i].x - links[j][length - 1].source.x, y: nodes[i].y - links[j][length - 1].source.y}) <= distanceThreshold) {
+                        links[j].push({
+                            source: nodes[i],
+                            target: connectors[i]
+                        });
+                        adjacentOtherLinks = true;
+                        break;
                     }
-				}
-			} else {
-                if (Math.abs(cur.top - prev.top) < threshold) {
-                    shared.coord = cur.top;
-                    shared.axis = 'y';
-                    shared.min = Math.min(cur.left, prev.left);
-                    shared.max = Math.max(cur.right, prev.right);
-                } else if (Math.abs(cur.bottom - prev.bottom) < threshold) {
-                    shared.coord = cur.bottom;
-                    shared.axis = 'y';
-                    shared.min = Math.min(cur.left, prev.left);
-                    shared.max = Math.max(cur.right, prev.right);
-                } else if (Math.abs(cur.left - prev.left) < threshold) {
-                    shared.coord = cur.left;
-                    shared.axis = 'x';
-                    shared.min = Math.min(cur.top, prev.top);
-                    shared.max = Math.max(cur.bottom, prev.bottom);
-                } else if (Math.abs(cur.right - prev.right) < threshold) {
-                    shared.coord = cur.right;
-                    shared.axis = 'x';
-                    shared.min = Math.min(cur.top, prev.top);
-                    shared.max = Math.max(cur.bottom, prev.bottom);
-                } else {
-                	// NO shared axis
-                    shared.isShared = false;
-                    return shared;
-				}
-			}
-			prev = cur;
-		}
+                }
+                if (!adjacentOtherLinks) {
+                    links.push([]);
+                    links[links.length-1].push({
+                        source: nodes[i],
+                        target: connectors[i]
+                    });
+                }
+            } else {
+                links[0].push({
+                    source: nodes[i],
+                    target: connectors[i]
+                });
+            }
+        }
 
-		shared.isShared = true;
-		return shared;
-	}
+        // separated due to too far distance
+        if (links.length > 1) {
+            // need to redo connectors for the other arrays
+            for (let i = 1; i < links.length; i++) {
+                let minX = links[i].reduce((acc, xy) => Math.min(acc, xy.source.x - 8), links[i][0].source.x);
+                let maxY = links[i].reduce((acc, xy) => Math.max(acc, xy.source.y + 8), 0);
+                for (let j = 0; j < links[i].length; j++) {
+                    let cur = links[i][j];
+                    if (isHorizontal) {
+                        cur.target = {x: minX, y: cur.target.y}
+                    } else {
+                        cur.target = {x: cur.target.x, y: maxY}
+                    }
 
+                }
+            }
+        }
+        return links;
+    }
+
+    function getDist(coords) {
+        return Math.sqrt(Math.pow(coords.x, 2) + Math.pow(coords.y, 2));
+    }
+
+    /******************************* END HELPER METHODS FOR DRAWING LINKS AND CLUSTERING *******************************/
+
+    /**
+     * Method to remove the links intervention
+     * @param {string} tuple_id - the id of the link(s) to remove
+     */
     MarksManager.prototype.removeLines = function(tuple_id) {
     	d3.selectAll('.line_' + tuple_id).remove();
+    	d3.selectAll('.box_' + tuple_id).remove();
 	};
 
+    /**
+     * Method to create the svg overlay on the entire msnv so that the links can be drawn between the text and the image
+     * @param {string} elem_id - the name of the element to draw the overlay on top of
+     */
     MarksManager.prototype.createTextVisOverlay = function(elem_id) {
         let textVisElement = document.getElementById(elem_id);
         let textVisCoords = textVisElement.getBoundingClientRect();
