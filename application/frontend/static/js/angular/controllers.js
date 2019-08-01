@@ -72,7 +72,7 @@ var AppCtrl = function($scope, $http, $location) {
       $scope.curSpanManager.clearSpans();
     }
     // Load the new condition
-    $http.get('static/data_updated/' + $scope.curConditionId + '_updated.json').
+    $http.get('static/data_pilot/' + $scope.curConditionId + '_updated.json').
         success(function(data, status, headers) {
           // Reset the worker filter
           $scope.imgSrc = 'static/' + data.chart;
