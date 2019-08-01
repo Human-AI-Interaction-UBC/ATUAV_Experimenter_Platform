@@ -671,6 +671,11 @@ function removeAllInterventions(referenceID) {
     }
 }
 
+/**
+ * function to send a post request to trigger the intervention from the backend
+ * called for mouseover events
+ * @param {string} refId - the reference id number to trigger for that MSNV
+ */
 function handleMouseover(refId) {
     $.ajax({
         url: '/triggerIntervention',
@@ -687,6 +692,10 @@ function handleMouseover(refId) {
     });
 }
 
+/**
+ * function to remove interventions triggered by mouseover event
+ * @param {string} refId - the reference id number to get which interventions to remove
+ */
 function handleMouseout(refId) {
     $scopeGlobal.curMarksManager.removeLines(refId);
     if (document.getElementsByClassName('refAOI')[0]) {
@@ -697,6 +706,11 @@ function handleMouseout(refId) {
     }
 }
 
+/**
+ * toggles interventions on and off
+ * called as onClick function for the toggle button on each page
+ * turns on both the mouseover and eye tracking interventions when on, turns both off when off
+ */
 function toggleIntervention() {
     $scopeGlobal.showInterventions = !$scopeGlobal.showInterventions;
 

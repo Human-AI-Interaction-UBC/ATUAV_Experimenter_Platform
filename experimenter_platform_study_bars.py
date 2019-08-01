@@ -67,6 +67,7 @@ class Application(tornado.web.Application):
             (r"/calibration", CalibrationHandler), (r"/(blank_cross.jpg)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/tobii", TobiiHandler),
             (r"/ready", ReadyHandler),
+            (r"/triggerIntervention", TriggerInterventionHandler),
             (r"/done", DoneHandler),
             (r"/final_question", FinalHandler), (r"/(post_question.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/done2", DoneHandler2),
@@ -96,8 +97,8 @@ class MMDWebSocket(ApplicationWebSocket):
         self.adaptation_loop.liveWebSocket = self
         print self.tobii_controller.eyetrackers
 
-        self.start_detection_components()
-        self.tobii_controller.startTracking()
+        # self.start_detection_components()
+        # self.tobii_controller.startTracking()
 
     def on_message(self, message):
         print("RECEIVED MESSAGE: " + message)
@@ -341,6 +342,15 @@ class PreStudyHandler(tornado.web.RequestHandler):
         self.application.conn.commit()
 
         self.redirect('/sample_MMD')
+
+
+class TriggerInterventionHandler(tornado.web.RequestHandler):
+    def post(self):
+        # gets polygon coordinates and refIds from frontend coordinateRefSentences
+        event_name = self.request.body
+        print(event_name)
+        self.application.adaptation_loop.evaluateRules(event_name, int(round(time.time() * 1000)), True)
+
 
 class SampleHandler(tornado.web.RequestHandler):
     def get(self):
