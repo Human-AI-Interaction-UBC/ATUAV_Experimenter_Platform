@@ -370,7 +370,6 @@ function initReferences($scope) {
   if($scope.curSpanManager) { $scope.curSpanManager.clearSpans(); }
   var datatable = $scope.datatable;
   var marks = $scope.marks;
-  let labels = $scope.labels;
   var visual_references = $scope.visualReferences;
   var textrefs =  $scope.curReference;
 
