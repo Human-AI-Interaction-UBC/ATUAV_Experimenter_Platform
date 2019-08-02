@@ -208,7 +208,7 @@ class AdaptationLoop():
             active_retrigger = rule['active_retrigger']
             remove_others = rule['trigger_other_removals'] #remove any of these if they are active
             #check the rule if it is not currently active or if active_retrigger = 1
-            if int(active_retrigger) == 1 or not self.app_state_controller.isInterventionActive(intervention_name):
+            if active_retrigger == 1 or not self.app_state_controller.isInterventionActive(intervention_name) or bypass_fixations:
                 #if both the rule and intervention has not exceeded max repeats
                 if self.__ruleRepeatsAllowed__(rule_name) and self.__interventionRepeatsAllowed__(intervention_name):
                     #check the delivery conditional
