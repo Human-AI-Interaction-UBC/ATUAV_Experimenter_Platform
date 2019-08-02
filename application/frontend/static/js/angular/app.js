@@ -724,6 +724,11 @@ function toggleIntervention() {
         });
         $scopeGlobal.ws.send("hideInterventions");
         $scopeGlobal.mouseOver = false;
+        let allMouseover = document.getElementsByClassName('mouseover-indicator');
+        while (allMouseover.length > 0) {
+            allMouseover[0].removeAttribute('class');
+
+        }
 
     } else {
         $scopeGlobal.ws.send("showInterventions");
