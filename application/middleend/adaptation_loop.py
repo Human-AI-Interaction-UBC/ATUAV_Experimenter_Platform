@@ -311,7 +311,6 @@ class AdaptationLoop():
         returns
         """
         #if the triggering event is not one of the active user states for this task, an error has occured
-        print(event_name)
         if event_name not in self.app_state_controller.eventNames:
             raise ValueError("Event name received is not one of the user states active for this task")
         task = self.app_state_controller.currTask
