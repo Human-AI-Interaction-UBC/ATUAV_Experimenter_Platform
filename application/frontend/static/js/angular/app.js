@@ -708,7 +708,7 @@ function handleMouseout(refId) {
 /**
  * toggles interventions on and off
  * called as onClick function for the toggle button on each page
- * turns on both the mouseover and eye tracking interventions when on, turns both off when off
+ * turns on eye tracking interventions (and mouseover if mouseover has been set to true) when on, turns both off when off
  */
 function toggleIntervention() {
     $scopeGlobal.showInterventions = !$scopeGlobal.showInterventions;
