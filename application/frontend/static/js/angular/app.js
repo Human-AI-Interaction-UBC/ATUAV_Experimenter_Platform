@@ -548,7 +548,7 @@ function handleDelivery(obj) {
           args.color = '#606060'
           for (let a_mark of $scopeGlobal.old_active_interventions) {
               //console.log('Attempting to grey:', a_mark)
-              if (!$scopeGlobal.mouseOver) {
+              if (!$scopeGlobal.mouseOverActive) {
                   $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, args);
               }
               $scopeGlobal.curMarksManager.removeLines(a_mark);
@@ -723,7 +723,7 @@ function toggleIntervention() {
             span.removeEventListener('mouseout', $scopeGlobal.mouseOutEvents.get(refId));
         });
         $scopeGlobal.ws.send("hideInterventions");
-        $scopeGlobal.mouseOver = false;
+        $scopeGlobal.mouseOverActive = false;
         let allMouseover = document.getElementsByClassName('mouseover-indicator');
         while (allMouseover.length > 0) {
             allMouseover[0].removeAttribute('class');
@@ -732,16 +732,18 @@ function toggleIntervention() {
 
     } else {
         $scopeGlobal.ws.send("showInterventions");
-        $scopeGlobal.aoiSpans.forEach((span) => {
-            let refId = span.id.split("_")[1];
-            let mouseOverEvent = handleMouseover.bind(null, refId);
-            $scopeGlobal.mouseOverEvents.set(refId, mouseOverEvent);
-            let mouseOutEvent = handleMouseout.bind(null, refId);
-            $scopeGlobal.mouseOutEvents.set(refId, mouseOutEvent);
-            span.addEventListener('mouseover', mouseOverEvent);
-            span.addEventListener('mouseout', mouseOutEvent);
-            span.setAttribute("class", "mouseover-indicator");
-            $scopeGlobal.mouseOver = true;
-        });
+
+        if ($scopeGlobal.mouseOver) {
+            $scopeGlobal.aoiSpans.forEach((span) => {
+                let refId = span.id.split("_")[1];
+                let mouseOverEvent = handleMouseover.bind(null, refId);
+                $scopeGlobal.mouseOverEvents.set(refId, mouseOverEvent);
+                let mouseOutEvent = handleMouseout.bind(null, refId);
+                $scopeGlobal.mouseOutEvents.set(refId, mouseOutEvent);
+                span.addEventListener('mouseover', mouseOverEvent);
+                span.addEventListener('mouseout', mouseOutEvent);
+                span.setAttribute("class", "mouseover-indicator");
+            });
+        }
     }
 }
