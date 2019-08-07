@@ -734,6 +734,7 @@ function toggleIntervention() {
         $scopeGlobal.ws.send("showInterventions");
 
         if ($scopeGlobal.mouseOver) {
+            $scopeGlobal.mouseOverActive = true;
             $scopeGlobal.aoiSpans.forEach((span) => {
                 let refId = span.id.split("_")[1];
                 let mouseOverEvent = handleMouseover.bind(null, refId);
