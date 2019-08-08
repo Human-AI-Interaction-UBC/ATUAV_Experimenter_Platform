@@ -155,8 +155,9 @@ class MainHandler(tornado.web.RequestHandler):
 
     def generate_within_subject_conds (self, trials, conds):
         conditions = {}
+        numPerCond = len(trials)/len(conds)
         for cond in conds:
-            conditions[cond] = random.sample(random.sample(trials, len(trials)/len(conds)))
+            conditions[cond] = random.sample(trials, numPerCond)
             trials = list(set(trials) - set(conditions[cond]))
 
         return conditions
