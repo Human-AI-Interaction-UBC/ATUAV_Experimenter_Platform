@@ -305,7 +305,7 @@ class MMDHandler(tornado.web.RequestHandler):
                 self.render('MMDExperimenter.html', mmd=str(self.application.cur_mmd),
                             condType=str(self.application.cond_types[self.application.cond_index]))
             self.application.mmd_index+=1
-        elif self.application.cond_index < len(self.application.cond_types):
+        elif self.application.cond_index < len(self.application.cond_types) - 1:
             self.application.cond_index += 1
             self.application.mmd_index = 0
             self.redirect('/subcond')
