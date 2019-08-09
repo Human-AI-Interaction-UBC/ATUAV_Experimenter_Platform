@@ -70,6 +70,7 @@ class Application(tornado.web.Application):
             (r"/subcond", SubcondHandler),
             (r"/done", DoneHandler),
             (r"/final_question", FinalHandler), (r"/(post_question.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+            (r"/subcond_question", SubcondQuestionHandler), (r"/(post_question_adaptation.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/done2", DoneHandler2),
             (r"/websocket", MMDWebSocket, dict(websocket_dict = websocket_dict))
         ]
@@ -281,11 +282,6 @@ class QuestionnaireHandler(tornado.web.RequestHandler):
 
         questions.append([self.application.cur_mmd, "2", "I would be interested in reading the full article.", "Likert", "Subjective"])
 
-        questions.append([self.application.cur_mmd, "3", "The " + self.application.cond_types[self.application.cond_index] + "intervention was helpful.", "Likert", "Subjective"])
-
-        # will need to reverse score
-        questions.append([self.application.cur_mmd, "4", "The " + self.application.cond_types[self.application.cond_index] + "intervention was distracting.", "Likert", "Subjective"])
-
         questions.extend(query_results.fetchall())
 
         return json.dumps(questions)
@@ -305,10 +301,10 @@ class MMDHandler(tornado.web.RequestHandler):
                 self.render('MMDExperimenter.html', mmd=str(self.application.cur_mmd),
                             condType=str(self.application.cond_types[self.application.cond_index]))
             self.application.mmd_index+=1
-        elif self.application.cond_index < len(self.application.cond_types) - 1:
+        elif self.application.cond_index < len(self.application.cond_types):
             self.application.cond_index += 1
             self.application.mmd_index = 0
-            self.redirect('/subcond')
+            self.redirect('/subcond_question')
         else:
             self.redirect('/done')
 
@@ -411,7 +407,7 @@ class ReadyHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("ready.html")
     def post(self):
-        self.redirect('/mmd')
+        self.redirect('/subcond')
 
 class DoneHandler(tornado.web.RequestHandler):
     def get(self):
@@ -429,11 +425,83 @@ class FinalHandler(tornado.web.RequestHandler):
         self.application.conn.execute('INSERT INTO final_question VALUES (?,?)', pre_data)
         self.application.conn.commit()
 
-        self.redirect('/done2')
+        self.redirect('/final_question2')
+
+
+class SubcondQuestionHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("postquestionnaire_adaptation.html")
+    def post(self):
+        q1 = self.get_argument('adapt_useful')
+        q2 = self.get_argument('adapt_understand')
+        q3 = self.get_argument('adapt_helpfocus')
+        q4 = self.get_argument('adapt_distracting')
+        q5 = self.get_argument('adapt_easy')
+        q6 = self.get_argument('adapt_confusing')
+        q7 = self.get_argument('adapt_goodtiming')
+        q8 = self.get_argument('adapt_wellintegrated')
+        q9 = self.get_argument('adapt_satisfied')
+        q10 = self.get_argument('adapt_reuse')
+        q11 = self.get_argument('comments_like')
+        q12 = self.get_argument('comments_dislike')
+        q13 = self.get_argument('comments_howimprove')
+
+        pre_data = [self.application.cur_user, q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11,q12,q13]
+        self.application.conn.execute('INSERT INTO final_question_adaptation VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', pre_data)
+        self.application.conn.commit()
+
+        print ""
+        print "Rating of the interventions, from 1 (strongly disagree) to 7 (strongly agree)."
+        print "The interventions were useful = "+str(q1)
+        print "The interventions helped me understand the snippet = "+str(q2)
+        print "The interventions helped me to focus on relevant information = "+str(q3)
+        print "The interventions were distracting = "+str(q4)
+        print "The interventions were easy to notice  ="+str(q5)
+        print "The interventions were confusing = "+str(q6)
+        print "The interventions appeared at the right time when reading the snippet = "+str(q7)
+        print "The interventions were well integrated into the snippet = "+str(q8)
+        print "I was satisfied with the interventions  ="+str(q9)
+        print "I would like to have these interventions again when I read these types of snippet = "+str(q10)
+        print ""
+        print "What I liked: "+str(q11)
+        print ""
+        print "What I disliked: "+str(q12)
+        print ""
+        print "How to improve: "+str(q13)
+
+        if self.application.cond_index < len(self.application.cond_types) - 1:
+            self.redirect('/subcond')
+        else:
+            self.redirect('/done2')
+
 
 class DoneHandler2(tornado.web.RequestHandler):
     def get(self):
-        self.render("done2.html")
+        query_results = self.application.conn.execute('select * from final_question_adaptation where user_id=?', (str(self.application.cur_user),) )
+        user_answers = query_results.fetchone()
+        user_answers = map(lambda x: 'Strongly disagree' if x == 1 else x, user_answers)
+        user_answers = map(lambda x: 'Disagree' if x == 2 else x, user_answers)
+        user_answers = map(lambda x: 'Somewhat disagree' if x == 3 else x, user_answers)
+        user_answers = map(lambda x: 'Undecided' if x == 4 else x, user_answers)
+        user_answers = map(lambda x: 'Somewhat agree' if x == 5 else x, user_answers)
+        user_answers = map(lambda x: 'Agree' if x == 6 else x, user_answers)
+        user_answers = map(lambda x: 'Strongly agree' if x == 7 else x, user_answers)
+
+        summary_answers = "<li>1. The interventions were useful = "+user_answers[1]+" \
+                            <li>2. The interventions helped me understand the snippet = "+user_answers[2]+"  \
+                            <li>3. The interventions helped me to focus on relevant information = "+user_answers[3]+"  \
+                            <li>4. The interventions were distracting = "+user_answers[4]+"  \
+                            <li>5. The interventions were easy to notice = "+user_answers[5]+"  \
+                            <li>6. The interventions were confusing = "+user_answers[6]+"  \
+                            <li>7. The interventions appeared at the right time when reading the snippet = "+user_answers[7]+"  \
+                            <li>8. The interventions were well integrated into the snippet = "+user_answers[8]+"  \
+                            <li>9. I was satisfied with the interventions = "+user_answers[9]+"  \
+                            <li>10. I would like to have these interventions again when I read these types of snippet = "+user_answers[10]+"  \
+                            <li>11. What did I like: "+user_answers[11]+"  \
+                            <li>12. What did I dislike: "+user_answers[12]+"  \
+                            <li>13. My suggestions to improve the interventions: "+user_answers[13]+""
+
+        self.render('done2.html', summary_question_adaptation=summary_answers)
 
 #main function is first thing to run when application starts
 def main():
