@@ -9,6 +9,8 @@
     <script>
         currentMMD = '{{mmd}}';
         console.log(currentMMD);
+        cond = '{{cond}}';
+        toggle = '{{toggle}}';
     </script>
   </head>
   <body>
@@ -23,7 +25,7 @@
     </div>
   </div>
   <br>
-  <label class="switch">
+  <label class="switch" hidden="{{!toggle}}">
     <input type="checkbox" onchange="toggleIntervention()">
     <span class="slider round"></span>
   </label>

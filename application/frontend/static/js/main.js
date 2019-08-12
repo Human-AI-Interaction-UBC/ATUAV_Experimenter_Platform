@@ -3,7 +3,8 @@
  */
 var MMDSet = [];
 var currentMMD; //by default
-
+var cond;
+var toggle;
 
 /*$( "#button_next" ).click(function() {
      console.log(new Date().getTime()); //get the timestamp

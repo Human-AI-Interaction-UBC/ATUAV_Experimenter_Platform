@@ -283,7 +283,7 @@ class MMDHandler(tornado.web.RequestHandler):
             if (self.application.show_question_only):
                 self.redirect('/questionnaire')
             else:
-                self.render('MMDExperimenter.html', mmd=str(self.application.cur_mmd))
+                self.render('MMDExperimenter.html', mmd=str(self.application.cur_mmd), cond="mouseover", toggle=True)
             self.application.mmd_index+=1
         else:
             self.redirect('/done')
