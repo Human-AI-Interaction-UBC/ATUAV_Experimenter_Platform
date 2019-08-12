@@ -208,7 +208,7 @@ class AdaptationLoop():
             active_retrigger = rule['active_retrigger']
             remove_others = rule['trigger_other_removals'] #remove any of these if they are active
             #check the rule if it is not currently active or if active_retrigger = 1
-            if active_retrigger == 1 or not self.app_state_controller.isInterventionActive(intervention_name) or bypass_fixations:
+            if active_retrigger == 1 or not self.app_state_controller.isRuleActive(rule_name) or bypass_fixations:
                 #if both the rule and intervention has not exceeded max repeats
                 if self.__ruleRepeatsAllowed__(rule_name) and self.__interventionRepeatsAllowed__(intervention_name):
                     #check the delivery conditional
@@ -233,11 +233,14 @@ class AdaptationLoop():
                                             self.app_state_controller.setInterventionInactive(target_bar)
                                             to_remove.append(target_bar)
 
+                                if self.app_state_controller.isRuleActive(a_rule):
+                                    self.app_state_controller.setRuleInactive(a_rule)
+
         if to_remove:
             to_remove = json.dumps({'remove': to_remove})
             print to_remove
             self.liveWebSocket.write_message(to_remove)
-
+            
         if to_deliver_rules:
             to_deliver_rules = json.dumps({'deliver': to_deliver_rules})
             print rule_name
