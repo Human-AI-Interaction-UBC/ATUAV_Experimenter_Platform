@@ -417,6 +417,20 @@ function initReferences($scope) {
         elem.setAttribute('id', 'aoi_' + span.refId);
     });
 
+    if ($scopeGlobal.mouseOver) {
+        $scopeGlobal.mouseOverActive = true;
+        $scopeGlobal.aoiSpans.forEach((span) => {
+            let refId = span.id.split("_")[1];
+            let mouseOverEvent = handleMouseover.bind(null, refId);
+            $scopeGlobal.mouseOverEvents.set(refId, mouseOverEvent);
+            let mouseOutEvent = handleMouseout.bind(null, refId);
+            $scopeGlobal.mouseOutEvents.set(refId, mouseOutEvent);
+            span.addEventListener('mouseover', mouseOverEvent);
+            span.addEventListener('mouseout', mouseOutEvent);
+            span.setAttribute("class", "mouseover-indicator");
+        });
+    }
+
   // Add the marks that have associated text
 
   referenced_tuples.forEach(function(tuple) {
