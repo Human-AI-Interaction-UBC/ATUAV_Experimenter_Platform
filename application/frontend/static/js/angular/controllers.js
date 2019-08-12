@@ -31,6 +31,9 @@ var AppCtrl = function($scope, $http, $location) {
      */
     matchMode: 'lenient'
   };
+
+  $scope.toggleOn = toggle === "true";
+
   /***** Server communications block *****/
   $scopeGlobal.showInterventions = false;
   $scopeGlobal.aoiSpans = [];
