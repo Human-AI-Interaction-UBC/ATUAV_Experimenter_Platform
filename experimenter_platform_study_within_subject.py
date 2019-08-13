@@ -6,6 +6,7 @@ import sqlite3
 import datetime
 import json
 import random
+import csv
 
 # Imports required for EYE TRACKING Code:
 import time
@@ -139,7 +140,6 @@ class MainHandler(tornado.web.RequestHandler):
             #suffle MMD order
             random.shuffle(self.application.mmd_order)
             random.shuffle(self.application.cond_types)
-            self.application.conditions = self.generate_within_subject_conds(self.application.mmd_order, self.application.cond_types)
             # get function to generate subconds with params for number of subconds?
 
             self.application.mmd_index = 0
@@ -344,6 +344,18 @@ class UserIDHandler(tornado.web.RequestHandler):
         self.application.conn.execute('INSERT INTO User_data VALUES (?,?,?)', user_data)
         self.application.conn.commit()
 
+        """
+        WITHIN-SUBJECT LOGIC
+        Adding counterbalancing by getting order of conditions for participant by reading from csv
+        """
+        if params.COUNTERBALANCE:
+            with open('within_text.csv', mode='r') as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=',')
+                for row in csv_reader:
+                    if row['userId'] == self.application.cur_user:
+                        self.application.cond_types = row.remove(0)
+
+        self.application.conditions = self.generate_within_subject_conds(self.application.mmd_order, self.application.cond_types)
         # self.redirect('/prestudy') FOR TEST
         # self.redirect('/mmd')
         self.redirect('/subcond')
