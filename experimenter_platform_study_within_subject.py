@@ -76,7 +76,7 @@ class Application(tornado.web.Application):
             (r"/websocket", MMDWebSocket, dict(websocket_dict = websocket_dict))
         ]
         #connects to database
-        self.conn = sqlite3.connect('database.db')
+        self.conn = sqlite3.connect('within_subject_database.db')
         #"global variable" to save current UserID of session
         UserID = -1;
         #global variable to track start and end times
@@ -459,8 +459,9 @@ class SubcondQuestionHandler(tornado.web.RequestHandler):
         q12 = self.get_argument('comments_dislike')
         q13 = self.get_argument('comments_howimprove')
 
-        pre_data = [self.application.cur_user, q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11,q12,q13]
-        self.application.conn.execute('INSERT INTO final_question_adaptation VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', pre_data)
+        pre_data = [self.application.cur_user, self.application.cond_types[self.application.cond_index],
+                    q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13]
+        self.application.conn.execute('INSERT INTO condition_questionnaire VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', pre_data)
         self.application.conn.commit()
 
         print ""
@@ -490,7 +491,9 @@ class SubcondQuestionHandler(tornado.web.RequestHandler):
 
 class DoneHandler2(tornado.web.RequestHandler):
     def get(self):
-        query_results = self.application.conn.execute('select * from final_question_adaptation where user_id=?', (str(self.application.cur_user),) )
+        query_results = \
+            self.application.conn.execute('select * from condition_questionnaire where user_id=? and condition_type=?',
+                                          (str(self.application.cur_user), str(self.application.cond_types[self.application.cond_index])))
         user_answers = query_results.fetchone()
         user_answers = map(lambda x: 'Strongly disagree' if x == 1 else x, user_answers)
         user_answers = map(lambda x: 'Disagree' if x == 2 else x, user_answers)
@@ -500,19 +503,19 @@ class DoneHandler2(tornado.web.RequestHandler):
         user_answers = map(lambda x: 'Agree' if x == 6 else x, user_answers)
         user_answers = map(lambda x: 'Strongly agree' if x == 7 else x, user_answers)
 
-        summary_answers = "<li>1. The interventions were useful = "+user_answers[1]+" \
-                            <li>2. The interventions helped me understand the snippet = "+user_answers[2]+"  \
-                            <li>3. The interventions helped me to focus on relevant information = "+user_answers[3]+"  \
-                            <li>4. The interventions were distracting = "+user_answers[4]+"  \
-                            <li>5. The interventions were easy to notice = "+user_answers[5]+"  \
-                            <li>6. The interventions were confusing = "+user_answers[6]+"  \
-                            <li>7. The interventions appeared at the right time when reading the snippet = "+user_answers[7]+"  \
-                            <li>8. The interventions were well integrated into the snippet = "+user_answers[8]+"  \
-                            <li>9. I was satisfied with the interventions = "+user_answers[9]+"  \
-                            <li>10. I would like to have these interventions again when I read these types of snippet = "+user_answers[10]+"  \
-                            <li>11. What did I like: "+user_answers[11]+"  \
-                            <li>12. What did I dislike: "+user_answers[12]+"  \
-                            <li>13. My suggestions to improve the interventions: "+user_answers[13]+""
+        summary_answers = "<li>1. The interventions were useful = "+user_answers[2]+" \
+                            <li>2. The interventions helped me understand the snippet = "+user_answers[3]+"  \
+                            <li>3. The interventions helped me to focus on relevant information = "+user_answers[4]+"  \
+                            <li>4. The interventions were distracting = "+user_answers[5]+"  \
+                            <li>5. The interventions were easy to notice = "+user_answers[6]+"  \
+                            <li>6. The interventions were confusing = "+user_answers[7]+"  \
+                            <li>7. The interventions appeared at the right time when reading the snippet = "+user_answers[8]+"  \
+                            <li>8. The interventions were well integrated into the snippet = "+user_answers[9]+"  \
+                            <li>9. I was satisfied with the interventions = "+user_answers[10]+"  \
+                            <li>10. I would like to have these interventions again when I read these types of snippet = "+user_answers[11]+"  \
+                            <li>11. What did I like: "+user_answers[12]+"  \
+                            <li>12. What did I dislike: "+user_answers[13]+"  \
+                            <li>13. My suggestions to improve the interventions: "+user_answers[14]+""
 
         self.render('done2.html', summary_question_adaptation=summary_answers)
 
