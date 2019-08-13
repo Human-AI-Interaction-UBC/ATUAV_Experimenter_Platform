@@ -344,7 +344,8 @@ class UserIDHandler(tornado.web.RequestHandler):
                 csv_reader = csv.reader(csv_file, delimiter=',')
                 for row in csv_reader:
                     if row[0] == self.application.cur_user:
-                        self.application.cond_types = row.remove(row[0])
+                        del row[0]
+                        self.application.cond_types = row
 
         self.application.conditions = self.generate_within_subject_conds(self.application.mmd_order, self.application.cond_types)
         # self.redirect('/prestudy') FOR TEST
