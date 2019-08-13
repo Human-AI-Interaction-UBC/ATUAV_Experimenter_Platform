@@ -293,7 +293,6 @@ class MMDHandler(tornado.web.RequestHandler):
                             condType=str(self.application.cond_types[self.application.cond_index]))
             self.application.mmd_index+=1
         elif self.application.cond_index < len(self.application.cond_types):
-            self.application.cond_index += 1
             self.application.mmd_index = 0
             self.redirect('/subcond_question')
         else:
@@ -484,6 +483,7 @@ class SubcondQuestionHandler(tornado.web.RequestHandler):
         print "How to improve: "+str(q13)
 
         if self.application.cond_index < len(self.application.cond_types) - 1:
+            self.application.cond_index += 1
             self.redirect('/subcond')
         else:
             self.redirect('/done2')
