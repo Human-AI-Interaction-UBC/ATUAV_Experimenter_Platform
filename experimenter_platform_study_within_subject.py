@@ -154,15 +154,6 @@ class MainHandler(tornado.web.RequestHandler):
 
         return json.dumps(query_results.fetchall())
 
-    def generate_within_subject_conds (self, trials, conds):
-        conditions = {}
-        numPerCond = len(trials)/len(conds)
-        for cond in conds:
-            conditions[cond] = random.sample(trials, numPerCond)
-            trials = list(set(trials) - set(conditions[cond]))
-
-        return conditions
-
 
 class ResumeHandler(tornado.web.RequestHandler):
     def get(self):
@@ -349,16 +340,25 @@ class UserIDHandler(tornado.web.RequestHandler):
         Adding counterbalancing by getting order of conditions for participant by reading from csv
         """
         if params.COUNTERBALANCE:
-            with open('within_text.csv', mode='r') as csv_file:
+            with open('within_test.csv', mode='r') as csv_file:
                 csv_reader = csv.reader(csv_file, delimiter=',')
                 for row in csv_reader:
-                    if row['userId'] == self.application.cur_user:
-                        self.application.cond_types = row.remove(0)
+                    if row[0] == self.application.cur_user:
+                        self.application.cond_types = row.remove(row[0])
 
         self.application.conditions = self.generate_within_subject_conds(self.application.mmd_order, self.application.cond_types)
         # self.redirect('/prestudy') FOR TEST
         # self.redirect('/mmd')
         self.redirect('/subcond')
+
+    def generate_within_subject_conds (self, trials, conds):
+        conditions = {}
+        numPerCond = len(trials)/len(conds)
+        for cond in conds:
+            conditions[cond] = random.sample(trials, numPerCond)
+            trials = list(set(trials) - set(conditions[cond]))
+
+        return conditions
 
 class PreStudyHandler(tornado.web.RequestHandler):
     def get(self):
