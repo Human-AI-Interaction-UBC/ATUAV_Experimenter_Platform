@@ -10,9 +10,10 @@
 <body>
 <br>
 <script>
-    imagePath = './application/frontend/static/sample/' + '{{cond}}' + 'png';
+    let imagePath = './application/frontend/static/sample/' + '{{cond}}' + 'png';
+    document.getElementById("img").src = imagePath;
 </script>
-<img src="{{imagePath}}">
+<img id="img" src="./application/frontend/static/sample/post_questionnaire_adaptation.png">
 
 
 <form id="form1"  method="post" >
