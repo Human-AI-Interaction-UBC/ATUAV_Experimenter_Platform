@@ -295,7 +295,14 @@ class MMDHandler(tornado.web.RequestHandler):
             self.application.mmd_index+=1
         elif self.application.cond_index < len(self.application.cond_types):
             self.application.mmd_index = 0
-            self.redirect('/subcond_question')
+            if params.SHOW_QUESTIONNAIRE:
+                self.redirect('/subcond_question')
+            else:
+                self.application.cond_index += 1
+                if params.SHOW_INSTRUCTIONS:
+                    self.redirect('/sample_intervention')
+                else:
+                    self.redirect('/subcond')
         else:
             self.redirect('/done')
 
@@ -427,7 +434,10 @@ class ReadyHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("ready.html")
     def post(self):
-        self.redirect('/sample_intervention')
+        if params.SHOW_INSTRUCTIONS:
+            self.redirect('/sample_intervention')
+        else:
+            self.redirect('/subcond')
 
 class DoneHandler(tornado.web.RequestHandler):
     def get(self):
@@ -445,7 +455,7 @@ class FinalHandler(tornado.web.RequestHandler):
         self.application.conn.execute('INSERT INTO final_question VALUES (?,?)', pre_data)
         self.application.conn.commit()
 
-        self.redirect('/final_question2')
+        self.redirect('/done2')
 
 
 class SubcondQuestionHandler(tornado.web.RequestHandler):
@@ -492,7 +502,10 @@ class SubcondQuestionHandler(tornado.web.RequestHandler):
 
         if self.application.cond_index < len(self.application.cond_types) - 1:
             self.application.cond_index += 1
-            self.redirect('/sample_intervention')
+            if params.SHOW_INSTRUCTIONS:
+                self.redirect('/sample_intervention')
+            else:
+                self.redirect('/subcond')
         else:
             self.redirect('/done2')
 
