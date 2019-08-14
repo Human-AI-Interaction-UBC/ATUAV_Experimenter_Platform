@@ -65,6 +65,7 @@ class Application(tornado.web.Application):
                                              (r"/(Sample_bars_2.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/sample_MMD", SampleHandler), (r"/(ExampleMMD.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/sample_Q", SampleHandler2), (r"/(ExampleQ.png)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
+            (r"/sample_intervention", SampleHandler3),
             (r"/calibration", CalibrationHandler), (r"/(blank_cross.jpg)", tornado.web.StaticFileHandler, {'path': params.FRONT_END_STATIC_PATH + 'sample/'}),
             (r"/tobii", TobiiHandler),
             (r"/ready", ReadyHandler),
@@ -349,7 +350,7 @@ class UserIDHandler(tornado.web.RequestHandler):
         self.application.conditions = self.generate_within_subject_conds(self.application.mmd_order, self.application.cond_types)
         # self.redirect('/prestudy') FOR TEST
         # self.redirect('/mmd')
-        self.redirect('/subcond')
+        self.redirect('/prestudy')
 
     def generate_within_subject_conds (self, trials, conds):
         conditions = {}
@@ -403,6 +404,13 @@ class SampleHandler2(tornado.web.RequestHandler):
     def post(self):
         self.redirect('/tobii')
 
+
+class SampleHandler3(tornado.web.RequestHandler):
+    def get(self):
+        self.render("subcond_sample_adaptation.html", cond=str(self.application.cond_types[self.application.cond_index]))
+    def post(self):
+        self.redirect('/subcond')
+
 class TobiiHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("load_tobii.html")
@@ -419,7 +427,7 @@ class ReadyHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("ready.html")
     def post(self):
-        self.redirect('/subcond')
+        self.redirect('/sample_intervention')
 
 class DoneHandler(tornado.web.RequestHandler):
     def get(self):
@@ -484,7 +492,7 @@ class SubcondQuestionHandler(tornado.web.RequestHandler):
 
         if self.application.cond_index < len(self.application.cond_types) - 1:
             self.application.cond_index += 1
-            self.redirect('/subcond')
+            self.redirect('/sample_intervention')
         else:
             self.redirect('/done2')
 
