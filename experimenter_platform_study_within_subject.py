@@ -129,13 +129,15 @@ class MainHandler(tornado.web.RequestHandler):
 
         q1 = self.get_argument('element_1')
 
-        # cond_type = str(self.get_argument('element_2'))
-        # print(cond_type)
-        # self.application.cond_type = cond_type
 
         if(int(q1)==1):
             self.application.mmd_order = [3,5,9,11,18,20,27,28,30,60,62,66,72,74,76]
-            self.application.cond_types = ['underline', 'branching']
+            if params.BETWEEN:
+                cond_type = str(self.get_argument('element_2'))
+                print(cond_type)
+                self.application.cond_types = [cond_type]
+            else:
+                self.application.cond_types = ['underline', 'branching']
             # self.application.mmd_order = [60]
 
             #suffle MMD order

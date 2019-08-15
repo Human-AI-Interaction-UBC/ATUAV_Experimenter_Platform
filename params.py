@@ -29,9 +29,10 @@ else:
         GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_pilot_removal.db"
 
 # Within-subject design configuration:
-COUNTERBALANCE = True
+COUNTERBALANCE = False
 SHOW_QUESTIONNAIRE = True
 SHOW_INSTRUCTIONS = True
+BETWEEN = True
 
 # Project paths:
 # Reference highlighting rules - SD testing
