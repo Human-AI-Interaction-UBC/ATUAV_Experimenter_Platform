@@ -32,7 +32,7 @@ var AppCtrl = function($scope, $http, $location) {
     matchMode: 'lenient'
   };
 
-  $scopeGlobal.withLink = condType === 'branching';
+  $scopeGlobal.condType = condType;
   /***** Server communications block *****/
   $scopeGlobal.interventions = {};
   $scopeGlobal.old_active_interventions = [];

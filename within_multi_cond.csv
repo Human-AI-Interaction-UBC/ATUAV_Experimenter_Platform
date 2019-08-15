@@ -1,0 +1,7 @@
+userId, cond1, cond2, cond3
+withinTest1,underline,branching,control
+withinTest2,branching,underline,control
+withinTest3,underline,control,branching
+withinTest4,branching,control,underline
+withinTest5,control,underline,branching
+withinTest6,control,branching,underline

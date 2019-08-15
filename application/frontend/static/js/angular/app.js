@@ -540,7 +540,7 @@ function handleDelivery(obj) {
           for (let a_mark of $scopeGlobal.old_active_interventions) {
               //console.log('Attempting to grey:', a_mark)
               $scopeGlobal.curMarksManager.highlight(tuple_ids , a_mark, 0, args);
-              if ($scopeGlobal.withLink) {
+              if ($scopeGlobal.condType === 'branching') {
                   $scopeGlobal.curMarksManager.removeLines(a_mark);
               }
           }
@@ -551,7 +551,7 @@ function handleDelivery(obj) {
       $scopeGlobal.old_active_interventions = [...new Set($scopeGlobal.old_active_interventions)]
       console.log('old_activeB:', $scopeGlobal.old_active_interventions);
 
-      if ($scopeGlobal.withLink) {
+      if ($scopeGlobal.condType === 'branching') {
           $scopeGlobal.curMarksManager.clusterTreeBranch(500, $scopeGlobal.interventions[obj.deliver[0].name].args.id,
               new_tuple_ids, $scopeGlobal.interventions[obj.deliver[0].name].args);
       }
@@ -624,22 +624,24 @@ function highlightVisAndRef_recency(referenceID, transition_in, args) {
 
     $scopeGlobal.curMarksManager.highlight(tuple_ids, referenceID.tuple_id, transition_in, args);
 
-    let refToHighlight = $scopeGlobal.startEndCoords.find(function (startEnd) {
-      let refNumber = referenceID.ref_id.split("_")[1];
-        return startEnd.refId === refNumber;
-    });
-
-    let paragraph = document.getElementById('theTextParagraph');
-    // Create the spans in the text
-
-    let sm = new SpanManager(paragraph);
-        sm.createSpans([refToHighlight], function(elem, _) {
-          elem.setAttribute('class', 'text-reference refAOI');
+    if ($scopeGlobal.condType === 'underline' || $scopeGlobal.condType === 'branching') {
+        let refToHighlight = $scopeGlobal.startEndCoords.find(function (startEnd) {
+            let refNumber = referenceID.ref_id.split("_")[1];
+            return startEnd.refId === refNumber;
         });
 
-      if (!document.getElementById('textVisContainer')) {
-        $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
-      }
+        let paragraph = document.getElementById('theTextParagraph');
+        // Create the spans in the text
+
+        let sm = new SpanManager(paragraph);
+        sm.createSpans([refToHighlight], function(elem, _) {
+            elem.setAttribute('class', 'text-reference refAOI');
+        });
+
+        if (!document.getElementById('textVisContainer')) {
+            $scopeGlobal.curMarksManager.createTextVisOverlay('textandvis');
+        }
+    }
 }
 
 /**
@@ -653,8 +655,11 @@ function highlightLegend(referenceID, transition_in, args) {
 function removeAllInterventions(referenceID) {
   //if($scopeGlobal.lastSelectedReference!=-1){//remove previous intervention //TODO: check if needed
     $scopeGlobal.curMarksManager.unhighlight($scopeGlobal.interventions, referenceID);
-    if ($scopeGlobal.withLink) {
+    if ($scopeGlobal.condType === 'branching') {
         $scopeGlobal.curMarksManager.removeLines(referenceID.tuple_id);
     }
-    document.getElementsByClassName('refAOI')[0].removeAttribute('class');
+
+    if ($scopeGlobal.condType === 'branching' || $scopeGlobal.condType === 'underline') {
+        document.getElementsByClassName('refAOI')[0].removeAttribute('class');
+    }
 }
