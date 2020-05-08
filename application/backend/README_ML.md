@@ -35,4 +35,4 @@ You should find prediction result made at each call back time run is printed in 
 To make intervention personalized according to vislit prediction results, simply change each delivery_sql_condition like below:
 
 
-![Image description](../4.jpg)
+![Image description](./4.jpg)
