@@ -36,3 +36,12 @@ To make intervention personalized according to vislit prediction results, simply
 
 
 ![Image description](./4.jpg)
+
+
+**Add another predictor:**
+
+I've changed the field self.threshold to dictonary. e.g. {'vislit': 0.5, 'read_prof' : 0.7}, so that regression preditors are supported as well. 
+
+1. Train a predictor and save **the model** and **feature names used** in folder **classifiers**(use joblib). Naming format: classifier_xxx.joblib; feature_names_xxx.joblib.
+
+2. You may want add additional logic in method: notify_app_state_controller to handle multi-class classification if you would like to do in the future.

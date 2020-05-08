@@ -16,7 +16,8 @@ class MLComponent(DetectionComponent):
         self.emdat_component = emdat_component
         # for now, only visual literacy is concerned
         self.feature_select = self.application_state_controller.getMLFeatures()
-        self.threshold = 0.5
+        self.threshold = {}
+        self.threshold['vislit'] = 0.5
         self.predictor = {}
         self.feature_names = {}
         print("ml created")
@@ -75,7 +76,7 @@ class MLComponent(DetectionComponent):
         # update dynamic tables by inserting a row of prediction result into corresponding table
         for feature in self.predicted_features.keys():
             if feature in self.feature_select:
-                val = "high" if self.predicted_features[feature] >= self.threshold else "low"
+                val = "high" if self.predicted_features[feature] >= self.threshold[feature] else "low"
                 print("run " + str(self.id))
                 print(val)
                 print(self.predicted_features[feature])
