@@ -1,6 +1,6 @@
 # Eyetracker type
-# EYETRACKER_TYPE = "IS4_Large_Peripheral" # 4C eyetracker
-EYETRACKER_TYPE = "Tobii T120" # Old eyetracker
+EYETRACKER_TYPE = "IS4_Large_Peripheral" # 4C eyetracker
+# EYETRACKER_TYPE = "Tobii T120" # Old eyetracker
 
 #Pilot condition
 PILOT_CONDITION_TEXT_INTERVENTION = True
@@ -16,7 +16,8 @@ PILOT_MMD_SUBSET = [5]
 # Reference highlighting rules
 #RUN USING:  python -u experimenter_platform_stage_1_demo.py
 if PILOT_CONDITION_TEXT_INTERVENTION:
-    USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight.db"
+    #USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight.db"
+    USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight_ml.db"
 else:
     USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight.db"
 # GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_and_text.db"
@@ -45,8 +46,8 @@ FRONT_END_TEMPLATE_PATH = "./application/frontend/templates/"
 
 # Platform configuration:
 USE_FIXATION_ALGORITHM = True
-USE_EMDAT = False
-USE_ML = False
+USE_EMDAT = True
+USE_ML = True
 USE_KEYBOARD = False
 USE_MOUSE = False
 
@@ -58,12 +59,12 @@ USE_FIXATION_PATH_FEATURES = True
 USE_TRANSITION_AOI_FEATURES = True
 
 # Sets of features to keep
-KEEP_TASK_FEATURES = False
-KEEP_GLOBAL_FEATURES = False
+KEEP_TASK_FEATURES = True
+KEEP_GLOBAL_FEATURES = True
 
 #Frequency of ML/EMDAT calls:
 EMDAT_CALL_PERIOD = 10000
-ML_CALL_PERIOD = 6000000
+ML_CALL_PERIOD = 1000
 
 # Some parameter from EMDAT
 MAX_SEG_TIMEGAP= 10

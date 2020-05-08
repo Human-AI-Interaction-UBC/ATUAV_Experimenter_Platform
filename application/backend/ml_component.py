@@ -4,8 +4,8 @@ import math
 from utils import *
 import geometry
 import time
-
-
+import joblib
+from sklearn.ensemble import RandomForestClassifier
 class MLComponent(DetectionComponent):
 
     def __init__(self, tobii_controller, app_state_control, callback_time, emdat_component):
@@ -24,11 +24,13 @@ class MLComponent(DetectionComponent):
         print("predictor done")
 
     def load_predictor(self):
+        # load multiple classifiers, for now the only 'feature' is vislit
         for feature in self.feature_select:
             self.predictor[feature] = joblib.load(
-                "C:\\Users\\Oliver\\Desktop\\rcode\\results\\classifier_" + str(feature) + ".joblib")
+                "./application/backend/classifiers/classifier_" + str(feature) + ".joblib")
             self.feature_names[feature] = joblib.load(
-                "C:\\Users\\Oliver\\Desktop\\rcode\\results\\feature_names_" + str(feature) + ".joblib")
+                "./application/backend/classifiers/feature_names_" + str(feature) + ".joblib")
+            print(str(feature) + " done")
 
     def run(self):
         ## Do something
@@ -44,6 +46,7 @@ class MLComponent(DetectionComponent):
                 emdat_raw = self.tobii_controller.emdat_global_features
                 X = []
                 for feature in features:
+                    # AOI features
                     if '_' in feature:
                         aoi_name = feature.split('_', 1)[0]
                         aoi_feature = feature.split('_', 1)[1]
@@ -53,6 +56,7 @@ class MLComponent(DetectionComponent):
                             X.append(-1)
                         else:
                             X.append(emdat_raw[aoi_name][aoi_feature])
+                    # non-AOI
                     else:
                         if feature not in emdat_raw:
                             X.append(-1)
@@ -68,6 +72,7 @@ class MLComponent(DetectionComponent):
         send features to the database
         """
     # TODO: FIX TIMESTAMP
+        # update dynamic tables by inserting a row of prediction result into corresponding table
         for feature in self.predicted_features.keys():
             if feature in self.feature_select:
                 val = "high" if self.predicted_features[feature] >= self.threshold else "low"
