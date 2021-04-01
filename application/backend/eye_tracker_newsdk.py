@@ -20,6 +20,7 @@ import emdat_utils
 import ast
 from websocket_client import EyetrackerWebsocketClient
 import subprocess
+from application.backend.eye_tracker_class import EyeTracker
 
 
 class TobiiControllerNewSdk:
@@ -66,6 +67,8 @@ class TobiiControllerNewSdk:
         self.last_pupil_right = -1
         self.LastTimestamp = -1
         self.init_emdat_global_features()
+
+        self.eye_tracker_class = EyeTracker("test")
         print("constructed eyetracker object")
     ############################################################################
     # activation methods
@@ -87,16 +90,17 @@ class TobiiControllerNewSdk:
         """
 
         print "Connecting to: ", params.EYETRACKER_TYPE
-        if params.EYETRACKER_TYPE == "Tobii T120":
-            while self.eyetracker is None:
-                eyetrackers = tr.find_all_eyetrackers()
-                for tracker in eyetrackers:
-                    self.eyetrackers[tracker.model] = tracker
-                self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
-        else:
-            print(os.path.join(sys.path[0]))
-            subprocess.Popen("application/backend/websocket_app/GazeServer.exe")
-            self.websocket_client = EyetrackerWebsocketClient(self)
+        # if params.EYETRACKER_TYPE == "Tobii T120":
+        #     while self.eyetracker is None:
+        #         eyetrackers = tr.find_all_eyetrackers()
+        #         for tracker in eyetrackers:
+        #             self.eyetrackers[tracker.model] = tracker
+        #         self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
+        # else:
+        #     print(os.path.join(sys.path[0]))
+        #     subprocess.Popen("application/backend/websocket_app/GazeServer.exe")
+        #     self.websocket_client = EyetrackerWebsocketClient(self)
+        self.eye_tracker_class.activate(self)
         print "Connected to: ", params.EYETRACKER_TYPE
 
     def startTracking(self):
@@ -131,10 +135,12 @@ class TobiiControllerNewSdk:
         print("=================== SLEEPING =========================")
         time.sleep(1)
         print("=================== WOKE UP =========================")
-        if params.EYETRACKER_TYPE == "Tobii T120":
-            self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
-        else:
-            self.websocket_client.start_tracking()
+
+        self.eye_tracker_class.start_tracking(self)
+        # if params.EYETRACKER_TYPE == "Tobii T120":
+        #     self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
+        # else:
+        #     self.websocket_client.start_tracking()
 
 
     def stopTracking(self):
@@ -154,10 +160,11 @@ class TobiiControllerNewSdk:
                     calls TobiiTracker.flushData before resetting both
                     self.gazeData and self.eventData
         """
-        if params.EYETRACKER_TYPE == "Tobii T120":
-            self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.on_gazedata)
-        else:
-            self.websocket_client.stop_tracking()
+        # if params.EYETRACKER_TYPE == "Tobii T120":
+        #     self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.on_gazedata)
+        # else:
+        #     self.websocket_client.stop_tracking()
+        self.eye_tracker_class.stop_tracking(self)
         #self.flushData()
         self.gazeData = []
         self.eventData = []
