@@ -19,6 +19,7 @@ from tornado import gen
 import emdat_utils
 import ast
 from websocket_client import EyetrackerWebsocketClient
+from SimulationSocket import SimulationSocket
 import subprocess
 
 
@@ -93,10 +94,13 @@ class TobiiControllerNewSdk:
                 for tracker in eyetrackers:
                     self.eyetrackers[tracker.model] = tracker
                 self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
-        else:
+        elif params.EYETRACKER_TYPE == "IS4_Large_Peripheral":
             print(os.path.join(sys.path[0]))
             subprocess.Popen("application/backend/websocket_app/GazeServer.exe")
             self.websocket_client = EyetrackerWebsocketClient(self)
+        else:
+            print("Simulation")
+            self.websocket_client = SimulationSocket(self)
         print "Connected to: ", params.EYETRACKER_TYPE
 
     def startTracking(self):
@@ -133,6 +137,8 @@ class TobiiControllerNewSdk:
         print("=================== WOKE UP =========================")
         if params.EYETRACKER_TYPE == "Tobii T120":
             self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
+        elif params.EYETRACKER_TYPE == "IS4_Large_Peripheral":
+            self.websocket_client.start_tracking()
         else:
             self.websocket_client.start_tracking()
 
@@ -156,8 +162,10 @@ class TobiiControllerNewSdk:
         """
         if params.EYETRACKER_TYPE == "Tobii T120":
             self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.on_gazedata)
-        else:
+        elif params.EYETRACKER_TYPE == "IS4_Large_Peripheral":
             self.websocket_client.stop_tracking()
+        else:
+            self.websocket_client.start_tracking()
         #self.flushData()
         self.gazeData = []
         self.eventData = []
@@ -270,6 +278,36 @@ class TobiiControllerNewSdk:
         self.dpt_id += 1
 
     def on_gazedata_4c(self, x, y, time_stamp):
+
+        """Adds new data point to the raw data arrays. If x, y coordinate data is not available,
+        stores the coordinates for this datapoint as (-1280, -1024). Any other feature,
+        if not available, is stored as -1.
+        arguments
+        error        --    some Tobii error message, isn't used in function
+        gaze        --    Tobii gaze data struct
+        keyword arguments
+        None
+        returns
+        None        --    appends gaze to self.gazeData list
+        """
+        #Don't need raw gaze so this code is commented out
+        #self.gazeData.append(gaze)
+
+        # print(gaze.RightGazePoint2D.x * 1280, gaze.RightGazePoint2D.y * 1024)
+        # print("%f" % (time.time() * 1000.0))
+        self.x.append(x)
+        self.y.append(y)
+        if (params.USE_EMDAT):
+            for aoi, polygon in self.AOIs.iteritems():
+                if utils.point_inside_polygon((self.x[-1], self.y[-1]), polygon):
+                    print("point inside ", aoi)
+                    self.aoi_ids[aoi].append(self.dpt_id)
+        self.time.append(time_stamp)
+        self.validity.append(True)
+        self.LastTimestamp = time_stamp
+        self.dpt_id += 1
+		
+    def on_gazedata_simulation(self, x, y, time_stamp):
 
         """Adds new data point to the raw data arrays. If x, y coordinate data is not available,
         stores the coordinates for this datapoint as (-1280, -1024). Any other feature,
