@@ -1,6 +1,7 @@
 # Eyetracker type
 # EYETRACKER_TYPE = "IS4_Large_Peripheral" # 4C eyetracker
-EYETRACKER_TYPE = "Tobii T120" # Old eyetracker
+#EYETRACKER_TYPE = "Tobii T120" # Old eyetracker
+EYETRACKER_TYPE = "simulation" # test
 
 #Pilot condition
 PILOT_CONDITION_TEXT_INTERVENTION = True
