@@ -18,8 +18,6 @@ import numpy as np
 from tornado import gen
 import emdat_utils
 import ast
-from websocket_client import EyetrackerWebsocketClient
-from SimulationSocket import SimulationSocket
 import subprocess
 from application.backend.eye_tracker_class import EyeTracker, SimulationEyeTracker, Tobii4CEyeTracker, TobiiT120EyeTracker
 

@@ -54,6 +54,7 @@ class Tobii4CEyeTracker(EyeTracker):
         super(Tobii4CEyeTracker, self).__init__("IS4_Large_Peripheral")
 
 
+# Simulation implementation
 class SimulationEyeTracker(EyeTracker):
     def __init__(self):
         super(SimulationEyeTracker, self).__init__("simulation")
