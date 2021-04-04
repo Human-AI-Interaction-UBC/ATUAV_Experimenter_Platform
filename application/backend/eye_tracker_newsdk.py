@@ -21,7 +21,7 @@ import ast
 from websocket_client import EyetrackerWebsocketClient
 from SimulationSocket import SimulationSocket
 import subprocess
-from application.backend.eye_tracker_class import EyeTracker
+from application.backend.eye_tracker_class import EyeTracker, SimulationEyeTracker, Tobii4CEyeTracker, TobiiT120EyeTracker
 
 
 class TobiiControllerNewSdk:
@@ -69,7 +69,7 @@ class TobiiControllerNewSdk:
         self.LastTimestamp = -1
         self.init_emdat_global_features()
 
-        self.eye_tracker_class = EyeTracker("test")
+        self.eye_tracker_class = Tobii4CEyeTracker()
         print("constructed eyetracker object")
     ############################################################################
     # activation methods
@@ -90,35 +90,21 @@ class TobiiControllerNewSdk:
                     sets self.syncmanager
         """
 
-        print "Connecting to: ", params.EYETRACKER_TYPE
-<<<<<<< HEAD
+        self.eye_tracker_class.activate(self)
         # if params.EYETRACKER_TYPE == "Tobii T120":
         #     while self.eyetracker is None:
         #         eyetrackers = tr.find_all_eyetrackers()
         #         for tracker in eyetrackers:
         #             self.eyetrackers[tracker.model] = tracker
         #         self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
-        # else:
+        # elif params.EYETRACKER_TYPE == "IS4_Large_Peripheral":
         #     print(os.path.join(sys.path[0]))
         #     subprocess.Popen("application/backend/websocket_app/GazeServer.exe")
         #     self.websocket_client = EyetrackerWebsocketClient(self)
-        self.eye_tracker_class.activate(self)
-=======
-        if params.EYETRACKER_TYPE == "Tobii T120":
-            while self.eyetracker is None:
-                eyetrackers = tr.find_all_eyetrackers()
-                for tracker in eyetrackers:
-                    self.eyetrackers[tracker.model] = tracker
-                self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
-        elif params.EYETRACKER_TYPE == "IS4_Large_Peripheral":
-            print(os.path.join(sys.path[0]))
-            subprocess.Popen("application/backend/websocket_app/GazeServer.exe")
-            self.websocket_client = EyetrackerWebsocketClient(self)
-        else:
-            print("Simulation")
-            self.websocket_client = SimulationSocket(self)
->>>>>>> eyetracker_simulation
-        print "Connected to: ", params.EYETRACKER_TYPE
+        # else:
+        #     print("Simulation")
+        #     self.websocket_client = SimulationSocket(self)
+        # print "Connected to: ", params.EYETRACKER_TYPE
 
     def startTracking(self):
 
@@ -152,21 +138,14 @@ class TobiiControllerNewSdk:
         print("=================== SLEEPING =========================")
         time.sleep(1)
         print("=================== WOKE UP =========================")
-<<<<<<< HEAD
 
         self.eye_tracker_class.start_tracking(self)
         # if params.EYETRACKER_TYPE == "Tobii T120":
         #     self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
+        # elif params.EYETRACKER_TYPE == "IS4_Large_Peripheral":
+        #     self.websocket_client.start_tracking()
         # else:
         #     self.websocket_client.start_tracking()
-=======
-        if params.EYETRACKER_TYPE == "Tobii T120":
-            self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
-        elif params.EYETRACKER_TYPE == "IS4_Large_Peripheral":
-            self.websocket_client.start_tracking()
-        else:
-            self.websocket_client.start_tracking()
->>>>>>> eyetracker_simulation
 
 
     def stopTracking(self):
@@ -186,23 +165,14 @@ class TobiiControllerNewSdk:
                     calls TobiiTracker.flushData before resetting both
                     self.gazeData and self.eventData
         """
-<<<<<<< HEAD
+        self.eye_tracker_class.stop_tracking(self)
         # if params.EYETRACKER_TYPE == "Tobii T120":
         #     self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.on_gazedata)
-        # else:
         #     self.websocket_client.stop_tracking()
-        self.eye_tracker_class.stop_tracking(self)
-=======
-        if params.EYETRACKER_TYPE == "Tobii T120":
-            self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.on_gazedata)
-        elif params.EYETRACKER_TYPE == "IS4_Large_Peripheral":
-            self.websocket_client.stop_tracking()
-        else:
-            self.websocket_client.start_tracking()
->>>>>>> eyetracker_simulation
+        # else:
+        #     self.websocket_client.start_tracking()
         #self.flushData()
         self.gazeData = []
-        self.eventData = []
         self.EndFixations = []
         #Preetpals code
         #Empty the arrays needed for fixation algorithm
