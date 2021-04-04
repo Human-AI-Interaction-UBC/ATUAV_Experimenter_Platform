@@ -64,14 +64,14 @@ class TobiiControllerNewSdk:
         self.LastTimestamp = -1
         self.init_emdat_global_features()
 
-        # Choose which eye tracker to use here: you can define eye_tracker_class to be any eye tracker class implemented inside the file eye_tracker_class.py
-        self.eye_tracker_class = SimulationEyeTracker()
+        # Choose which eye tracker to use here: you can define eye_tracker to be any eye tracker class implemented inside the file eye_tracker_class.py
+        self.eye_tracker = SimulationEyeTracker()
         print("constructed eyetracker object")
     ############################################################################
     # activation methods
     ############################################################################
     def activate(self):
-        self.eye_tracker_class.activate(self)
+        self.eye_tracker.activate(self)
 
     def startTracking(self):
         """Starts the collection of gaze data
@@ -105,7 +105,7 @@ class TobiiControllerNewSdk:
         time.sleep(1)
         print("=================== WOKE UP =========================")
 
-        self.eye_tracker_class.start_tracking(self)
+        self.eye_tracker.start_tracking(self)
 
 
     def stopTracking(self):
@@ -124,7 +124,7 @@ class TobiiControllerNewSdk:
                     calls TobiiTracker.flushData before resetting both
                     self.gazeData and self.eventData
         """
-        self.eye_tracker_class.stop_tracking(self)
+        self.eye_tracker.stop_tracking(self)
         #self.flushData()
         self.gazeData = []
         self.EndFixations = []
