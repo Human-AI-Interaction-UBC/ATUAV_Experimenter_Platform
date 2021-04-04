@@ -32,14 +32,11 @@ class SimulationSocket(object):
             ]
             index = 0
 
-            if msg is not None:
-                if self.track_data:
-                    index = (index + 1) % len(coordinates) if (i % 10) == 0 else index
-                    self.tobii_controller.on_gazedata_simulation(coordinates[index]["x"], coordinates[index]["y"], coordinates[index]["time"] * 20000)
-                    yield gen.sleep(.1)
-                    i += 1
-            else:
-                print("Eyetracker websocket connection was interrupted!")
+            if self.track_data:
+                index = (index + 1) % len(coordinates) if (i % 10) == 0 else index
+                self.tobii_controller.on_gazedata_simulation(coordinates[index]["x"], coordinates[index]["y"], coordinates[index]["time"] * 20000)
+                yield gen.sleep(.1)
+                i += 1
 
     def start_tracking(self):
         self.track_data = True
