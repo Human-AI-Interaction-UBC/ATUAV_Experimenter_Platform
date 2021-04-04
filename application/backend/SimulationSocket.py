@@ -23,19 +23,19 @@ class SimulationSocket(object):
         i = 1
         #time.sleep(10)
         while True:
-            msg1 = "400,310,"+str(i)
-            msg2 = "600,310,"+str(i)
-            msg = msg1
-            current_message = 1
-            #print msg
+            # list of coordinate dicts to loop through in the function
+            # can add more objects if needed, as long as the format of the object stays as:
+            # {"x": <your x coordinate>, "y": <your y coordinate>, "time": <i or a timestamp>}
+            coordinates = [
+                {"x": 400, "y": 310, "time": i},
+                {"x": 600, "y": 310, "time": i}
+            ]
+            index = 0
+
             if msg is not None:
                 if self.track_data:
-                    if (i % 10) == 0:
-                        msg = msg2 if current_message == 1 else msg1
-                        current_message = 2 if current_message == 1 else 1 
-                    msg = msg.split(",")
-                    self.tobii_controller.on_gazedata_simulation(float(msg[0]), float(msg[1]), float(msg[2]) * 20000)
-                    #print "msg"
+                    index = (index + 1) % len(coordinates) if (i % 10) == 0 else index
+                    self.tobii_controller.on_gazedata_simulation(coordinates[index]["x"], coordinates[index]["y"], coordinates[index]["time"] * 20000)
                     yield gen.sleep(.1)
                     i += 1
             else:
