@@ -37,9 +37,6 @@ class TobiiControllerNewSdk:
         None
         """
         print("constructing eyetracker object")
-        # eye tracking
-        self.eyetrackers = {}
-        self.eyetracker = None
 
         self.gazeData = []
         self.eventData = []
@@ -67,45 +64,16 @@ class TobiiControllerNewSdk:
         self.LastTimestamp = -1
         self.init_emdat_global_features()
 
-        self.eye_tracker_class = Tobii4CEyeTracker()
+        # Choose which eye tracker to use here: you can define eye_tracker_class to be any eye tracker class implemented inside the file eye_tracker_class.py
+        self.eye_tracker_class = SimulationEyeTracker()
         print("constructed eyetracker object")
     ############################################################################
     # activation methods
     ############################################################################
     def activate(self):
-
-        """Connects to specified eye tracker
-
-        arguments
-        eyetracker    --    key for the self.eyetracker dict under which the
-                    eye tracker to which you want to connect is found
-
-        keyword arguments
-        None
-
-        returns
-        None        --    calls TobiiController.on_eyetracker_created, then
-                    sets self.syncmanager
-        """
-
         self.eye_tracker_class.activate(self)
-        # if params.EYETRACKER_TYPE == "Tobii T120":
-        #     while self.eyetracker is None:
-        #         eyetrackers = tr.find_all_eyetrackers()
-        #         for tracker in eyetrackers:
-        #             self.eyetrackers[tracker.model] = tracker
-        #         self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
-        # elif params.EYETRACKER_TYPE == "IS4_Large_Peripheral":
-        #     print(os.path.join(sys.path[0]))
-        #     subprocess.Popen("application/backend/websocket_app/GazeServer.exe")
-        #     self.websocket_client = EyetrackerWebsocketClient(self)
-        # else:
-        #     print("Simulation")
-        #     self.websocket_client = SimulationSocket(self)
-        # print "Connected to: ", params.EYETRACKER_TYPE
 
     def startTracking(self):
-
         """Starts the collection of gaze data
 
         arguments
@@ -138,17 +106,10 @@ class TobiiControllerNewSdk:
         print("=================== WOKE UP =========================")
 
         self.eye_tracker_class.start_tracking(self)
-        # if params.EYETRACKER_TYPE == "Tobii T120":
-        #     self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
-        # elif params.EYETRACKER_TYPE == "IS4_Large_Peripheral":
-        #     self.websocket_client.start_tracking()
-        # else:
-        #     self.websocket_client.start_tracking()
 
 
     def stopTracking(self):
-
-        """Starts the collection of gaze data
+        """Stops the collection of gaze data
 
         arguments
         None
@@ -164,11 +125,6 @@ class TobiiControllerNewSdk:
                     self.gazeData and self.eventData
         """
         self.eye_tracker_class.stop_tracking(self)
-        # if params.EYETRACKER_TYPE == "Tobii T120":
-        #     self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.on_gazedata)
-        #     self.websocket_client.stop_tracking()
-        # else:
-        #     self.websocket_client.start_tracking()
         #self.flushData()
         self.gazeData = []
         self.EndFixations = []
