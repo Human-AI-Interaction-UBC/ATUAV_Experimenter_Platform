@@ -547,7 +547,6 @@ function handleDelivery(obj) {
           }
       }
 
-      console.log(tuple_ids);
       $scopeGlobal.old_active_interventions = $scopeGlobal.old_active_interventions.concat(new_tuple_ids);
       $scopeGlobal.old_active_interventions = [...new Set($scopeGlobal.old_active_interventions)]
       console.log('old_activeB:', $scopeGlobal.old_active_interventions);
