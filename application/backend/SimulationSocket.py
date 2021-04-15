@@ -29,7 +29,7 @@ class SimulationSocket(object):
         i = 1
         #time.sleep(10)
         while True:
-            coordinates = [
+            self.coordinates = [
                 {"x": 400, "y": 310, "time": i},
                 {"x": 600, "y": 310, "time": i}
             ]
