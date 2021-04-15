@@ -19,7 +19,7 @@ from tornado import gen
 import emdat_utils
 import ast
 import subprocess
-from application.backend.eye_tracker_class import EyeTracker, SimulationEyeTracker, Tobii4CEyeTracker, TobiiT120EyeTracker
+from application.backend.eye_tracker_class import *
 
 
 class TobiiControllerNewSdk:
@@ -64,8 +64,9 @@ class TobiiControllerNewSdk:
         self.LastTimestamp = -1
         self.init_emdat_global_features()
 
-        # Choose which eye tracker to use here: you can define eye_tracker to be any eye tracker class implemented inside the file eye_tracker_class.py
-        self.eye_tracker = SimulationEyeTracker()
+        
+        # Instantiate an eye tracker class corresponding to the EYETRACKER_TYPE determined inside the params.py file
+        self.eye_tracker = globals()[EyeTrackerNames[params.EYETRACKER_TYPE].value]()
         print("constructed eyetracker object")
     ############################################################################
     # activation methods

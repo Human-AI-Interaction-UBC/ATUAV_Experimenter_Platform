@@ -8,6 +8,12 @@ class SimulationSocket(object):
         self.tobii_controller = tobii_controller
         self.ws = None
         self.track_data = False
+        # list of coordinate dicts to loop through in the function
+        # can add more objects if needed, as long as the format of the object stays as:
+        # {"x": <your x coordinate>, "y": <your y coordinate>, "time": <i or a timestamp>}
+        self.coordinates = [
+            {"x": 400, "y": 310, "time": 1}
+        ]
 
     @gen.coroutine
     def connect(self):
@@ -23,9 +29,6 @@ class SimulationSocket(object):
         i = 1
         #time.sleep(10)
         while True:
-            # list of coordinate dicts to loop through in the function
-            # can add more objects if needed, as long as the format of the object stays as:
-            # {"x": <your x coordinate>, "y": <your y coordinate>, "time": <i or a timestamp>}
             coordinates = [
                 {"x": 400, "y": 310, "time": i},
                 {"x": 600, "y": 310, "time": i}
@@ -33,8 +36,8 @@ class SimulationSocket(object):
             index = 0
 
             if self.track_data:
-                index = (index + 1) % len(coordinates) if (i % 10) == 0 else index
-                self.tobii_controller.on_gazedata_simulation(coordinates[index]["x"], coordinates[index]["y"], coordinates[index]["time"] * 20000)
+                index = (index + 1) % len(self.coordinates) if (i % 10) == 0 else index
+                self.tobii_controller.on_gazedata_simulation(self.coordinates[index]["x"], self.coordinates[index]["y"], self.coordinates[index]["time"] * 20000)
                 yield gen.sleep(.1)
                 i += 1
 
