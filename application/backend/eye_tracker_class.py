@@ -5,7 +5,7 @@ from SimulationSocket import SimulationSocket
 import subprocess
 from enum import Enum
 
-sys.path.append('E:\\Users\\admin\\Desktop\\experimenter_platform_core\\ATUAV_Experimenter_Platform\\Modules')
+sys.path.append(os.path.join(sys.path[0],'Modules'))
 sys.path.append(os.path.join(sys.path[0],'tobii_binder'))
 
 """
