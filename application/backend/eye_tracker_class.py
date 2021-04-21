@@ -46,15 +46,15 @@ class EyeTracker(object):
         self.websocket_client.stop_tracking()
 
 
-# Tobii T120 (old eyetracker) and Tobii Pro X3 implemetation
-class TobiiT120X3EyeTracker(EyeTracker):
+# Tobii T120 (old eyetracker) implemetation
+class TobiiT120EyeTracker(EyeTracker):
     def __init__(self):
-        super(TobiiT120X3EyeTracker, self).__init__("Tobii T120/X3")
+        super(TobiiT120EyeTracker, self).__init__("Tobii T120")
         self.eyetracker = None
         self.eyetrackers = {}
     
     def activate(self, tobii_controller):
-        print("connecting to TobiiT120/X3 eyetracker")
+        print("connecting to TobiiT120 eyetracker")
         while self.eyetracker is None:
             eyetrackers = tr.find_all_eyetrackers()
             for tracker in eyetrackers:
@@ -68,6 +68,27 @@ class TobiiT120X3EyeTracker(EyeTracker):
     def stop_tracking(self, tobii_controller):
         self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, tobii_controller.on_gazedata)
 
+# Tobii Pro X3 implementation
+class TobiiX3EyeTracker(EyeTracker):
+    def __init__(self):
+        super(TobiiX3EyeTracker, self).__init__("Tobii Pro X3-120 EPU")
+        self.eyetracker = None
+        self.eyetrackers = {}
+    
+    def activate(self, tobii_controller):
+        print("connecting to Tobii Pro X3 eyetracker")
+        while self.eyetracker is None:
+            eyetrackers = tr.find_all_eyetrackers()
+            for tracker in eyetrackers:
+                self.eyetrackers[tracker.model] = tracker
+            self.eyetracker = self.eyetrackers.get(self.tracker_type, None)
+    
+
+    def start_tracking(self, tobii_controller):
+        self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, tobii_controller.on_gazedata, as_dictionary=True)
+
+    def stop_tracking(self, tobii_controller):
+        self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, tobii_controller.on_gazedata)
 
 # 4C implementation
 class Tobii4CEyeTracker(EyeTracker):
@@ -89,9 +110,9 @@ class SimulationEyeTracker(EyeTracker):
 EyeTrackerNames = Enum(
     value="EyeTrackerNames",
     names=[
-        ("Tobii T120", "TobiiT120X3EyeTracker"),
+        ("Tobii T120", "TobiiT120EyeTracker"),
         ("IS4_Large_Peripheral", "Tobii4CEyeTracker"),
         ("simulation", "SimulationEyeTracker"),
-        ("Tobii Pro X3-120 EPU", "TobiiT120X3EyeTracker")
+        ("Tobii Pro X3-120 EPU", "TobiiX3EyeTracker")
     ]
 )

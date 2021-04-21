@@ -74,32 +74,6 @@ class TobiiControllerNewSdk:
     def activate(self):
         self.eye_tracker.activate(self)
 
-        """Connects to specified eye tracker
-
-        arguments
-        eyetracker    --    key for the self.eyetracker dict under which the
-                    eye tracker to which you want to connect is found
-
-        keyword arguments
-        None
-
-        returns
-        None        --    calls TobiiController.on_eyetracker_created, then
-                    sets self.syncmanager
-        """
-
-        print "Connecting to: ", params.EYETRACKER_TYPE
-        if params.EYE_TRACKER_SDK_SOCKET == "Tobii Research":
-            while self.eyetracker is None:
-                eyetrackers = tr.find_all_eyetrackers()
-                for tracker in eyetrackers:
-                    self.eyetrackers[tracker.model] = tracker
-                self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
-        else:
-            print(os.path.join(sys.path[0]))
-            subprocess.Popen("application/backend/websocket_app/GazeServer.exe")
-            self.websocket_client = EyetrackerWebsocketClient(self)
-        print "Connected to: ", params.EYETRACKER_TYPE
 
     def startTracking(self):
         """Starts the collection of gaze data
@@ -132,11 +106,6 @@ class TobiiControllerNewSdk:
         print("=================== SLEEPING =========================")
         time.sleep(1)
         print("=================== WOKE UP =========================")
-        if params.EYE_TRACKER_SDK_SOCKET == "Tobii Research":
-            self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
-        else:
-            self.websocket_client.start_tracking()
-
         self.eye_tracker.start_tracking(self)
 
 
@@ -157,10 +126,6 @@ class TobiiControllerNewSdk:
                     self.gazeData and self.eventData
         """
         self.eye_tracker.stop_tracking(self)
-        if params.EYE_TRACKER_SDK_SOCKET == "Tobii Research":
-            self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.on_gazedata)
-        else:
-            self.websocket_client.stop_tracking()
         #self.flushData()
         self.gazeData = []
         self.EndFixations = []
