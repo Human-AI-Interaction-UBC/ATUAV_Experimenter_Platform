@@ -333,20 +333,20 @@ class TobiiController:
 
 		#Below code checks to see if the gaze data is valid. If it is valid then
 		#we average the left and right. Else we use the valid eye. We are multiplying
-		#by 1280 and 1024 because those are the dimensions of the monitor and since
+		#by SCREEN_SIZE_X and SCREEN_SIZE_Y because those are the dimensions of the monitor and since
 		#the gaze values returned are between 0 and 1
 		if ((gaze.LeftGazePoint2D.x >= 0) & (gaze.RightGazePoint2D.x >= 0)):
-			self.x.append(((gaze.LeftGazePoint2D.x + gaze.RightGazePoint2D.x)/2) * 1280)
-			self.y.append(((gaze.LeftGazePoint2D.y + gaze.RightGazePoint2D.y)/2) * 1024)
+			self.x.append(((gaze.LeftGazePoint2D.x + gaze.RightGazePoint2D.x)/2) * params.SCREEN_SIZE_X)
+			self.y.append(((gaze.LeftGazePoint2D.y + gaze.RightGazePoint2D.y)/2) * params.SCREEN_SIZE_Y)
 		elif (gaze.LeftGazePoint2D.x >= 0):
-			self.x.append(gaze.LeftGazePoint2D.x * 1280)
-			self.y.append(gaze.LeftGazePoint2D.y * 1024)
+			self.x.append(gaze.LeftGazePoint2D.x * params.SCREEN_SIZE_X)
+			self.y.append(gaze.LeftGazePoint2D.y * params.SCREEN_SIZE_Y)
 		elif (gaze.RightGazePoint2D.x >= 0):
-			self.x.append(gaze.RightGazePoint2D.x * 1280)
-			self.y.append(gaze.RightGazePoint2D.y * 1024)
+			self.x.append(gaze.RightGazePoint2D.x * params.SCREEN_SIZE_X)
+			self.y.append(gaze.RightGazePoint2D.y * params.SCREEN_SIZE_Y)
 		else:
-			self.x.append(-1 * 1280)
-			self.y.append(-1 * 1024)
+			self.x.append(-1 * params.SCREEN_SIZE_X)
+			self.y.append(-1 * params.SCREEN_SIZE_Y)
 		# print(gaze.RightGazePoint2D.x * 1280, gaze.RightGazePoint2D.y * 1024)
 		# print("%f" % (time.time() * 1000.0))
 		if (params.USE_EMDAT):

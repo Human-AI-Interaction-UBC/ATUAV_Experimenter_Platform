@@ -4,7 +4,7 @@ import params
 #This sets the path in our computer to where the eyetracker stuff is located
 #sys.path.append('/Users/Preetpal/desktop/ubc_4/experimenter_platform/modules')
 #sys.path.append('E\\Users\\admin\\Desktop\\experimenter_platform\\modules')
-sys.path.append('E:\\Users\\admin\\Desktop\\experimenter_platform_core\\ATUAV_Experimenter_Platform\\Modules')
+sys.path.append(os.path.join(sys.path[0],'Modules'))
 sys.path.append(os.path.join(sys.path[0],'tobii_binder'))
 
 import os
@@ -87,7 +87,7 @@ class TobiiControllerNewSdk:
         """
 
         print "Connecting to: ", params.EYETRACKER_TYPE
-        if params.EYETRACKER_TYPE == "Tobii T120":
+        if params.EYE_TRACKER_SDK_SOCKET == "Tobii Research":
             while self.eyetracker is None:
                 eyetrackers = tr.find_all_eyetrackers()
                 for tracker in eyetrackers:
@@ -131,7 +131,7 @@ class TobiiControllerNewSdk:
         print("=================== SLEEPING =========================")
         time.sleep(1)
         print("=================== WOKE UP =========================")
-        if params.EYETRACKER_TYPE == "Tobii T120":
+        if params.EYE_TRACKER_SDK_SOCKET == "Tobii Research":
             self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
         else:
             self.websocket_client.start_tracking()
@@ -154,7 +154,7 @@ class TobiiControllerNewSdk:
                     calls TobiiTracker.flushData before resetting both
                     self.gazeData and self.eventData
         """
-        if params.EYETRACKER_TYPE == "Tobii T120":
+        if params.EYE_TRACKER_SDK_SOCKET == "Tobii Research":
             self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.on_gazedata)
         else:
             self.websocket_client.stop_tracking()
@@ -232,21 +232,21 @@ class TobiiControllerNewSdk:
 
         #Below code checks to see if the gaze data is valid. If it is valid then
         #we average the left and right. Else we use the valid eye. We are multiplying
-        #by 1280 and 1024 because those are the dimensions of the monitor and since
+        #by SCREEN_SIZE_X and SCREEN_SIZE_Y because those are the dimensions of the monitor and since
         #the gaze values returned are between 0 and 1
         if ((gaze["left_gaze_point_on_display_area"][0] >= 0) & (gaze["right_gaze_point_on_display_area"][0] >= 0)):
-            self.x.append(((gaze["left_gaze_point_on_display_area"][0] + gaze["right_gaze_point_on_display_area"][0])/2) * 1280)
-            self.y.append(((gaze["left_gaze_point_on_display_area"][1] + gaze["right_gaze_point_on_display_area"][1])/2) * 1024)
+            self.x.append(((gaze["left_gaze_point_on_display_area"][0] + gaze["right_gaze_point_on_display_area"][0])/2) * params.SCREEN_SIZE_X)
+            self.y.append(((gaze["left_gaze_point_on_display_area"][1] + gaze["right_gaze_point_on_display_area"][1])/2) * params.SCREEN_SIZE_Y)
         elif (gaze["left_gaze_point_on_display_area"][0] >= 0):
-            self.x.append(gaze["left_gaze_point_on_display_area"][0] * 1280)
-            self.y.append(gaze["left_gaze_point_on_display_area"][1] * 1024)
+            self.x.append(gaze["left_gaze_point_on_display_area"][0] * params.SCREEN_SIZE_X)
+            self.y.append(gaze["left_gaze_point_on_display_area"][1] * params.SCREEN_SIZE_Y)
         elif (gaze["right_gaze_point_on_display_area"][0] >= 0):
-            self.x.append(gaze["right_gaze_point_on_display_area"][0] * 1280)
-            self.y.append(gaze["right_gaze_point_on_display_area"][1] * 1024)
+            self.x.append(gaze["right_gaze_point_on_display_area"][0] * params.SCREEN_SIZE_X)
+            self.y.append(gaze["right_gaze_point_on_display_area"][1] * params.SCREEN_SIZE_Y)
         else:
-            self.x.append(-1 * 1280)
-            self.y.append(-1 * 1024)
-        # print(gaze.RightGazePoint2D.x * 1280, gaze.RightGazePoint2D.y * 1024)
+            self.x.append(-1 * params.SCREEN_SIZE_X)
+            self.y.append(-1 * params.SCREEN_SIZE_Y)
+        #print(gaze.RightGazePoint2D.x * params.SCREEN_SIZE_X, gaze.RightGazePoint2D.y * params.SCREEN_SIZE_Y)
         # print("%f" % (time.time() * 1000.0))
 
         if (params.USE_EMDAT):
@@ -260,7 +260,7 @@ class TobiiControllerNewSdk:
         else:
             self.pupilvelocity.append(-1)
         self.time.append(gaze["device_time_stamp"])
-        self.head_distance.append(self.get_distance(gaze["left_gaze_point_in_user_coordinate_system"][2],                                                                             gaze["right_gaze_point_in_user_coordinate_system"][2]))
+        self.head_distance.append(self.get_distance(gaze["left_gaze_point_in_user_coordinate_system"][2], gaze["right_gaze_point_in_user_coordinate_system"][2]))
         self.validity.append(gaze["left_gaze_point_validity"] == 1 or gaze["right_gaze_point_validity"] == 1)
 
         # for pupil velocity
