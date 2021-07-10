@@ -11,7 +11,31 @@ Institution: The University of British Columbia.
 import math
 import ast
 
-def point_inside_polygon(x,y,poly):
+
+def datapoint_inside_aoi(datapoint, polyin, polyout):
+    """Helper function that checks if a datapoint object is inside the AOI described by extrernal polygon polyin and the internal polygon polyout.
+    Datapoint object is inside AOI if it is inside polyin but outside polyout
+    Args:
+        datapoint: A Datapoint object
+        polyin: the external polygon in form of a list of (x,y) tuples
+        polyout: the internal polygon in form of a list of (x,y) tuples
+    Returns:
+        A boolean for whether the Datapoint is inside the AOI or not
+    """
+    inside = False
+    i = 0
+    for polyin_i in polyin:
+        if point_inside_polygon(datapoint.gazepointx,
+                                datapoint.gazepointy, polyin_i) and not point_inside_polygon(datapoint.gazepointx,
+                                                                                             datapoint.gazepointy,
+                                                                                             polyout[i]):
+            inside = True
+            break
+        i += 1
+    return inside
+
+
+def point_inside_polygon(x, y, poly):
     """Determines if a point is inside a given polygon or not
 
         The algorithm is called "Ray Casting Method".
@@ -45,8 +69,19 @@ def point_inside_polygon(x,y,poly):
                     if p1x == p2x or x <= xinters:
                         inside = not inside
         p1x, p1y = p2x, p2y
-    #print inside
+    # print inside
     return inside
+
+
+def point_inside_multi_polygon(x, y, poly):
+    if all(isinstance(element, list) for element in poly):
+        # if poly is a list of list of coordinates
+        return any([point_inside_polygon(x, y, polygon) for polygon in poly])
+
+    else:
+        # if polygon_data is a list of coordinates
+        return point_inside_polygon(x, y, poly)
+
 
 def stddev(data):
     """Returns the standard deviation of a list of numbers
@@ -57,10 +92,10 @@ def stddev(data):
     returns:
         a float that is the std deviation of the list of numbers or NAN if it is undefined
     """
-    if len(data)< 2:
+    if len(data) < 2:
         return float('nan')
     m = mean(data)
-    return math.sqrt(sum(map(lambda x: (x-m)**2, data))/float(len(data)-1))
+    return math.sqrt(sum(map(lambda x: (x - m) ** 2, data)) / float(len(data) - 1))
 
 
 def mean(data):
@@ -72,10 +107,11 @@ def mean(data):
     returns:
         a float that is the average of the list of numbers
     """
-    if len(data)==0:
+    if len(data) == 0:
         return 0
     return sum(data) / float(len(data))
-	
+
+
 def euclidean_distance(point1, point2):
     (x1, y1) = point1
     (x2, y2) = point2
@@ -85,4 +121,4 @@ def euclidean_distance(point1, point2):
     x2 = float(x2)
     y2 = float(y2)
 
-    return math.sqrt((x1-x2)**2 + (y1-y2)**2)
+    return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)

@@ -4,8 +4,9 @@ import params
 #This sets the path in our computer to where the eyetracker stuff is located
 #sys.path.append('/Users/Preetpal/desktop/ubc_4/experimenter_platform/modules')
 #sys.path.append('E\\Users\\admin\\Desktop\\experimenter_platform\\modules')
-sys.path.append(os.path.join(sys.path[0],'Modules'))
-sys.path.append(os.path.join(sys.path[0],'tobii_binder'))
+#sys.path.append('E:\\Users\\admin\\Desktop\\experimenter_platform_core\\ATUAV_Experimenter_Platform\\Modules')
+
+#sys.path.append(os.path.join(sys.path[0],'tobii_binder'))
 
 import os
 import datetime
@@ -18,8 +19,9 @@ import numpy as np
 from tornado import gen
 import emdat_utils
 import ast
+from websocket_client import EyetrackerWebsocketClient
 import subprocess
-from application.backend.eye_tracker_class import *
+from application.backend import utils
 
 
 class TobiiControllerNewSdk:
@@ -37,6 +39,9 @@ class TobiiControllerNewSdk:
         None
         """
         print("constructing eyetracker object")
+        # eye tracking
+        self.eyetrackers = {}
+        self.eyetracker = None
 
         self.gazeData = []
         self.eventData = []
@@ -63,19 +68,41 @@ class TobiiControllerNewSdk:
         self.last_pupil_right = -1
         self.LastTimestamp = -1
         self.init_emdat_global_features()
-
-        
-        # Instantiate an eye tracker class corresponding to the EYETRACKER_TYPE determined inside the params.py file
-        self.eye_tracker = globals()[EyeTrackerNames[params.EYETRACKER_TYPE].value]()
         print("constructed eyetracker object")
     ############################################################################
     # activation methods
     ############################################################################
     def activate(self):
-        self.eye_tracker.activate(self)
 
+        """Connects to specified eye tracker
+
+        arguments
+        eyetracker    --    key for the self.eyetracker dict under which the
+                    eye tracker to which you want to connect is found
+
+        keyword arguments
+        None
+
+        returns
+        None        --    calls TobiiController.on_eyetracker_created, then
+                    sets self.syncmanager
+        """
+
+        print "Connecting to: ", params.EYETRACKER_TYPE
+        if params.EYETRACKER_TYPE == "Tobii T120":
+            while self.eyetracker is None:
+                eyetrackers = tr.find_all_eyetrackers()
+                for tracker in eyetrackers:
+                    self.eyetrackers[tracker.model] = tracker
+                self.eyetracker = self.eyetrackers.get(params.EYETRACKER_TYPE, None)
+        else:
+            print(os.path.join(sys.path[0]))
+            subprocess.Popen("application/backend/websocket_app/GazeServer.exe")
+            self.websocket_client = EyetrackerWebsocketClient(self)
+        print "Connected to: ", params.EYETRACKER_TYPE
 
     def startTracking(self):
+
         """Starts the collection of gaze data
 
         arguments
@@ -106,11 +133,15 @@ class TobiiControllerNewSdk:
         print("=================== SLEEPING =========================")
         time.sleep(1)
         print("=================== WOKE UP =========================")
-        self.eye_tracker.start_tracking(self)
+        if params.EYETRACKER_TYPE == "Tobii T120":
+            self.eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, self.on_gazedata, as_dictionary=True)
+        else:
+            self.websocket_client.start_tracking()
 
 
     def stopTracking(self):
-        """Stops the collection of gaze data
+
+        """Starts the collection of gaze data
 
         arguments
         None
@@ -125,9 +156,13 @@ class TobiiControllerNewSdk:
                     calls TobiiTracker.flushData before resetting both
                     self.gazeData and self.eventData
         """
-        self.eye_tracker.stop_tracking(self)
+        if params.EYETRACKER_TYPE == "Tobii T120":
+            self.eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, self.on_gazedata)
+        else:
+            self.websocket_client.stop_tracking()
         #self.flushData()
         self.gazeData = []
+        self.eventData = []
         self.EndFixations = []
         #Preetpals code
         #Empty the arrays needed for fixation algorithm
@@ -199,35 +234,39 @@ class TobiiControllerNewSdk:
 
         #Below code checks to see if the gaze data is valid. If it is valid then
         #we average the left and right. Else we use the valid eye. We are multiplying
-        #by SCREEN_SIZE_X and SCREEN_SIZE_Y because those are the dimensions of the monitor and since
+        #by 1280 and 1024 because those are the dimensions of the monitor and since
         #the gaze values returned are between 0 and 1
         if ((gaze["left_gaze_point_on_display_area"][0] >= 0) & (gaze["right_gaze_point_on_display_area"][0] >= 0)):
-            self.x.append(((gaze["left_gaze_point_on_display_area"][0] + gaze["right_gaze_point_on_display_area"][0])/2) * params.SCREEN_SIZE_X)
-            self.y.append(((gaze["left_gaze_point_on_display_area"][1] + gaze["right_gaze_point_on_display_area"][1])/2) * params.SCREEN_SIZE_Y)
+            self.x.append(((gaze["left_gaze_point_on_display_area"][0] + gaze["right_gaze_point_on_display_area"][0])/2) * 1280)
+            self.y.append(((gaze["left_gaze_point_on_display_area"][1] + gaze["right_gaze_point_on_display_area"][1])/2) * 1024)
         elif (gaze["left_gaze_point_on_display_area"][0] >= 0):
-            self.x.append(gaze["left_gaze_point_on_display_area"][0] * params.SCREEN_SIZE_X)
-            self.y.append(gaze["left_gaze_point_on_display_area"][1] * params.SCREEN_SIZE_Y)
+            self.x.append(gaze["left_gaze_point_on_display_area"][0] * 1280)
+            self.y.append(gaze["left_gaze_point_on_display_area"][1] * 1024)
         elif (gaze["right_gaze_point_on_display_area"][0] >= 0):
-            self.x.append(gaze["right_gaze_point_on_display_area"][0] * params.SCREEN_SIZE_X)
-            self.y.append(gaze["right_gaze_point_on_display_area"][1] * params.SCREEN_SIZE_Y)
+            self.x.append(gaze["right_gaze_point_on_display_area"][0] * 1280)
+            self.y.append(gaze["right_gaze_point_on_display_area"][1] * 1024)
         else:
-            self.x.append(-1 * params.SCREEN_SIZE_X)
-            self.y.append(-1 * params.SCREEN_SIZE_Y)
-        #print(gaze.RightGazePoint2D.x * params.SCREEN_SIZE_X, gaze.RightGazePoint2D.y * params.SCREEN_SIZE_Y)
+            self.x.append(-1 * 1280)
+            self.y.append(-1 * 1024)
+        # print(gaze.RightGazePoint2D.x * 1280, gaze.RightGazePoint2D.y * 1024)
         # print("%f" % (time.time() * 1000.0))
 
         if (params.USE_EMDAT):
-            for aoi, polygon in self.AOIs.iteritems():
-                if utils.point_inside_polygon((self.x[-1], self.y[-1]), polygon):
+
+            for aoi, polygon_data in self.AOIs.iteritems():
+                if utils.point_inside_multi_polygon(self.x[-1], self.y[-1], polygon_data):
                     self.aoi_ids[aoi].append(self.dpt_id)
+
+
         # Pupil size features
         self.pupilsize.append(self.get_pupil_size(gaze["left_pupil_diameter"], gaze["right_pupil_diameter"]))
         if (self.last_pupil_right != -1):
             self.pupilvelocity.append(self.get_pupil_velocity(self.last_pupil_left, self.last_pupil_right, gaze["left_pupil_diameter"], gaze["right_pupil_diameter"], gaze["device_time_stamp"] - self.LastTimestamp))
         else:
             self.pupilvelocity.append(-1)
+
         self.time.append(gaze["device_time_stamp"])
-        self.head_distance.append(self.get_distance(gaze["left_gaze_point_in_user_coordinate_system"][2], gaze["right_gaze_point_in_user_coordinate_system"][2]))
+        self.head_distance.append(self.get_distance(gaze["left_gaze_point_in_user_coordinate_system"][2],                                                                             gaze["right_gaze_point_in_user_coordinate_system"][2]))
         self.validity.append(gaze["left_gaze_point_validity"] == 1 or gaze["right_gaze_point_validity"] == 1)
 
         # for pupil velocity
@@ -257,40 +296,21 @@ class TobiiControllerNewSdk:
         self.x.append(x)
         self.y.append(y)
         if (params.USE_EMDAT):
-            for aoi, polygon in self.AOIs.iteritems():
-                if utils.point_inside_polygon((self.x[-1], self.y[-1]), polygon):
-                    print("point inside ", aoi)
-                    self.aoi_ids[aoi].append(self.dpt_id)
-        self.time.append(time_stamp)
-        self.validity.append(True)
-        self.LastTimestamp = time_stamp
-        self.dpt_id += 1
-		
-    def on_gazedata_simulation(self, x, y, time_stamp):
 
-        """Adds new data point to the raw data arrays. If x, y coordinate data is not available,
-        stores the coordinates for this datapoint as (-1280, -1024). Any other feature,
-        if not available, is stored as -1.
-        arguments
-        error        --    some Tobii error message, isn't used in function
-        gaze        --    Tobii gaze data struct
-        keyword arguments
-        None
-        returns
-        None        --    appends gaze to self.gazeData list
-        """
-        #Don't need raw gaze so this code is commented out
-        #self.gazeData.append(gaze)
+            for aoi, polygon_data in self.AOIs.iteritems():
 
-        # print(gaze.RightGazePoint2D.x * 1280, gaze.RightGazePoint2D.y * 1024)
-        # print("%f" % (time.time() * 1000.0))
-        self.x.append(x)
-        self.y.append(y)
-        if (params.USE_EMDAT):
-            for aoi, polygon in self.AOIs.iteritems():
-                if utils.point_inside_polygon((self.x[-1], self.y[-1]), polygon):
-                    print("point inside ", aoi)
-                    self.aoi_ids[aoi].append(self.dpt_id)
+                if all(isinstance(element, list) for element in polygon_data):
+                    # if polygon_data is a list of list of coordinates
+                    for polygon in polygon_data:
+                        if utils.point_inside_polygon(self.x[-1], self.y[-1], polygon):
+                            # print("point inside ", aoi)
+                            self.aoi_ids[aoi].append(self.dpt_id)
+                else:
+                    # if polygon_data is a list of coordinates
+                    if utils.point_inside_polygon(self.x[-1], self.y[-1], polygon_data):
+                        # print("point inside ", aoi)
+                        self.aoi_ids[aoi].append(self.dpt_id)
+
         self.time.append(time_stamp)
         self.validity.append(True)
         self.LastTimestamp = time_stamp

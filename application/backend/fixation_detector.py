@@ -39,6 +39,10 @@ class FixationDetector(DetectionComponent):
             The method is a coroutine, which means that it can pause its execution and give control to other components of the platform.
         """
         print(self.AOIS, "Started fixation algorithm")
+
+        # added
+        # print('getFixAoiMapping: ', self.application_state_controller.getEmdatAoiMapping())
+
         #list of lists, each containing [starttime, endtime, duration, endx, endy]
         self.EndFixations = []
         #Keep track of index in x,y,time array

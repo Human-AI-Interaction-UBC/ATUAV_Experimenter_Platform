@@ -331,7 +331,7 @@
                     }
 
                     d3.select(self.textVisOverlay).append("line")
-                        .attr("class", "line")
+                        .attr("class", "line_" + id)
                         .attr("x2", relativeCoords.markx).attr("y2", relativeCoords.marky)
                         .attr("x1", relativeCoords.refX).attr("y1", relativeCoords.refY)
                         .style("stroke-dasharray", (3, 3))
@@ -359,7 +359,7 @@
                         .enter()
                         .append('g')
                         .classed('links', true)
-                        .attr("class", "line")
+                        .attr("class", "line_" + id)
                         .append('path')
                         .attr('d', function (d) {
                             return 'M ' + d.source.x + ' ' + d.source.y + ' ' + d.target.x + ' ' + d.target.y;
@@ -643,7 +643,7 @@
      * @param {string} tuple_id - the id of the link(s) to remove
      */
     MarksManager.prototype.removeLines = function(tuple_id) {
-    	d3.selectAll('.line').remove();
+    	d3.selectAll('.line_' + tuple_id).remove();
     	d3.selectAll('.box_' + tuple_id).remove();
 	};
 

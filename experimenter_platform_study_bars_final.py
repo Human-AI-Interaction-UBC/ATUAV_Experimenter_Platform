@@ -17,7 +17,8 @@ from application.application_web_socket import ApplicationWebSocket
 
 from application.backend.fixation_detector import FixationDetector
 from application.backend.emdat_component import EMDATComponent
-from application.backend.ml_component import MLComponent
+# from application.backend.ml_component import MLComponent
+from application.backend.ml_module.ml_component_new import MLComponent
 from application.backend.mouse_keyboard_event_detector import MouseKeyboardEventDetector
 
 import params
@@ -47,7 +48,7 @@ class Application(tornado.web.Application):
 
         self.fixation_component = FixationDetector(self.tobii_controller, self.adaptation_loop)
         self.emdat_component = EMDATComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.EMDAT_CALL_PERIOD)
-        self.ml_component = MLComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.EMDAT_CALL_PERIOD, emdat_component = self.emdat_component)
+        self.ml_component = MLComponent(self.tobii_controller, self.adaptation_loop, callback_time = params.ML_CALL_PERIOD, emdat_component = self.emdat_component, prediction_type=params.PREDICTION_SETUP)
         self.mouse_key_component = MouseKeyboardEventDetector(self.tobii_controller, self.adaptation_loop, self.emdat_component, params.USE_MOUSE, params.USE_KEYBOARD)
         websocket_dict = {TOBII_CONTROLLER: self.tobii_controller,
                          APPLICATION_STATE_CONTROLLER: self.app_state_control,
@@ -98,6 +99,7 @@ class MMDWebSocket(ApplicationWebSocket):
         self.websocket_ping_interval = 0
         self.websocket_ping_timeout = float("inf")
         self.adaptation_loop.liveWebSocket = self
+        print self.tobii_controller.eyetrackers
 
         self.start_detection_components()
         self.tobii_controller.startTracking()
@@ -315,8 +317,8 @@ class UserIDHandler(tornado.web.RequestHandler):
         self.application.conn.execute('INSERT INTO User_data VALUES (?,?,?)', user_data)
         self.application.conn.commit()
 
-        self.redirect('/prestudy')
-        #self.redirect('/mmd')
+        #self.redirect('/prestudy')
+        self.redirect('/mmd')
 
 class PreStudyHandler(tornado.web.RequestHandler):
     def get(self):
@@ -476,5 +478,11 @@ def main():
     http_server.listen(options.port)
     tornado.ioloop.IOLoop.current().start()
 
+import joblib
+
 if __name__ == "__main__":
+    print('start')
+    model = joblib.load('application//backend//ml_module//ml_models//within//verbalwm//2_LR.joblib')
+    # model = joblib.parallel
+    # print(model)
     main()
