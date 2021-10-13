@@ -171,18 +171,23 @@ class ApplicationStateController():
             table_name = user['event_name']
             print "creating table:" + table_name
             if user['type'] == 'fix':
-                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_start` INTEGER, `time_end` INTEGER, `duration` INTEGER, PRIMARY KEY(`id`) )".format(table_name))
+                self.conn.execute("CREATE TABLE '{}' ( `id` INTEGER, `time_start` INTEGER, `time_end` INTEGER, `duration` INTEGER, PRIMARY KEY(`id`) )".format(table_name))
             elif user['type'] == 'emdat':
-                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `interval_value` INTEGER, `task_value` TEXT, `runtime_value` TEXT, PRIMARY KEY(`id`) )".format(table_name))
+                self.conn.execute("CREATE TABLE '{}' ( `id` INTEGER, `interval_value` INTEGER, `task_value` TEXT, `runtime_value` TEXT, PRIMARY KEY(`id`) )".format(table_name))
             elif user['type'] == 'ml':
-                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `raw_prediction` REAL, `value` TEXT, PRIMARY KEY(`id`) )".format(table_name))
+                self.conn.execute("CREATE TABLE '{}' ( `id` INTEGER, `time_stamp` INTEGER, `raw_prediction` REAL, `value` TEXT, PRIMARY KEY(`id`) )".format(table_name))
             elif user['type'] == 'mouse':
-                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, `is_press` BOOLEAN, PRIMARY KEY(`id`) )".format(table_name))
-                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, 'x_coord' REAL, 'y_coord' REAL,  PRIMARY KEY(`id`) )".format(table_name + "_double_click"))
+                self.conn.execute("CREATE TABLE '{}' ( `id` INTEGER, `time_stamp` INTEGER, `is_press` BOOLEAN, PRIMARY KEY(`id`) )".format(table_name))
+                self.conn.execute("CREATE TABLE '{}' ( `id` INTEGER, `time_stamp` INTEGER, 'x_coord' REAL, 'y_coord' REAL,  PRIMARY KEY(`id`) )".format(table_name + "_double_click"))
             elif user['type'] == 'keyboard':
-                self.conn.execute("CREATE TABLE {} ( `id` INTEGER, `time_stamp` INTEGER, key STRING, PRIMARY KEY(`id`) )".format(table_name))
+                self.conn.execute("CREATE TABLE '{}' ( `id` INTEGER, `time_stamp` INTEGER, key STRING, PRIMARY KEY(`id`) )".format(table_name))
             else:
                 raise NotImplementedError("Invalid Type: The supported types are `fix` `ml` `emdat`, 'mouse', 'drag_drop'")
+
+            # crete ml tables:
+            #for table_name in ['vislit', 'readp', 'verbalwm', 'taskcomp', 'tasktime']:
+            #     self.conn.execute("CREATE TABLE '{}' ( `id` INTEGER, `time_stamp` INTEGER, `raw_prediction` REAL, `value` TEXT, PRIMARY KEY(`id`) )".format(table_name))
+
             self.conn.commit() #commit after every creation?
 
     def __deleteTaskDynamicTables__(self):
@@ -203,7 +208,7 @@ class ApplicationStateController():
         self.conn.commit()
         for user in self.userStates:
             table_name = user['event_name']
-            self.conn.execute("DROP TABLE IF EXISTS {}".format(table_name))
+            self.conn.execute("DROP TABLE IF EXISTS '{}'".format(table_name))
         self.conn.commit()
 
     def __deleteAllDynamicTables__(self):
@@ -233,7 +238,7 @@ class ApplicationStateController():
 
         for user in userStates:
             table_name = user['event_name']
-            self.conn.execute("DROP TABLE IF EXISTS {}".format(table_name))
+            self.conn.execute("DROP TABLE IF EXISTS '{}'".format(table_name))
         self.conn.commit()
 
     def logTask(self, user_id):
@@ -348,6 +353,7 @@ class ApplicationStateController():
         mapping = {}
         query_results = self.conn.execute("SELECT user_state.event_name, polygon FROM aoi, user_state, user_state_task WHERE user_state.aoi = aoi.name AND aoi.task = ? AND user_state.event_name = user_state_task.event_name AND user_state_task.task = ? AND type = 'emdat'", (str(self.currTask), str(self.currTask)))
         aoi_results = query_results.fetchall()
+        # print('aoi_results: ', aoi_results)
         for aoi in aoi_results:
             event_name = aoi['event_name']
 
@@ -373,6 +379,7 @@ class ApplicationStateController():
         mapping = {}
         query_results = self.conn.execute("SELECT user_state.event_name, polygon FROM aoi, user_state, user_state_task WHERE user_state.aoi = aoi.name AND aoi.task = ? AND user_state.event_name = user_state_task.event_name AND user_state_task.task = ? AND type = 'mouse'", (str(self.currTask), str(self.currTask)))
         aoi_results = query_results.fetchall()
+        # print('aoi_results: ', aoi_results)
         for aoi in aoi_results:
             event_name = aoi['event_name']
 
@@ -400,6 +407,7 @@ class ApplicationStateController():
         mapping = {}
         query_results = self.conn.execute("SELECT user_state.event_name, feature FROM user_state, user_state_task WHERE user_state.event_name = user_state_task.event_name AND user_state_task.task = ? AND type = 'emdat'", (str(self.currTask),))
         feature_results = query_results.fetchall()
+        # print('feature_results: ', feature_results)
         for feature in feature_results:
             event_name = feature['event_name']
 
@@ -474,7 +482,7 @@ class ApplicationStateController():
         """
         if not (isinstance(id, int) and isinstance(time_start, long) and isinstance(time_end, long) and isinstance(duration, int)):
             raise TypeError('Value for columns of a fixation table must be an int')
-        self.conn.execute("INSERT INTO {} VALUES (?,?,?,?)".format(table), (id, time_start, time_end, duration))
+        self.conn.execute("INSERT INTO '{}' VALUES (?,?,?,?)".format(table), (id, time_start, time_end, duration))
         self.conn.commit()
 
     def updateMouseTable(self, table, id, mouse_event):
@@ -496,7 +504,7 @@ class ApplicationStateController():
         """
         if not (isinstance(id, int) and isinstance(mouse_event.time_stamp, int) and isinstance(mouse_event.is_press, bool)):
             raise TypeError('Invalid value for the mouse table')
-        self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (id, mouse_event.time_stamp, mouse_event.is_press))
+        self.conn.execute("INSERT INTO '{}' VALUES (?,?,?)".format(table), (id, mouse_event.time_stamp, mouse_event.is_press))
         self.conn.commit()
 
     def updateDragDropTable(self, table, dd_event):
@@ -515,7 +523,7 @@ class ApplicationStateController():
         """
         if not (isinstance(dd_event.id, int) and isinstance(dd_event.time_stamp, int) and isinstance(dd_event.drag_start, bool) and isinstance(dd_event.duration, int) and isinstance(dd_event.displacement, float)):
             raise TypeError('Invalid value for the mouse table')
-        self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (dd_event.id, dd_event.time_stamp, dd_event.drag_start, dd_event.duration, dd_event.displacement))
+        self.conn.execute("INSERT INTO '{}' VALUES (?,?,?)".format(table), (dd_event.id, dd_event.time_stamp, dd_event.drag_start, dd_event.duration, dd_event.displacement))
         self.conn.commit()
 
     def updateDoubleClickTable(self, table, id, dc_event):
@@ -536,7 +544,7 @@ class ApplicationStateController():
         print(dc_event.x, dc_event.y)
         if not (isinstance(id, int) and isinstance(dc_event.time_stamp, int) and isinstance(dc_event.x, int) and isinstance(dc_event.y, int)):
             raise TypeError('Invalid value for the mouse table')
-        self.conn.execute("INSERT INTO {} VALUES (?,?,?,?)".format(table  + "_double_click"), (id, dc_event.time_stamp, dc_event.x, dc_event.y))
+        self.conn.execute("INSERT INTO '{}' VALUES (?,?,?,?)".format(table  + "_double_click"), (id, dc_event.time_stamp, dc_event.x, dc_event.y))
         self.conn.commit()
 
     def updateKeyboardTable(self, table, id, key_event):
@@ -555,7 +563,7 @@ class ApplicationStateController():
         """
         if not isinstance(key_event.time_stamp, int) and isinstance(key_event.key, string):
             raise TypeError('Invalid value for the keyboard table')
-        self.conn.execute("INSERT INTO {} VALUES (?,?,?)".format(table), (id, key_event.time_stamp, key_event.key))
+        self.conn.execute("INSERT INTO '{}' VALUES (?,?,?)".format(table), (id, key_event.time_stamp, key_event.key))
         self.conn.commit()
 
 
@@ -577,8 +585,18 @@ class ApplicationStateController():
 
         #TODO: type checking
         for event_name in emdat_features:
-            self.conn.execute("INSERT INTO {} VALUES (?,?,?,?)".format(event_name), (id,) + emdat_features[event_name])
+            self.conn.execute("INSERT INTO '{}' VALUES (?,?,?,?)".format(str(event_name)), (id,) + emdat_features[event_name])
         self.conn.commit()
+
+        # added
+        # cursor = self.conn.cursor()
+        # cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        # print('all tables')
+        # print(cursor.fetchall())
+
+        # import pandas as pd
+        # db_df = pd.read_sql_query("SELECT * FROM Text", self.conn)
+        # db_df.to_csv('database_text.csv', index=False)
 
     def updateMlTable(self, table, id, time_stamp, raw_prediction, value):
 
@@ -600,7 +618,7 @@ class ApplicationStateController():
         None
         """
         #TODO: type checking
-        self.conn.execute("INSERT INTO {} VALUES (?,?,?,?)".format(table), (id, time_stamp, raw_prediction, value))
+        self.conn.execute("INSERT INTO '{}' VALUES (?,?,?,?)".format(table), (id, time_stamp, raw_prediction, value))
         self.conn.commit()
 
     def getInterventionOccurences(self, intervention_name):

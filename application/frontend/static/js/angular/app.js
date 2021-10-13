@@ -500,7 +500,6 @@ function handleDelivery(obj) {
   //THIS FUNCTION IS USED!
   console.log("Received a deliver call");
   console.log(obj)
-  $scopeGlobal.currentInterventions = [];
   for (let intervention of obj.deliver) {
     var func = intervention.function;
     var interventionName = intervention.name;
@@ -515,15 +514,14 @@ function handleDelivery(obj) {
       var referenceID = args.id;
     }
     $scopeGlobal.interventions[interventionName] = { tuple_id: args.id, args: args, transition_out: intervention.transition_out, ref_id: refId};
-    $scopeGlobal.currentInterventions[interventionName] = { tuple_id: args.id, args: args, transition_out: intervention.transition_out, ref_id: refId};
     //args.dash = false
     eval(func)($scopeGlobal.interventions[interventionName], transition_in, args);
 
     //4 lines of CODE ADDED HERE TO GENRATE highlightVisOnly_recency
-    // if (func == 'highlightVisOnly_recency' || func == 'highlightVisAndRef_recency') {
-    //   var index =  $scopeGlobal.old_active_interventions.indexOf(args.id);
-    //   if (index !== -1) $scopeGlobal.old_active_interventions.splice(index, 1);
-    // }
+    if (func == 'highlightVisOnly_recency' || func == 'highlightVisAndRef_recency') {
+      var index =  $scopeGlobal.old_active_interventions.indexOf(args.id);
+      if (index !== -1) $scopeGlobal.old_active_interventions.splice(index, 1);
+    }
 
   }
 
@@ -532,12 +530,11 @@ function handleDelivery(obj) {
      */
   if (func == 'highlightVisAndRef_recency') {
       console.log('old_activeA:', $scopeGlobal.old_active_interventions);
-      tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
-      let new_tuple_ids = Object.values($scopeGlobal.currentInterventions).map(function(obj){return obj.tuple_id});
+      let tuple_ids = Object.values($scopeGlobal.interventions).map(function(obj){ return obj.tuple_id});
+      let new_tuple_ids =tuple_ids.filter(function(id) {
+        return !$scopeGlobal.old_active_interventions.includes(id);
+      });
 
-      $scopeGlobal.old_active_interventions = $scopeGlobal.old_active_interventions.filter(function (id) {
-        return !new_tuple_ids.includes(id);
-      })
       if ($scopeGlobal.old_active_interventions.length > 0){
           args.color = '#606060'
           for (let a_mark of $scopeGlobal.old_active_interventions) {
@@ -547,7 +544,8 @@ function handleDelivery(obj) {
           }
       }
 
-      $scopeGlobal.old_active_interventions = $scopeGlobal.old_active_interventions.concat(new_tuple_ids);
+
+      $scopeGlobal.old_active_interventions = $scopeGlobal.old_active_interventions.concat(tuple_ids);
       $scopeGlobal.old_active_interventions = [...new Set($scopeGlobal.old_active_interventions)]
       console.log('old_activeB:', $scopeGlobal.old_active_interventions);
 

@@ -33,7 +33,6 @@ var AppCtrl = function($scope, $http, $location) {
   };
   /***** Server communications block *****/
   $scopeGlobal.interventions = {};
-  $scopeGlobal.currentInterventions = {};
   $scopeGlobal.old_active_interventions = [];
   $scopeGlobal.ws = new WebSocket("ws://localhost:8888/websocket");
   // Generic app.js functions for triggering/dremoving interventions

@@ -6,4 +6,4 @@ To get started, the documentation folder contains:
 
 The platform was implemented in 2018-2019 by the IUI Group of the Department of Computer Science at the University of British Columbia (Vancouver BC, Canada).
 
-Credit: Lallé, S., Toker, D., and Conati, C. 2019. Gaze-Driven Adaptive Interventions for Magazine-Style Narrative Visualizations. IEEE Transactions on Visualization and Computer Graphics. DOI: doi.org/10.1109/TVCG.2019.2958540. 
+Credit: C. Conati, G. Guz, S. Lallé, W. Peng, and D. Toker. 2018. “An Experimenter Platform for Eye-Tracking-Based User Adaptation.” [https://github.com/ATUAV/ATUAV_Experimenter_Platform].

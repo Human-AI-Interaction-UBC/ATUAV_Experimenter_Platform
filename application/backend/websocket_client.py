@@ -26,7 +26,7 @@ class EyetrackerWebsocketClient(object):
     def run(self):
         while True:
             msg = yield self.ws.read_message()
-            #print msg
+            # print("message", msg)
             if msg is not None:
                 if self.track_data:
                     msg = msg.split(",")

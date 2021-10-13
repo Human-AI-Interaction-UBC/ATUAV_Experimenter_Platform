@@ -1,12 +1,10 @@
-# Eyetracker type
-# EYETRACKER_TYPE = "IS4_Large_Peripheral" # 4C eyetracker
-#EYETRACKER_TYPE = "Tobii T120" # Old eyetracker
-EYETRACKER_TYPE = "simulation" # test
-# EYETRACKER_TYPE = "Tobii Pro X3-120 EPU" # Tobii X3
 
-
-SCREEN_SIZE_X = 1920
-SCREEN_SIZE_Y = 1080
+EYETRACKERS = {
+    0: "Tobii Pro X3-120 EPU",
+    1: "4C eyetracker",
+    2: "IS4_Large_Peripheral"
+}
+EYETRACKER_TYPE = EYETRACKERS[1]
 
 #Pilot condition
 PILOT_CONDITION_TEXT_INTERVENTION = True
@@ -22,9 +20,12 @@ PILOT_MMD_SUBSET = [5]
 # Reference highlighting rules
 #RUN USING:  python -u experimenter_platform_stage_1_demo.py
 if PILOT_CONDITION_TEXT_INTERVENTION:
-    USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight.db"
+    # USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight.db"
+    USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight_ml_new.db"
 else:
     USER_MODEL_STATE_PATH = "./database/user_model_state_ref_highlight.db"
+
+
 # GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_and_text.db"
 if PILOT_CONDITION_TEXT_INTERVENTION:
     GAZE_EVENT_RULES_PATH = "./database/gaze_event_rules_ref_highlight_and_text_pilot_noremoval.db"
@@ -51,25 +52,28 @@ FRONT_END_TEMPLATE_PATH = "./application/frontend/templates/"
 
 # Platform configuration:
 USE_FIXATION_ALGORITHM = True
-USE_EMDAT = False
-USE_ML = False
+USE_EMDAT = True
+USE_ML = True
 USE_KEYBOARD = False
 USE_MOUSE = False
 
 
 # Features to use
-USE_PUPIL_FEATURES = True
-USE_DISTANCE_FEATURES = True
+USE_PUPIL_FEATURES = False
+USE_DISTANCE_FEATURES = False
 USE_FIXATION_PATH_FEATURES = True
 USE_TRANSITION_AOI_FEATURES = True
 
 # Sets of features to keep
-KEEP_TASK_FEATURES = False
-KEEP_GLOBAL_FEATURES = False
+KEEP_TASK_FEATURES = True
+KEEP_GLOBAL_FEATURES = True
 
 #Frequency of ML/EMDAT calls:
-EMDAT_CALL_PERIOD = 10000
-ML_CALL_PERIOD = 6000000
+EMDAT_CALL_PERIOD = 1000
+ML_CALL_PERIOD = 1000
+
+# Prediction setup
+PREDICTION_SETUP = ['within', 'across'][0]
 
 # Some parameter from EMDAT
 MAX_SEG_TIMEGAP= 10
